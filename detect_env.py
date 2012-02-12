@@ -4,6 +4,7 @@
 import os
 
 
+
 def find_above(*names):
     """Attempt to locate a .env file by searching parent dirs."""
 
@@ -26,5 +27,6 @@ if __name__ == '__main__':
 
         if envfile:
             # Do it live!
-            print('export AUTOENV_ACTIVE')
-            print('source %s' % envfile)
+            print 'ls'
+            print 'export AUTOENV_ACTIVE'
+            print 'source %s' % envfile

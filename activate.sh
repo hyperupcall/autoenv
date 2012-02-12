@@ -1,8 +1,15 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(dirname $0)"
 
 function cd(){
     builtin cd "$@"
-    $($DIR/detect_env.py)
+
+    # Run detect script and split it up.
+    saveIFS=$IFS; IFS=$'\n'; cmds=($($DIR/detect_env.py)); IFS=$saveIFS
+
+    for cmd in ${cmds}
+    do
+       eval $cmd
+    done
 }
