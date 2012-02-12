@@ -16,7 +16,10 @@ This is great for...
 - project-specific environment variables
 - making millions
 
+[Foreman](https://github.com/ddollar/foreman)'s `.env` files are completely compatible.
 You can also nest envs within eachother. How awesome is that!?
+
+
 
 Usage
 -----
