@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
-cd ~
 echo "Downloading autoenv..."
-git clone git@github.com:kennethreitz/autoenv.git .autoenv
-
+git clone git@github.com:kennethreitz/autoenv.git ~/.autoenv
 
 # TODO: if bash, if zsh
 echo "Done!"

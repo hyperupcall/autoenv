@@ -1,16 +1,16 @@
-Autoenv: Dir-based Environments
-==============================
+Autoenv: Directory-based Environments
+======================================
 
-I use this to auto-activate virtualenvs. Trying to keep it abstract.
-
-It assumes you're in a bash-like environment. How pretentious.
+Magic per-project environments. How pretentious.
 
 
 What is it?
 -----------
 
-``.env`` file will automatically be excecuted when you ``cd`` into it.
-This if great for...
+If a directory contains ``.env`` file, it will automatically be excecuted
+when you ``cd`` into it.
+
+This is great for...
 
 - auto-activating virtualenvs
 - project-specific environment variables
