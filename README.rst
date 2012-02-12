@@ -33,6 +33,9 @@ Follow the white rabbit::
     woah
 
 
+.. image:: http://media.tumblr.com/tumblr_ltuzjvbQ6L1qzgpx9.gif
+
+
 Install
 -------
 
