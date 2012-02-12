@@ -35,7 +35,7 @@ Install it easily::
 
     $ curl https://raw.github.com/kennethreitz/autoenv/master/install.sh | sh
 
-Or `don't <https://raw.github.com/kennethreitz/autoenv/master/install.sh >`_.
+Or `don't <https://raw.github.com/kennethreitz/autoenv/master/install.sh>`_.
 
 Disclaimer
 ----------
