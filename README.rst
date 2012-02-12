@@ -40,6 +40,6 @@ Install it easily::
 Disclaimer
 ----------
 
-Autoenv is built upon terrible ideas. It overrides ``cd``.
+Autoenv overrides ``cd``. If you're already doing this, you can run the ``autoenv-init`` function within your own ``cd``.
 
 Be a rebel.
