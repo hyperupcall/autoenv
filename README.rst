@@ -1,7 +1,7 @@
 Autoenv: Directory-based Environments
 ======================================
 
-Magic per-project environments. How pretentious.
+Magic per-project shell environments. Very pretentious.
 
 
 What is it?
@@ -49,5 +49,3 @@ Disclaimer
 ----------
 
 Autoenv overrides ``cd``. If you already do this, invoke ``autoenv-init`` within your custom ``cd``.
-
-Be a rebel.
