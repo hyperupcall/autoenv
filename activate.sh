@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-DIR="$(dirname $0)"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function autoenv-init(){
     # Run detect script and split it up.
-    saveIFS=$IFS; IFS=$'\n'; cmds=($($DIR/detect_env.py)); IFS=$saveIFS
+    saveIFS=$IFS
+    IFS=$'\n'
 
-    for cmd in ${cmds}
+    for cmd in $($DIR/detect_env.py) 
     do
        eval $cmd
     done
+
+    IFS=$saveIFS
+
 }
 
 function cd(){
