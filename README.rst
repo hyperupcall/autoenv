@@ -16,6 +16,7 @@ This is great for...
 - project-specific environment variables
 - making millions
 
+Envs also cascade, so you can have nest them.
 
 Usage
 -----
