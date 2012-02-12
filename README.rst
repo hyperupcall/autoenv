@@ -17,6 +17,15 @@ This if great for...
 - making millions
 
 
+Usage
+-----
+
+$ touch project/.env
+$ echo "echo 'woah'" > project/.env
+$ cd project
+woah
+
+
 Install
 -------
 
