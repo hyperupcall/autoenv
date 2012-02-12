@@ -27,6 +27,5 @@ if __name__ == '__main__':
 
         if envfile:
             # Do it live!
-            print 'ls'
             print 'export AUTOENV_ACTIVE'
             print 'source %s' % envfile
