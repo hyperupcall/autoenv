@@ -3,6 +3,8 @@ Autoenv: Dir-based Environments
 
 I use this to auto-activate virtualenvs. Trying to keep it abstract.
 
+It assumes you're in a bash-like environment. How pretentious.
+
 
 Usage
 -----
