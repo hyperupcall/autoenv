@@ -6,7 +6,7 @@ import os
 
 
 def find_above(*names):
-    """Attempt to locate a .workon file by searching parent dirs."""
+    """Attempt to locate a .env file by searching parent dirs."""
 
     path = '.'
 
