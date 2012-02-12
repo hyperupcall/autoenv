@@ -1,22 +1,27 @@
 #!/usr/bin/env bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+AUTOENV_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-function autoenv-init(){
-    # Run detect script and split it up.
-    saveIFS=$IFS
-    IFS=$'\n'
+autoenv-init()
+{
+  typeset IFS cmd
+  typeset -a cmds
+  IFS=$'\n'
+  cmds=( $( "${AUTOENV_DIR}/detect_env.py" ) )
 
-    for cmd in $($DIR/detect_env.py) 
-    do
-       eval $cmd
-    done
-
-    IFS=$saveIFS
-
+  for cmd in ${cmds}
+  do
+    eval $cmd
+  done
 }
 
-function cd(){
-    builtin cd "$@"
+cd()
+{
+  if builtin cd "$@"
+  then
     autoenv-init
+    return 0
+  else
+    return $?
+  fi
 }
