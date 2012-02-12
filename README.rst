@@ -20,10 +20,12 @@ This if great for...
 Usage
 -----
 
-$ touch project/.env
-$ echo "echo 'woah'" > project/.env
-$ cd project
-woah
+Follow the white rabbit::
+
+    $ touch project/.env
+    $ echo "echo 'woah'" > project/.env
+    $ cd project
+    woah
 
 
 Install
