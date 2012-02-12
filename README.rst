@@ -33,7 +33,8 @@ Install
 
 Install it easily::
 
-    $ curl https://raw.github.com/kennethreitz/autoenv/master/install.sh | sh
+    $ git clone git@github.com:kennethreitz/autoenv.git ~/.autoenv
+    $ echo 'source ~/.autoenv/activate.sh' > ~/.bashrc
 
 Or `don't <https://raw.github.com/kennethreitz/autoenv/master/install.sh>`_.
 
