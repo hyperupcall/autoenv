@@ -6,12 +6,15 @@ I use this to auto-activate virtualenvs. Trying to keep it abstract.
 It assumes you're in a bash-like environment. How pretentious.
 
 
-Usage
------
+What is it?
+-----------
 
-Add this to your ``shellrc``::
+``.env`` file will automatically be excecuted when you ``cd`` into it.
+This if great for...
 
-    $ source ~/.autoenv/activate.sh
+- auto-activating virtualenvs
+- project-specific environment variables
+- making millions
 
 
 Install
