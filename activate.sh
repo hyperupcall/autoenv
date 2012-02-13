@@ -6,15 +6,18 @@ autoenv_init()
   target=$1
   home="$(dirname $HOME)"
 
-  (
+  while read _file
+  do
+    source "${_file}"
+  done < <(
     while [[ "$PWD" != "/" && "$PWD" != "$home" ]]
     do
       _file="$PWD/.env"
       if [[ -e "${_file}" ]]
-      then source "${_file}"
+      then echo "${_file}"
       fi
       builtin cd ..
-    done
+    done | sort -r
   )
 }
 

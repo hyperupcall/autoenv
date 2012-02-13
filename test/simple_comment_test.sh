@@ -12,8 +12,8 @@ echo "echo -c/d-" > "$test_dir/c/d/.env"
 cd $test_dir
 
 ## test
-( cd a   ) # match=/-a-/ ; status=0
-( cd a/b ) # match=/-a-/ ; match=/-a/b-/ ; status=0
+( cd a   ) # match=/-a-/ ; match!=/-a/b-/ ; status=0
+( cd a/b ) # match=/-a-\n-a/b-/ ; status=0
 ( cd c   ) # match=/$^/ ; status=0
 ( cd c/d ) # match!=/-c-/ ; match=/-c/d-/ ; status=0
 ( cd e   ) # match!=/^$/ ; status!=0
