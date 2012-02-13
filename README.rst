@@ -60,4 +60,4 @@ Test::
 Disclaimer
 ----------
 
-Autoenv overrides ``cd``. If you already do this, invoke ``autoenv-init`` within your custom ``cd`` after sourcing ``activate.sh``.
+Autoenv overrides ``cd``. If you already do this, invoke ``autoenv_init`` within your custom ``cd`` after sourcing ``activate.sh``.

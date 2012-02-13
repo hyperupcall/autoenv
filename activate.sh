@@ -5,7 +5,7 @@ then __array_offset=0
 else __array_offset=1
 fi
 
-autoenv-init()
+autoenv_init()
 {
   typeset target home _file
   typeset -a _files
@@ -35,7 +35,7 @@ cd()
 {
   if builtin cd "$@"
   then
-    autoenv-init
+    autoenv_init
     return 0
   else
     return $?
