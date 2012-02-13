@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-autoenv_init()
+autoenv-init()
 {
   typeset target home _file
   target=$1
@@ -25,7 +25,7 @@ cd()
 {
   if builtin cd "$@"
   then
-    autoenv_init
+    autoenv-init
     return 0
   else
     return $?
