@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
 
+if [[ -n "${ZSH_VERSION}" ]]
+then __array_offset=0
+else __array_offset=1
+fi
+
 autoenv-init()
 {
   typeset target home _file
+  typeset -a _files
   target=$1
   home="$(dirname $HOME)"
 
-  while read _file
-  do
-    source "${_file}"
-  done < <(
+  _files=( $(
     while [[ "$PWD" != "/" && "$PWD" != "$home" ]]
     do
       _file="$PWD/.env"
@@ -17,8 +20,15 @@ autoenv-init()
       then echo "${_file}"
       fi
       builtin cd ..
-    done | sort -r
-  )
+    done
+  ) )
+
+  _file=${#_files[@]}
+  while (( _file > 0 ))
+  do
+    source "${_files[_file-__array_offset]}"
+    : $(( _file -= 1 ))
+  done
 }
 
 cd()
