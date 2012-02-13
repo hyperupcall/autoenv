@@ -48,9 +48,8 @@ Install it easily::
 Testing
 -------
 
-Install dtf::
+Install the test runner::
 
-    $ gem install dtf --version 0.1.1 # verbose output
     $ gem install dtf --version 0.1.2 # dotted output
 
 Test::
@@ -61,5 +60,4 @@ Test::
 Disclaimer
 ----------
 
-Autoenv overrides ``cd``. If you already do this, invoke ``autoenv_init`` within your custom ``cd``.
-Make sure your cd override is defined after sourcing activate.sh.
+Autoenv overrides ``cd``. If you already do this, invoke ``autoenv-init`` within your custom ``cd`` after sourcing ``activate.sh``.
