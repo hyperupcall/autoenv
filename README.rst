@@ -50,11 +50,16 @@ Testing
 
 Install the test runner::
 
-    $ gem install dtf --version 0.1.2 # dotted output
+    $ make
+    gem install dtf --version 0.1.2
+    Successfully installed dtf-0.1.2
 
 Test::
 
-    $ dtf test/*
+    $ make test
+    dtf tests/*
+    ............
+    ##### Processed commands 14 of 14, success tests 12 of 12.
 
 
 Disclaimer
