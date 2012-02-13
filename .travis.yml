@@ -3,5 +3,5 @@ rvm:
   - 1.9.3
 install: true
 before_install:
-  - gem install dtf -version 0.1.2
+  - gem install dtf --version 0.1.2
 script: 'dtf test/*'
