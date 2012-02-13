@@ -45,7 +45,21 @@ Install it easily::
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
 
 
+Testing
+-------
+
+Install dtf::
+
+    $ gem install dtf --version 0.1.1 # verbose output
+    $ gem install dtf --version 0.1.2 # dotted output
+
+Test::
+
+    $ dtf test/*
+
+
 Disclaimer
 ----------
 
-Autoenv overrides ``cd``. If you already do this, invoke ``autoenv-init`` within your custom ``cd``.
+Autoenv overrides ``cd``. If you already do this, invoke ``autoenv_init`` within your custom ``cd``.
+Make sure your cd override is defined after sourcing activate.sh.

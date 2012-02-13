@@ -1,25 +1,31 @@
 #!/usr/bin/env bash
 
-AUTOENV_DIR="$(dirname $0)"
-
-autoenv-init()
+autoenv_init()
 {
-  typeset IFS cmd
-  typeset -a cmds
-  IFS=$'\n'
-  cmds=( $( "${AUTOENV_DIR}/detect_env.py" ) )
+  typeset target home _file
+  target=$1
+  home="$(dirname $HOME)"
 
-  for cmd in ${cmds}
+  while read _file
   do
-    eval $cmd
-  done
+    source "${_file}"
+  done < <(
+    while [[ "$PWD" != "/" && "$PWD" != "$home" ]]
+    do
+      _file="$PWD/.env"
+      if [[ -e "${_file}" ]]
+      then echo "${_file}"
+      fi
+      builtin cd ..
+    done | sort -r
+  )
 }
 
 cd()
 {
   if builtin cd "$@"
   then
-    autoenv-init
+    autoenv_init
     return 0
   else
     return $?
