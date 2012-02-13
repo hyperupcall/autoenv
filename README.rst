@@ -41,8 +41,18 @@ Install
 
 Install it easily::
 
+    $ brew install autoenv
+
+If you're on Linux, follow these simple steps:
+
     $ git clone git://github.com/kennethreitz/autoenv.git ~/.autoenv
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
+
+
+Disclaimer
+----------
+
+Autoenv overrides ``cd``. If you already do this, invoke ``autoenv_init`` within your custom ``cd`` after sourcing ``activate.sh``.
 
 
 Testing
@@ -60,9 +70,3 @@ Test::
     dtf tests/*
     ............
     ##### Processed commands 14 of 14, success tests 12 of 12.
-
-
-Disclaimer
-----------
-
-Autoenv overrides ``cd``. If you already do this, invoke ``autoenv_init`` within your custom ``cd`` after sourcing ``activate.sh``.
