@@ -41,3 +41,5 @@ cd()
     return $?
   fi
 }
+
+cd $PWD
