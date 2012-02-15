@@ -67,7 +67,9 @@ autoenv_check_authz_and_run()
 {
   typeset envfile
   envfile=$1
-  if ! autoenv_check_authz "$envfile"; then
+  if autoenv_check_authz "$envfile"; then
+    source "$envfile"
+  else
     autoenv_env
     autoenv_env "WARNING:"
     autoenv_env "This is the first time you are about to source $envfile":
