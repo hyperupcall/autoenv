@@ -41,6 +41,10 @@ Install
 
 Install it easily::
 
+    $ brew install autoenv
+
+If you're on Linux, follow these simple steps::
+
     $ git clone git://github.com/kennethreitz/autoenv.git ~/.autoenv
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
 
