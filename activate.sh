@@ -60,7 +60,7 @@ autoenv_check_authz()
   envfile=$1
   hash=$(autoenv_hashline "$envfile")
   touch $AUTOENV_AUTH_FILE
-  grep -Gq "$hash" $AUTOENV_AUTH_FILE
+  \grep -Gq "$hash" $AUTOENV_AUTH_FILE
 }
 
 autoenv_check_authz_and_run()
