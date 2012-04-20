@@ -69,7 +69,9 @@ autoenv_check_authz_and_run()
   envfile=$1
   if autoenv_check_authz "$envfile"; then
     source "$envfile"
-  else
+    return 0
+  fi
+  if [[ -z $MC_SID ]]; then #make sure mc is not running
     autoenv_env
     autoenv_env "WARNING:"
     autoenv_env "This is the first time you are about to source $envfile":
