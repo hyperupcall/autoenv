@@ -12,7 +12,7 @@ when you ``cd`` into it.
 
 This is great for...
 
-- auto-activating virtualenvs
+- [auto-activating virtualenvs][venv-wiki]
 - project-specific environment variables
 - making millions
 
@@ -20,7 +20,7 @@ This is great for...
 
 You can also nest envs within eachother. How awesome is that!?
 
-
+[venv-wiki]: https://github.com/kennethreitz/autoenv/wiki/Cookbook
 
 Usage
 -----
