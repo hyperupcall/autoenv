@@ -12,15 +12,13 @@ when you ``cd`` into it.
 
 This is great for...
 
-- auto-activating virtualenvs
+- `auto-activating virtualenvs <https://github.com/kennethreitz/autoenv/wiki/Cookbook>`_
 - project-specific environment variables
 - making millions
 
 `Foreman <https://github.com/ddollar/foreman>`_ env files are completely compatible.
 
 You can also nest envs within eachother. How awesome is that!?
-
-
 
 Usage
 -----
