@@ -117,3 +117,5 @@ autoenv_cd()
 cd() {
   autoenv_cd "$@"
 }
+
+cd .
