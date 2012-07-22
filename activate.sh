@@ -78,6 +78,7 @@ autoenv_check_authz_and_run()
     autoenv_env
     autoenv_env "    --- (begin contents) ---------------------------------------"
     autoenv_indent "$envfile"
+    autoenv_env
     autoenv_env "    --- (end contents) -----------------------------------------"
     autoenv_env
     autoenv_printf "Are you sure you want to allow this? (y/N) "
