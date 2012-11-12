@@ -20,7 +20,7 @@ autoenv_init()
       if [[ -e "${_file}" ]]
       then echo "${_file}"
       fi
-      builtin cd ..
+      builtin cd .. &>/dev/null
     done
   ) )
 
