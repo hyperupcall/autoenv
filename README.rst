@@ -37,11 +37,28 @@ Follow the white rabbit::
 Install
 -------
 
-Install it easily::
+Install it easily:
+
+Mac OS X Using Homebrew
+~~~~~~~~~~~~~~~~~~~~~~~
+
+::
 
     $ brew install autoenv
 
-If you're on Linux, follow these simple steps::
+
+Using pip
+~~~~~~~~~
+
+::
+
+    $ pip install autoenv
+
+
+Using git
+~~~~~~~~~
+
+::
 
     $ git clone git://github.com/kennethreitz/autoenv.git ~/.autoenv
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
