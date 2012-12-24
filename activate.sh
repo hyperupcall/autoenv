@@ -68,7 +68,7 @@ autoenv_check_authz_and_run()
   typeset envfile
   envfile=$1
   if autoenv_check_authz "$envfile"; then
-    source "$envfile"
+    autoenv_source "$envfile"
     return 0
   fi
   if [[ -z $MC_SID ]]; then #make sure mc is not running
@@ -85,7 +85,7 @@ autoenv_check_authz_and_run()
     read answer
     if [[ "$answer" == "y" ]]; then
       autoenv_authorize_env "$envfile"
-      source "$envfile"
+      autoenv_source "$envfile"
     fi
   fi
 }
@@ -102,6 +102,13 @@ autoenv_authorize_env() {
   envfile=$1
   autoenv_deauthorize_env "$envfile"
   autoenv_hashline "$envfile" >> $AUTOENV_AUTH_FILE
+}
+
+autoenv_source() {
+  typeset envfile
+  envfile=$1
+  source "$envfile" && \
+    export `sed -ne "s/^\([a-zA-Z_]\+[a-zA-Z0-9_]*\)=.*$/\1/p" "$envfile"` >/dev/null
 }
 
 autoenv_cd()
