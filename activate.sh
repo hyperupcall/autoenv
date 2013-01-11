@@ -115,8 +115,12 @@ autoenv_cd()
   fi
 }
 
-cd() {
-  autoenv_cd "$@"
-}
+if [[ -z "$ZSH_VERSION" ]]; then
+  cd() {
+    autoenv_cd "$@"
+  }
+else
+  chpwd_functions=( autoenv_init $chpwd_functions )
+fi
 
 cd .
