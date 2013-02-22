@@ -112,7 +112,8 @@ autoenv_new() {
   else
     new_env_name="${PWD##*/}"
     touch $envfile
-    echo "use_env $new_env_name" > $envfile
+    echo "# Assumes use_env. See https://github.com/kennethreitz/autoenv/wiki/Cookbook" >> $envfile
+    echo "use_env $new_env_name"  >> $envfile
     auto_env "Made $envfile"
   fi
 }
