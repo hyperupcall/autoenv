@@ -113,6 +113,7 @@ autoenv_new() {
     new_env_name="${PWD##*/}"
     touch $envfile
     echo "use_env $new_env_name" > $envfile
+    auto_env "Made $envfile"
   fi
 }
 
