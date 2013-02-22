@@ -104,6 +104,18 @@ autoenv_authorize_env() {
   autoenv_hashline "$envfile" >> $AUTOENV_AUTH_FILE
 }
 
+autoenv_new() {
+  typeset envfile
+  envfile=$1
+  if [[ -e "$envfile" ]]; then
+    auto_env "The file $envfile already exists."
+  else
+    new_env_name="${PWD##*/}"
+    touch $envfile
+    echo "use_env $new_env_name" > $envfile
+  fi
+}
+
 autoenv_cd()
 {
   if builtin cd "$@"
