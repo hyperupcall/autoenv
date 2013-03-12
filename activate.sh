@@ -33,6 +33,12 @@ autoenv_init()
   done
 }
 
+autoenv_run() {
+  typeset _file
+  _file="$(realpath "$1")"
+  autoenv_check_authz_and_run "${_file}"
+}
+
 autoenv_env() {
   builtin echo "autoenv:" "$@"
 }
