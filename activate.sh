@@ -117,6 +117,14 @@ autoenv_authorize_env() {
   autoenv_hashline "$envfile" >> $AUTOENV_AUTH_FILE
 }
 
+autoenv_source() {
+  typeset allexport
+  allexport=$(set +o | grep allexport)
+  set -a
+  source "$1"
+  eval "$allexport"
+}
+
 autoenv_cd()
 {
   if builtin cd "$@"
