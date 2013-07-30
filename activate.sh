@@ -74,7 +74,7 @@ autoenv_check_authz_and_run()
   typeset envfile
   envfile=$1
   if autoenv_check_authz "$envfile"; then
-    source "$envfile"
+    autoenv_source "$envfile"
     return 0
   fi
   if [[ -z $MC_SID ]]; then #make sure mc is not running
@@ -91,7 +91,7 @@ autoenv_check_authz_and_run()
     read answer
     if [[ "$answer" == "y" ]]; then
       autoenv_authorize_env "$envfile"
-      source "$envfile"
+      autoenv_source "$envfile"
     fi
   fi
 }
@@ -108,6 +108,14 @@ autoenv_authorize_env() {
   envfile=$1
   autoenv_deauthorize_env "$envfile"
   autoenv_hashline "$envfile" >> $AUTOENV_AUTH_FILE
+}
+
+autoenv_source() {
+  typeset allexport
+  allexport=$(set +o | grep allexport)
+  set -a
+  source "$1"
+  eval "$allexport"
 }
 
 autoenv_cd()
