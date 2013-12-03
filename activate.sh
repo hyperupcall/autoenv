@@ -69,6 +69,13 @@ autoenv_check_authz()
   \grep -Gq "$hash" $AUTOENV_AUTH_FILE
 }
 
+autoenv_source() {
+  typeset envfile
+  envfile=$1
+  source "$envfile"
+  eval $AUTOENV
+}
+
 autoenv_check_authz_and_run()
 {
   typeset envfile
