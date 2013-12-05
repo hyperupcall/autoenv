@@ -45,6 +45,7 @@ Mac OS X Using Homebrew
 ::
 
     $ brew install autoenv
+    $ source /usr/local/opt/autoenv/activate.sh
 
 
 Using pip
@@ -53,6 +54,7 @@ Using pip
 ::
 
     $ pip install autoenv
+    $ source /usr/local/bin/activate.sh
 
 
 Using git
