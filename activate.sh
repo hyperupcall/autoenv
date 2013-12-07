@@ -31,6 +31,14 @@ autoenv_init()
     autoenv_check_authz_and_run "$envfile"
     : $(( _file -= 1 ))
   done
+
+  _file="$PWD/.autoenv"
+  if [[ -e "${_file}" ]]
+  then 
+  autoenv_check_authz "${_file}"
+  source "${_file}"
+  fi
+
 }
 
 autoenv_run() {
