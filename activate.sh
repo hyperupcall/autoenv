@@ -43,7 +43,6 @@ autoenv_init()
       builtin cd .. &>/dev/null
     done
   ) )
-  echo unfiles=$_unfiles
 
   _unfile=${#_unfiles[@]}
   while (( _unfile > 0 ))
