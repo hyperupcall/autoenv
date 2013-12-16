@@ -10,6 +10,9 @@ What is it?
 If a directory contains a ``.env`` file, it will automatically be executed
 when you ``cd`` into it.
 
+If a directory contains a ``.unenv`` file, it will automatically be executed
+when you ``cd`` out of it.
+
 This is great for...
 
 - `auto-activating virtualenvs <https://github.com/kennethreitz/autoenv/wiki/Cookbook>`_
