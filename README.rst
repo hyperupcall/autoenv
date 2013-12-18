@@ -12,7 +12,7 @@ when you ``cd`` into it.
 
 This is great for...
 
-- `auto-activating virtualenvs <https://github.com/kennethreitz/autoenv/wiki/Cookbook>`_
+- auto-activating virtualenvs
 - project-specific environment variables
 - making millions
 
