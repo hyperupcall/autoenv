@@ -56,7 +56,10 @@ autoenv_hashline()
 {
   typeset envfile hash
   envfile=$1
-  hash=$(sha1sum "$envfile" | cut -d' ' -f 1)
+  if [[ -a shasum ]]
+  then hash=$(shasum "$envfile" | cut -d' ' -f 1)
+  else hash=$(sha1sum "$envfile" | cut -d' ' -f 1)
+  fi
   echo "$envfile:$hash"
 }
 
