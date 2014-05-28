@@ -8,6 +8,9 @@ fi
 
 autoenv_init()
 {
+  defIFS=$IFS
+  IFS=$(echo -en "\n\b")
+
   typeset target home _file
   typeset -a _files
   target=$1
@@ -31,6 +34,8 @@ autoenv_init()
     autoenv_check_authz_and_run "$envfile"
     : $(( _file -= 1 ))
   done
+
+  IFS=$defIFS
 }
 
 autoenv_run() {
