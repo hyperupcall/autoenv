@@ -102,7 +102,7 @@ autoenv_check_authz_and_run()
 autoenv_deauthorize_env() {
   typeset envfile
   envfile=$1
-  cp "$AUTOENV_AUTH_FILE" "$AUTOENV_AUTH_FILE.tmp"
+  \cp "$AUTOENV_AUTH_FILE" "$AUTOENV_AUTH_FILE.tmp"
   \grep -Gv "$envfile:" "$AUTOENV_AUTH_FILE.tmp" > $AUTOENV_AUTH_FILE
 }
 
