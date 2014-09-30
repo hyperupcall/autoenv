@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 AUTOENV_AUTH_FILE=~/.autoenv_authorized
+if [ -z "$AUTOENV_ENV_FILENAME" ]; then
+    AUTOENV_ENV_FILENAME=.env
+fi
 
 if [[ -n "${ZSH_VERSION}" ]]
 then __array_offset=0
@@ -16,7 +19,7 @@ autoenv_init()
   _files=( $(
     while [[ "$PWD" != "/" && "$PWD" != "$home" ]]
     do
-      _file="$PWD/.env"
+      _file="$PWD/$AUTOENV_ENV_FILENAME"
       if [[ -e "${_file}" ]]
       then echo "${_file}"
       fi
