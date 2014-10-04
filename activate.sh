@@ -27,12 +27,22 @@ autoenv_init() {
 
   chdir "${original_PWD}" >/dev/null 2>&1
 
+  # check if zsh with not set shwordsplit
+  zsh_shwordsplit=$( setopt > /dev/null 2>&1 | grep -q shwordsplit && echo "true" )
+  # in zsh: set shwordsplit for traditional for loop
+  if [ -z "${zsh_shwordsplit}" ]; then
+    setopt shwordsplit >/dev/null 2>&1
+  fi
   original_IFS=${IFS}
   IFS=:
   for autoenv__envfile in ${autoenv__files}; do
     autoenv_check_authz_and_run "${autoenv__envfile}"
   done
   IFS=${original_IFS}
+  # in zsh: restore shwordsplit
+  if [ -z "${zsh_shwordsplit}" ]; then
+    unsetopt shwordsplit >/dev/null 2>&1
+  fi
 }
 
 autoenv_env() {
