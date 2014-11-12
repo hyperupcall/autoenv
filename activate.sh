@@ -20,7 +20,7 @@ autoenv_init()
     while [[ "$PWD" != "/" && "$PWD" != "$home" ]]
     do
       _file="$PWD/$AUTOENV_ENV_FILENAME"
-      if [[ -e "${_file}" ]]
+      if [[ -f "${_file}" ]]
       then echo "${_file}"
       fi
       builtin cd .. &>/dev/null
