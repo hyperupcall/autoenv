@@ -118,7 +118,7 @@ autoenv_authorize_env() {
 
 autoenv_source() {
   typeset allexport
-  allexport=$(set +o | grep allexport)
+  allexport=$(set +o | \grep allexport)
   set -a
   source "$1"
   eval "$allexport"
