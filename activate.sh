@@ -59,10 +59,7 @@ autoenv_hashline()
 {
   typeset envfile hash
   envfile=$1
-  if which shasum &> /dev/null
-  then hash=$(shasum "$envfile" | cut -d' ' -f 1)
-  else hash=$(sha1sum "$envfile" | cut -d' ' -f 1)
-  fi
+  hash=$(autoenv_shasum "$envfile" | cut -d' ' -f 1)
   echo "$envfile:$hash"
 }
 
@@ -135,8 +132,29 @@ autoenv_cd()
   fi
 }
 
-cd() {
-  autoenv_cd "$@"
+enable_autoenv() {
+    cd() {
+        autoenv_cd "$@"
+    }
+
+    cd .
 }
 
-cd .
+# probe to see if we have access to a shasum command, otherwise disable autoenv
+if which gsha1sum 2>/dev/null >&2 ; then
+    autoenv_shasum() {
+        gsha1sum "$@"
+    }
+    enable_autoenv
+elif which sha1sum 2>/dev/null >&2; then
+    autoenv_shasum() {
+        sha1sum "$@"
+    }
+    enable_autoenv
+elif which shasum 2>/dev/null >&2; then
+    autoenv_shasum() {
+        shasum "$@"
+    }
+else
+    echo "Autoenv cannot locate a compatible shasum binary; not enabling"
+fi
