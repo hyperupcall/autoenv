@@ -54,6 +54,7 @@ Using pip
 ::
 
     $ pip install autoenv
+    $ echo "source `which activate.sh`" >> ~/.bashrc
 
 
 Using git
