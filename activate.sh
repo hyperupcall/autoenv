@@ -1,138 +1,127 @@
-#!/usr/bin/env bash
-AUTOENV_AUTH_FILE=~/.autoenv_authorized
-if [ -z "$AUTOENV_ENV_FILENAME" ]; then
-    AUTOENV_ENV_FILENAME=.env
+#!/bin/sh
+AUTOENV_AUTH_FILE="${HOME}/.autoenv_authorized"
+if [ -z "${AUTOENV_ENV_FILENAME}" ]; then
+    AUTOENV_ENV_FILENAME=".env"
 fi
 
-if [[ -n "${ZSH_VERSION}" ]]
-then __array_offset=0
-else __array_offset=1
+if ! chdir >/dev/null 2>&1; then
+  alias chdir="builtin cd"  # for bash
 fi
 
-autoenv_init()
-{
-  defIFS=$IFS
-  IFS=$(echo -en "\n\b")
+autoenv_init() {
+  autoenv__home="$(dirname ${HOME})"
+  autoenv__files=""
 
-  typeset target home _file
-  typeset -a _files
-  target=$1
-  home="$(dirname $HOME)"
-
-  _files=( $(
-    while [[ "$PWD" != "/" && "$PWD" != "$home" ]]
-    do
-      _file="$PWD/$AUTOENV_ENV_FILENAME"
-      if [[ -e "${_file}" ]]
-      then echo "${_file}"
+  original_PWD="${PWD}"
+  while [ "${PWD}" != "/" ] && [ "${PWD}" != "${autoenv__home}" ]; do
+    autoenv__file="${PWD}/${AUTOENV_ENV_FILENAME}"
+    if [ -e "${autoenv__file}" ]; then
+      if [ -z "${autoenv__files}" ]; then 
+        autoenv__files="${autoenv__file}"
+      else
+        autoenv__files="${autoenv__file}:${autoenv__files}"
       fi
-      builtin cd .. &>/dev/null
-    done
-  ) )
-
-  _file=${#_files[@]}
-  while (( _file > 0 ))
-  do
-    envfile=${_files[_file-__array_offset]}
-    autoenv_check_authz_and_run "$envfile"
-    : $(( _file -= 1 ))
+    fi
+    chdir .. >/dev/null 2>&1
   done
 
-  IFS=$defIFS
-}
+  chdir "${original_PWD}" >/dev/null 2>&1
 
-autoenv_run() {
-  typeset _file
-  _file="$(realpath "$1")"
-  autoenv_check_authz_and_run "${_file}"
+  # check if zsh with not set shwordsplit
+  zsh_shwordsplit=$( setopt > /dev/null 2>&1 | grep -q shwordsplit && echo "true" )
+  # in zsh: set shwordsplit for traditional for loop
+  if [ -z "${zsh_shwordsplit}" ]; then
+    setopt shwordsplit >/dev/null 2>&1
+  fi
+  original_IFS=${IFS}
+  IFS=:
+  for autoenv__envfile in ${autoenv__files}; do
+    autoenv_check_authz_and_run "${autoenv__envfile}"
+  done
+  IFS=${original_IFS}
+  # in zsh: restore shwordsplit
+  if [ -z "${zsh_shwordsplit}" ]; then
+    unsetopt shwordsplit >/dev/null 2>&1
+  fi
 }
 
 autoenv_env() {
-  builtin echo "autoenv:" "$@"
+  echo "autoenv:$@"
 }
 
 autoenv_printf() {
-  builtin printf "autoenv: "
-  builtin printf "$@"
+  printf "autoenv: %s" "$@"
 }
 
 autoenv_indent() {
-  sed 's/.*/autoenv:     &/' $@
+  echo "$@" | sed 's/.*/autoenv:     &/'
 }
 
-autoenv_hashline()
-{
-  typeset envfile hash
-  envfile=$1
-  if which shasum &> /dev/null
-  then hash=$(shasum "$envfile" | cut -d' ' -f 1)
-  else hash=$(sha1sum "$envfile" | cut -d' ' -f 1)
+autoenv_hashline() {
+  autoenv__envfile=$1
+  if which shasum >/dev/null 2>&1 ; then
+    autoenv__hash="$(shasum "${autoenv__envfile}" | cut -d' ' -f 1)"
+  else
+    autoenv__hash="$(sha1sum "${autoenv__envfile}" | cut -d' ' -f 1)"
   fi
-  echo "$envfile:$hash"
+  echo "${autoenv__envfile}:${autoenv__hash}"
 }
 
-autoenv_check_authz()
-{
-  typeset envfile hash
-  envfile=$1
-  hash=$(autoenv_hashline "$envfile")
-  touch $AUTOENV_AUTH_FILE
-  \grep -Gq "$hash" $AUTOENV_AUTH_FILE
+autoenv_check_authz() {
+  autoenv__envfile=$1
+  autoenv__hash="$(autoenv_hashline "${autoenv__envfile}")"
+  touch "${AUTOENV_AUTH_FILE}"
+  grep -Gq "${autoenv__hash}" "${AUTOENV_AUTH_FILE}"
 }
 
-autoenv_check_authz_and_run()
-{
-  typeset envfile
-  envfile=$1
-  if autoenv_check_authz "$envfile"; then
-    autoenv_source "$envfile"
+autoenv_check_authz_and_run() {
+  autoenv__envfile=$1
+  if autoenv_check_authz "${autoenv__envfile}" ; then
+    autoenv_source "${autoenv__envfile}"
     return 0
   fi
-  if [[ -z $MC_SID ]]; then #make sure mc is not running
+  if [ -z "${MC_SID}" ]; then #make sure mc is not running
     autoenv_env
     autoenv_env "WARNING:"
-    autoenv_env "This is the first time you are about to source $envfile":
+    autoenv_env "This is the first time you are about to source ${envfile}":
     autoenv_env
     autoenv_env "    --- (begin contents) ---------------------------------------"
-    autoenv_indent "$envfile"
+    autoenv_indent "${envfile}"
     autoenv_env
     autoenv_env "    --- (end contents) -----------------------------------------"
     autoenv_env
     autoenv_printf "Are you sure you want to allow this? (y/N) "
-    read answer
-    if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
-      autoenv_authorize_env "$envfile"
-      autoenv_source "$envfile"
+
+    read autoenv__answer
+    if [ "${autoenv__answer}" = "y" ] || [ "${autoenv__answer}" = "Y" ]; then
+      autoenv_authorize_env "${autoenv__envfile}"
+      autoenv_source "${autoenv__envfile}"
     fi
   fi
 }
 
 autoenv_deauthorize_env() {
-  typeset envfile
-  envfile=$1
-  \cp "$AUTOENV_AUTH_FILE" "$AUTOENV_AUTH_FILE.tmp"
-  \grep -Gv "$envfile:" "$AUTOENV_AUTH_FILE.tmp" > $AUTOENV_AUTH_FILE
+  autoenv__envfile="$1"
+  \cp "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
+  \grep -Gv "${autoenv__envfile}:" "${AUTOENV_AUTH_FILE}.tmp" \
+    > "${AUTOENV_AUTH_FILE}"
 }
 
 autoenv_authorize_env() {
-  typeset envfile
-  envfile=$1
-  autoenv_deauthorize_env "$envfile"
-  autoenv_hashline "$envfile" >> $AUTOENV_AUTH_FILE
+  autoenv__envfile=$1
+  autoenv_deauthorize_env "${autoenv__envfile}"
+  autoenv_hashline "${autoenv__envfile}" >> "${AUTOENV_AUTH_FILE}"
 }
 
 autoenv_source() {
-  typeset allexport
-  allexport=$(set +o | grep allexport)
+  autoenv__allexport="$(set +o | grep allexport)"
   set -a
-  source "$1"
-  eval "$allexport"
+  . "$1"
+  eval "${autoenv__allexport}"
 }
 
-autoenv_cd()
-{
-  if builtin cd "$@"
-  then
+autoenv_cd() {
+  if chdir "$@" ; then
     autoenv_init
     return 0
   else
@@ -144,4 +133,4 @@ cd() {
   autoenv_cd "$@"
 }
 
-cd .
+cd "${PWD}"
