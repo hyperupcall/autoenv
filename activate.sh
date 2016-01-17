@@ -57,7 +57,7 @@ autoenv_printf() {
 }
 
 autoenv_indent() {
-  sed 's/.*/autoenv:     &/' $@
+ cat -e $@ | sed 's/.*/autoenv:     &/' 
 }
 
 autoenv_hashline()
