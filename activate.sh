@@ -100,7 +100,7 @@ autoenv_check_authz_and_run()
     autoenv_env
     autoenv_printf "Are you sure you want to allow this? (y/N) "
     read answer
-    if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
+    if [ "$answer" = "y" -o "$answer" = "Y" ]; then
       autoenv_authorize_env "$envfile"
       autoenv_source "$envfile"
     fi
