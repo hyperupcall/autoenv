@@ -57,7 +57,7 @@ autoenv_printf() {
 }
 
 autoenv_indent() {
- cat -e $@ | sed 's/.*/autoenv:     &/' 
+ cat -e $@ | sed 's/.*/autoenv:     &/'
 }
 
 autoenv_hashline()
@@ -100,7 +100,7 @@ autoenv_check_authz_and_run()
     autoenv_env
     autoenv_printf "Are you sure you want to allow this? (y/N) "
     read answer
-    if [ "$answer" == "y" ] || [ "$answer" == "Y" ]; then
+    if [[ "$answer" =~ "^(y|Y|yes|YES|Yes)$" ]]; then
       autoenv_authorize_env "$envfile"
       autoenv_source "$envfile"
     fi
