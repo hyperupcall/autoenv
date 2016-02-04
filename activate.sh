@@ -160,6 +160,7 @@ elif which shasum 2>/dev/null >&2; then
     autoenv_shasum() {
         shasum "$@"
     }
+    enable_autoenv
 else
     echo "Autoenv cannot locate a compatible shasum binary; not enabling"
 fi
