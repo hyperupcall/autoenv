@@ -122,8 +122,11 @@ autoenv_source() {
   typeset allexport
   allexport=$(set +o | \grep allexport)
   set -a
+  AUTOENV_CUR_FILE=$1
+  AUTOENV_CUR_DIR=$(dirname $1)
   source "$1"
   eval "$allexport"
+  unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
 }
 
 autoenv_cd()
