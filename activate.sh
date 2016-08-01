@@ -94,7 +94,10 @@ autoenv_deauthorize_env() {
 	typeset envfile
 	envfile=$1
 	\cp "$AUTOENV_AUTH_FILE" "$AUTOENV_AUTH_FILE.tmp"
+	noclobber=$(set +o | \grep noclobber)
+	set +C
 	\grep -Gv "$envfile:" "$AUTOENV_AUTH_FILE.tmp" > "$AUTOENV_AUTH_FILE"
+	eval "$noclobber"
 	rm "$AUTOENV_AUTH_FILE.tmp" 2>/dev/null || :
 }
 
