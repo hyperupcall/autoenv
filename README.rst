@@ -16,8 +16,6 @@ This is great for...
 - project-specific environment variables
 - making millions
 
-`Foreman <https://github.com/ddollar/foreman>`_ env files are completely compatible.
-
 You can also nest envs within eachother. How awesome is that!?
 
 Usage
@@ -25,7 +23,6 @@ Usage
 
 Follow the white rabbit::
 
-    $ touch project/.env
     $ echo "echo 'woah'" > project/.env
     $ cd project
     woah
@@ -45,7 +42,7 @@ Mac OS X Using Homebrew
 ::
 
     $ brew install autoenv
-    $ echo 'source /usr/local/opt/autoenv/activate.sh' >> ~/.bash_profile
+    $ echo 'source $(brew --prefix autoenv)/activate.sh' >> ~/.bash_profile
 
 
 Using pip
@@ -66,6 +63,15 @@ Using git
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
 
 
+Configuration
+-------------
+
+Before sourcing activate.sh, you can set the following variables:
+
+- AUTOENV_AUTH_FILE: Authorized env files, defaults to ~/.autoenv_authorized
+- AUTOENV_ENV_FILENAME: Name of the .env file, defaults to .env
+
+
 Disclaimer
 ----------
 
@@ -78,15 +84,6 @@ certain file systems, particularly those that are FUSE-based (such as
 Testing
 -------
 
-Install the test runner::
-
-    $ make
-    gem install dtf --version 0.1.2
-    Successfully installed dtf-0.1.2
-
 Test::
 
     $ make test
-    dtf tests/*
-    ............
-    ##### Processed commands 14 of 14, success tests 12 of 12.
