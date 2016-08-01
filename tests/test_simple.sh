@@ -10,7 +10,7 @@ echo 'echo c' > "c/.env"
 # Test simple cd
 patterntest 'echo "Y" | cd a' '.*a$'
 # Test cd to subdirectory
-patterntest 'echo "Y" | cd a/b' '.*b$'
+patterntest 'echo "Y" | cd a/b' '.*a'$'\n''b$'
 # Test cd with env in parent directory
 patterntest 'echo "Y" | cd c/d' '.*c$'
 # Check cd into nonexistent directory

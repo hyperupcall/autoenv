@@ -10,7 +10,7 @@ done
 
 # Settings
 shells='bash:bash --noprofile --norc|zsh:zsh' # Shells to test. Shells separated by |, name/executable by :
-tests='test_simple' # Tests to run
+tests='test_simple|test_cd_spaces' # Tests to run
 
 # Global variables
 TMPDIR='' # Global so we can react when the script fails
@@ -51,7 +51,7 @@ export FUNCTIONS
 # Execute each test for each shell
 IFS='|'
 for shell in ${shells}; do
-	for current_test in "${tests}"; do
+	for current_test in ${tests}; do
 		# Prepare this test
 		echo -n ":: Running ${current_test} for `echo "${shell}" | cut -d':' -f1`..."
 		TMPDIR="`mktemp -dp ${basedir} ${current_test}.XXXXXX`"

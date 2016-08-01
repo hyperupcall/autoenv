@@ -8,8 +8,6 @@ patterntest() {
 		exit 1
 	fi
 	# Pattern test
-	echo $out
-	echo $2
 	echo "${out}" | grep -q "${2}"
 	if ! test $? -eq 0; then
 		echo "Output did not match pattern ${2}"
