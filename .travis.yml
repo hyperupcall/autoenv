@@ -1,7 +1,11 @@
-language: ruby
-rvm:
-  - 1.9.3
-install: true
-before_install:
-  - gem install dtf --version 0.1.2
-script: 'dtf test/*'
+addons:
+    apt:
+        packages:
+            - bash
+            - zsh
+            - dash
+            - fish
+            - ksh
+            - csh
+            - make
+script: make test
