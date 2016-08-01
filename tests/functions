@@ -7,11 +7,12 @@ patterntest() {
 		echo "Call completed with exit code ${ret}."
 		exit 1
 	fi
+	echo "Output was:"
+	echo "${out}"
 	# Pattern test
 	echo "${out}" | grep -q "${2}"
 	if ! test $? -eq 0; then
 		echo "Output did not match pattern ${2}"
-		echo "Output was: ${out}"
 		exit 1
 	fi
 }
