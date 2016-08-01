@@ -70,8 +70,8 @@ Configuration
 
 Before sourcing activate.sh, you can set the following variables:
 
-- AUTOENV_AUTH_FILE: Authorized env files, defaults to ~/.autoenv_authorized
-- AUTOENV_ENV_FILENAME: Name of the .env file, defaults to .env
+- ``AUTOENV_AUTH_FILE``: Authorized env files, defaults to ``~/.autoenv_authorized``
+- ``AUTOENV_ENV_FILENAME``: Name of the .env file, defaults to ``.env``
 
 
 Disclaimer
