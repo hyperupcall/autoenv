@@ -58,6 +58,7 @@ autoenv_hashline() {
 
 autoenv_check_authz() {
 	typeset envfile hash
+	envfile="$1"
 	hash=$(autoenv_hashline "$envfile")
 	touch "$AUTOENV_AUTH_FILE"
 	\grep -Gq "$hash" "$AUTOENV_AUTH_FILE"
