@@ -10,7 +10,7 @@ done
 
 # Settings
 shells='bash:bash --noprofile --norc|zsh:zsh' # Shells to test. Shells separated by |, name/executable by :
-tests='test_simple|test_cd_spaces' # Tests to run
+tests='test_simple|test_cd_spaces|test_auth_spaces' # Tests to run
 
 # Global variables
 TMPDIR='' # Global so we can react when the script fails
