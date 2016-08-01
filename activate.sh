@@ -11,13 +11,13 @@ autoenv_init() {
 	defIFS="$IFS"
 	IFS=$(echo -en "\n\b")
 
-	typeset target home _file
+	typeset target _mountpoint _file
 	typeset -a _files
 	target=$1
-	home="$(dirname $HOME)"
+	_mountpoint="`stat -c '%m' \"$PWD\"`"
 
 	_files=( $(
-		while [[ "$PWD" != "/" && "$PWD" != "$home" ]]; do
+		while [[ "$PWD" != "$_mountpoint" ]]; do
 			_file="$PWD/$AUTOENV_ENV_FILENAME"
 			if [[ -f "${_file}" ]]; then
 				echo "${_file}"
