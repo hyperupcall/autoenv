@@ -82,10 +82,3 @@ Autoenv overrides ``cd``. If you already do this, invoke ``autoenv_init`` within
 Autoenv can be disabled via ``unset cd`` if you experience I/O issues with
 certain file systems, particularly those that are FUSE-based (such as 
 ``smbnetfs``).
-
-Testing
--------
-
-Test::
-
-    $ make test
