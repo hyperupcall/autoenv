@@ -18,7 +18,7 @@ This is great for...
 
 You can also nest envs within eachother. How awesome is that!?
 
-When executing, autoenv, will walk up the directories until the mount point and execute all .env files.
+When executing, autoenv, will walk up the directories until the mount point and execute all ``.env`` files.
 
 Usage
 -----
