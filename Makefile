@@ -6,9 +6,6 @@ clean:
 develop:
 	python setup.py develop
 
-init:
-	gem install dtf --version 0.1.2
-
 install:
 	python setup.py install
 
@@ -16,7 +13,7 @@ publish: clean
 	python setup.py register sdist upload
 
 test:
-	dtf tests/*
+	sh tests/test.sh
 
 uninstall:
 	pip uninstall autoenv

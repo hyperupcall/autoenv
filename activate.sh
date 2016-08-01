@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
-AUTOENV_AUTH_FILE=~/.autoenv_authorized
-if [ -z "$AUTOENV_ENV_FILENAME" ]; then
-    AUTOENV_ENV_FILENAME=.env
-fi
+AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE-$HOME/.autoenv_authorized}"
+AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME-.env}"
 
 if [[ -n "${ZSH_VERSION}" ]]
 then __array_offset=0
