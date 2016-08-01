@@ -10,7 +10,6 @@ done
 
 # Settings
 shells='bash:bash --noprofile --norc|zsh:zsh' # Shells to test. Shells separated by |, name/executable by :
-tests='test_simple|test_cd_spaces|test_auth_spaces|test_not_file|test_cd_env|test_colons' # Tests to run
 
 # Global variables
 TMPDIR='' # Global so we can react when the script fails
@@ -18,6 +17,13 @@ basedir="$(readlink -f $(dirname $0))" # So we can find our tests
 oldpwd="`pwd`" # So we can come back after testing
 ZDOTDIR='/dev/null' # Don't use default ZSH files
 export ZDOTDIR
+
+# Discover tests
+tests=''
+for file in `find "${basedir}" -type f -name 'test_*.sh'`; do
+	tests="${tests}|`basename \"$file\" .sh`"
+done
+tests="${tests#|}"
 
 # Handle test errors
 fail() {
