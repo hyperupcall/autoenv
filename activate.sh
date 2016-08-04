@@ -46,7 +46,7 @@ autoenv_printf() {
 }
 
 autoenv_indent() {
-	cat -e $@ | sed 's/.*/autoenv:     &/' 
+	cat -e $@ | sed 's/.*/autoenv:     &/'
 }
 
 autoenv_hashline() {
@@ -115,6 +115,7 @@ autoenv_source() {
 	AUTOENV_CUR_FILE="$1"
 	AUTOENV_CUR_DIR="$(dirname \"$1\")"
 	source "$1"
+	[[ "$ZSH_VERSION" = "5.1"* ]] && set +a
 	eval "$allexport"
 	unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
 }
