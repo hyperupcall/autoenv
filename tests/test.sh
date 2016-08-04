@@ -1,7 +1,7 @@
 #!/usr/bin/env dash
 
 # Check if all commands exist
-for cmd in bash zsh; do
+for cmd in bash zsh dash; do
 	if ! which "${cmd}" 2>/dev/null >&2; then
 		echo ":: This test requires the ${cmd} executable."
 		exit 1
@@ -9,7 +9,7 @@ for cmd in bash zsh; do
 done
 
 # Settings
-shells='bash:bash --noprofile --norc|zsh:zsh' # Shells to test. Shells separated by |, name/executable by :
+shells='bash:bash --noprofile --norc|zsh:zsh|sh:dash' # Shells to test. Shells separated by |, name/executable by :
 
 # Global variables
 TMPDIR='' # Global so we can react when the script fails

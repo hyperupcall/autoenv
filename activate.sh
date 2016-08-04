@@ -1,158 +1,162 @@
-#!/usr/bin/env bash
 AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE-$HOME/.autoenv_authorized}"
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME-.env}"
 
-if [[ -n "${ZSH_VERSION}" ]]
-then __array_offset=0
-else __array_offset=1
-fi
-
 autoenv_init() {
-	defIFS="$IFS"
-	IFS=$(echo -en "\n\b")
-
-	typeset target _mountpoint _file
-	typeset -a _files
-	target=$1
-	_mountpoint="`stat -c '%m' \"$PWD\"`"
-
-	_files=( $(
-		while [[ "$PWD" != "$_mountpoint" ]]; do
-			_file="$PWD/$AUTOENV_ENV_FILENAME"
-			if [[ -f "${_file}" ]]; then
-				echo "${_file}"
+	local _mountpoint _files _orderedfiles
+	_mountpoint="`stat -c '%m' \"${PWD}\"`"
+	# Discover all files we need to source
+	# We do this in a subshell so we can cd/chdir
+	_files="`
+		_hadone=''
+		while [ "${PWD}" != "${_mountpoint}" ]; do
+			_file="${PWD}/${AUTOENV_ENV_FILENAME}"
+			if [ -f "${_file}" ]; then
+				if [ -z "${_hadone}" ]; then
+					echo -n ${_file}
+					_hadone='1'
+				else
+					echo -n "
+${_file}"
+				fi
 			fi
-			builtin cd .. &>/dev/null
+			command -v chdir >/dev/null 2>&1 && chdir .. || builtin cd ..
 		done
-	) )
+	`"
 
-	_file=${#_files[@]}
-	while (( _file > 0 )); do
-		envfile="${_files[_file-__array_offset]}"
-		autoenv_check_authz_and_run "$envfile"
-		: $(( _file -= 1 ))
+	# ZSH: Use traditional for loop
+	zsh_shwordsplit="$( setopt > /dev/null 2>&1 | grep -q shwordsplit && echo 1 )"
+	if [ -z "${zsh_shwordsplit}" ]; then
+		setopt shwordsplit >/dev/null 2>&1
+	fi
+	# Custom IFS
+	origIFS="${IFS}"
+	IFS='
+'
+
+	# Turn around the env files order
+	_orderedfiles=''
+	for _file in ${_files}; do
+		_orderedfiles="${_file}
+${_orderedfiles}"
 	done
 
-	IFS="$defIFS"
-}
+	# Execute the env files
+	for _file in ${_orderedfiles}; do
+		autoenv_check_authz_and_run "${_file}"
+	done
+	IFS="${origIFS}"
 
-autoenv_env() {
-	builtin echo "autoenv:" "$@"
-}
-
-autoenv_printf() {
-	builtin printf "autoenv: "
-	builtin printf "$@"
-}
-
-autoenv_indent() {
-	cat -e $@ | sed 's/.*/autoenv:     &/' 
+	# ZSH: Unset shwordsplit
+	if [ -z "${zsh_shwordsplit}" ]; then
+		unsetopt shwordsplit >/dev/null 2>&1
+	fi
 }
 
 autoenv_hashline() {
-	typeset envfile hash
-	envfile=$1
-	hash=$(autoenv_shasum "$envfile" | cut -d' ' -f 1)
-	echo "$envfile:$hash"
+	local _envfile _hash
+	_envfile="${1}"
+	_hash=$(autoenv_shasum "${_envfile}" | cut -d' ' -f 1)
+	echo "${_envfile}:${_hash}"
 }
 
 autoenv_check_authz() {
-	typeset envfile hash
-	envfile="$1"
-	hash=$(autoenv_hashline "$envfile")
-	touch "$AUTOENV_AUTH_FILE"
-	\grep -Gq "$hash" "$AUTOENV_AUTH_FILE"
+	local _envfile _hash
+	_envfile="${1}"
+	_hash=$(autoenv_hashline "${_envfile}")
+	touch "${AUTOENV_AUTH_FILE}"
+	\grep -Gq "${_hash}" "${AUTOENV_AUTH_FILE}"
 }
 
 autoenv_check_authz_and_run() {
-	typeset envfile
-	envfile="$1"
-	if autoenv_check_authz "$envfile"; then
-		autoenv_source "$envfile"
+	local _envfile
+	_envfile="${1}"
+	if autoenv_check_authz "${_envfile}"; then
+		autoenv_source "${_envfile}"
 		return 0
 	fi
-	if [[ -z "$MC_SID" ]]; then # Make sure mc is not running
-		autoenv_env
-		autoenv_env "WARNING:"
-		autoenv_env "This is the first time you are about to source $envfile":
-		autoenv_env
-		autoenv_env "    --- (begin contents) ---------------------------------------"
-		autoenv_indent "$envfile"
-		autoenv_env
-		autoenv_env "    --- (end contents) -----------------------------------------"
-		autoenv_env
-		autoenv_printf "Are you sure you want to allow this? (y/N) "
+	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
+		echo "autoenv:"
+		echo "autoenv: WARNING:"
+		echo "autoenv: This is the first time you are about to source ${_envfile}":
+		echo "autoenv:"
+		echo "autoenv:   --- (begin contents) ---------------------------------------"
+		cat -e "${_envfile}" | sed 's/.*/autoenv:     &/'
+		echo "autoenv:"
+		echo "autoenv:   --- (end contents) -----------------------------------------"
+		echo "autoenv:"
+		printf "%s" "autoenv: Are you sure you want to allow this? (y/N) "
 		read answer
-		if [ "$answer" = "y" ] || [ "$answer" = "Y" ]; then
-			autoenv_authorize_env "$envfile"
-			autoenv_source "$envfile"
+		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
+			autoenv_authorize_env "${_envfile}"
+			autoenv_source "${_envfile}"
 		fi
 	fi
 }
 
 autoenv_deauthorize_env() {
-	typeset envfile
-	envfile=$1
-	\cp "$AUTOENV_AUTH_FILE" "$AUTOENV_AUTH_FILE.tmp"
-	noclobber=$(set +o | \grep noclobber)
+	local _envfile _noclobber
+	_envfile="${1}"
+	\cp "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
+	_noclobber="$(set +o | \grep noclobber)"
 	set +C
-	\grep -Gv "$envfile:" "$AUTOENV_AUTH_FILE.tmp" > "$AUTOENV_AUTH_FILE"
-	eval "$noclobber"
-	rm "$AUTOENV_AUTH_FILE.tmp" 2>/dev/null || :
+	\grep -Gv "${_envfile}:" "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
+	eval "${_noclobber}"
+	rm "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
 autoenv_authorize_env() {
-	typeset envfile
-	envfile=$1
-	autoenv_deauthorize_env "$envfile"
-	autoenv_hashline "$envfile" >> "$AUTOENV_AUTH_FILE"
+	local _envfile
+	_envfile="${1}"
+	autoenv_deauthorize_env "${_envfile}"
+	autoenv_hashline "${_envfile}" >> "${AUTOENV_AUTH_FILE}"
 }
 
 autoenv_source() {
-	typeset allexport
-	allexport=$(set +o | \grep allexport)
+	local _allexport
+	_allexport="$(set +o | \grep allexport)"
 	set -a
-	AUTOENV_CUR_FILE="$1"
-	AUTOENV_CUR_DIR="$(dirname \"$1\")"
-	source "$1"
-	eval "$allexport"
+	AUTOENV_CUR_FILE="${1}"
+	AUTOENV_CUR_DIR="$(dirname \"${1}\")"
+	. "${1}"
+	eval "${_allexport}"
 	unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
 }
 
 autoenv_cd() {
-	if builtin cd "$@"; then
+	command -v chdir >/dev/null 2>&1 && chdir "${@}" || builtin cd "${@}"
+	if [ "${?}" -eq 0 ]; then
 		autoenv_init
 		return 0
 	else
-		return $?
+		return "${?}"
 	fi
 }
 
 # Override the cd alias
 enable_autoenv() {
 	cd() {
-		autoenv_cd "$@"
+		autoenv_cd "${@}"
 	}
 
-	cd .
+	cd "${PWD}"
 }
 
 # Probe to see if we have access to a shasum command, otherwise disable autoenv
 if which gsha1sum 2>/dev/null >&2 ; then
 	autoenv_shasum() {
-		gsha1sum "$@"
+		gsha1sum "${@}"
 	}
 	enable_autoenv
 elif which sha1sum 2>/dev/null >&2; then
 	autoenv_shasum() {
-		sha1sum "$@"
+		sha1sum "${@}"
 	}
 	enable_autoenv
 elif which shasum 2>/dev/null >&2; then
 	autoenv_shasum() {
-		shasum "$@"
+		shasum "${@}"
 	}
 	enable_autoenv
 else
-	echo "Autoenv cannot locate a compatible shasum binary; not enabling"
+	echo "autoenv: can not locate a compatible shasum binary; not enabling"
 fi
