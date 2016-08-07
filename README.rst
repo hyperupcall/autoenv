@@ -16,7 +16,7 @@ This is great for...
 - project-specific environment variables
 - making millions
 
-You can also nest envs within eachother. How awesome is that!?
+You can also nest envs within each other. How awesome is that!?
 
 When executing, autoenv, will walk up the directories until the mount point and execute all ``.env`` files.
 
