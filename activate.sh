@@ -3,7 +3,11 @@ AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME-.env}"
 
 autoenv_init() {
 	local _mountpoint _files _orderedfiles
-	_mountpoint="`stat -c '%m' \"${PWD}\"`"
+	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
+		_mountpoint="`df "${PWD}" | awk 'END{print $NF}'`"
+	else
+		_mountpoint="`stat -c '%m' \"${PWD}\"`"
+	fi
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
 	_files="`
