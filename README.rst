@@ -73,6 +73,16 @@ Before sourcing activate.sh, you can set the following variables:
 - ``AUTOENV_AUTH_FILE``: Authorized env files, defaults to ``~/.autoenv_authorized``
 - ``AUTOENV_ENV_FILENAME``: Name of the ``.env`` file, defaults to ``.env``
 
+Shells
+------
+
+autoenv is tested on:
+
+- bash
+- zsh
+- dash
+- more to come
+
 
 Disclaimer
 ----------
