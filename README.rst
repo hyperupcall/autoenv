@@ -74,7 +74,7 @@ You need to source activate.sh in your bashrc afterwards:
 
 ::
 
-    $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
+    $ echo 'source /usr/share/autoenv/activate.sh' >> ~/.bashrc
 
 
 Configuration
