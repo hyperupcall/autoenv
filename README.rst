@@ -69,9 +69,11 @@ Using AUR
 ~~~~~~~~~
 
 Arch Linux users can install `autoenv<https://aur.archlinux.org/packages/autoenv/>` or `autoenv-git<https://aur.archlinux.org/packages/autoenv-git/>` with their favorite AUR helper.
+
 You need to source activate.sh in your bashrc afterwards:
 
 ::
+
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
 
 
