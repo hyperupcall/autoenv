@@ -50,7 +50,7 @@ ${_orderedfiles}"
 
 	# Execute the env files
 	for _file in ${_orderedfiles}; do
-		echo "Will run ${_file}"
+		[ -z "${AUTOENV_QUIET}" ] && echo "Will run ${_file}"
 		autoenv_check_authz_and_run "${_file}"
 	done
 	IFS="${origIFS}"
