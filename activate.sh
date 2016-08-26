@@ -16,7 +16,7 @@ autoenv_init() {
 			_file="${PWD}/${AUTOENV_ENV_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
-					echo -n ${_file}
+					echo -n "${_file}"
 					_hadone='1'
 				else
 					echo -n "
