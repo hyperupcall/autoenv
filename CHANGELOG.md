@@ -5,6 +5,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.1] - ??
+
 # Fixed
 - Remove debug output
 - Paths with spaces on dash
@@ -12,6 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Usage of double slashes
 
 ## [0.2.0] - 2016-08-08
+
 ## Added
 - setup.py for pyPi
 - setup.py in the Makefile
@@ -42,14 +44,18 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Print hidden characters
 
 ## [0.1.0] - 2012-02-15
+
 ## Added
 - .env files need approval now
+
 ## Fixed
 - Execution on zsh
+
 ## Changed
 - Put autoenv under a public license
 
 ## [0.0.1] - 2012-02-13
+
 ### Added
 - Initial public version of autoenv
 - Allwos executing .env files recursively
@@ -60,3 +66,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [0.0.1]: https://github.com/kennethreitz/autoenv/releases/tag/v0.0.1
 [0.1.0]: https://github.com/kennethreitz/autoenv/releases/tag/v0.1.0
 [0.2.0]: https://github.com/kennethreitz/autoenv/releases/tag/v0.2.0
+[0.2.1]: https://github.com/kennethreitz/autoenv
