@@ -2,14 +2,20 @@ AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE:-$HOME/.autoenv_authorized}"
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 
 autoenv_init() {
-	local _mountpoint _files _orderedfiles
+	local _mountpoint _files _orderedfiles _sedregexp
 	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
 		_mountpoint="`df "${PWD}" | awk 'END{print $NF}'`"
+		_sedregexp='-E'
 	else
 		_mountpoint="`stat -c '%m' \"${PWD}\"`"
+		_sedregexp='-r'
 	fi
+	# Remove double slashes, see #125
+	PWD="`echo "${PWD}" | sed "${_sedregexp}" 's:/+:/:g'`"
+	command -v chdir >/dev/null 2>&1 && chdir "${PWD}" || builtin cd "${PWD}"
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
+	set -x
 	_files="`
 		_hadone=''
 		while [ "${PWD}" != "${_mountpoint}" ]; do
@@ -26,6 +32,7 @@ ${_file}"
 			command -v chdir >/dev/null 2>&1 && chdir .. || builtin cd ..
 		done
 	`"
+	set +x
 
 	# ZSH: Use traditional for loop
 	zsh_shwordsplit="$( setopt > /dev/null 2>&1 | grep -q shwordsplit && echo 1 )"
