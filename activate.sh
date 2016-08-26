@@ -1,5 +1,5 @@
-AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE-$HOME/.autoenv_authorized}"
-AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME-.env}"
+AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE:-$HOME/.autoenv_authorized}"
+AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 
 autoenv_init() {
 	local _mountpoint _files _orderedfiles
