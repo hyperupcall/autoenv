@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.1] - ??
 
-# Fixed
+### Fixed
 - Remove debug output
 - Paths with spaces on dash
 - Custom names for .env
@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.0] - 2016-08-08
 
-## Added
+### Added
 - setup.py for pyPi
 - setup.py in the Makefile
 - Support for OS X
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Accept 'y' or 'Y' as answer
 - Expose `AUTOENV_CUR_FILE` and `AUTOENV_CUR_DIR`
 
-## Fixed
+### Fixed
 - Fix spaces in filenames
 - Strange grep behaviour
 - Look for a .env file when activating autoenv
@@ -32,26 +32,26 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - autoenv now works with noclobber
 - Crash with zsh 5.1
 
-## Changed
+### Changed
 - Don't run in mc
 - Updated readme
 - Export all variables
 - Rewrote tests
 - Follow .env files until the moutpoint
 
-## Security
+### Security
 - Add quotes everywhere in the shell script
 - Print hidden characters
 
 ## [0.1.0] - 2012-02-15
 
-## Added
+### Added
 - .env files need approval now
 
-## Fixed
+### Fixed
 - Execution on zsh
 
-## Changed
+### Changed
 - Put autoenv under a public license
 
 ## [0.0.1] - 2012-02-13
