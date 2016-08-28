@@ -29,7 +29,7 @@ autoenv_init() {
 ${_file}"
 				fi
 			fi
-			command -v chdir >/dev/null 2>&1 && chdir .. || builtin cd ..
+			command -v chdir >/dev/null 2>&1 && chdir .. >/dev/null 2>&1 || builtin cd .. >/dev/null 2>&1 
 		done
 	`"
 	set +x
