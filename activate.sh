@@ -15,7 +15,6 @@ autoenv_init() {
 	command -v chdir >/dev/null 2>&1 && chdir "${PWD}" || builtin cd "${PWD}"
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
-	set -x
 	_files="`
 		_hadone=''
 		while [ "${PWD}" != "${_mountpoint}" ]; do
@@ -32,7 +31,6 @@ ${_file}"
 			command -v chdir >/dev/null 2>&1 && chdir .. || builtin cd ..
 		done
 	`"
-	set +x
 
 	# ZSH: Use traditional for loop
 	zsh_shwordsplit="$( setopt > /dev/null 2>&1 | grep -q shwordsplit && echo 1 )"
