@@ -7,10 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.2.1] - ??
 
 ### Fixed
-- Remove debug output
+- Remove debug output (#126)
 - Paths with spaces on dash
-- Custom names for .env
-- Usage of double slashes
+- Custom names for .env (#109)
+- Usage of double slashes (#125)
+- Infinte loop when symlinking across mountpoints (#133)
 
 ## [0.2.0] - 2016-08-08
 
