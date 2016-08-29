@@ -4,10 +4,10 @@ AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 autoenv_init() {
 	local _mountpoint _files _orderedfiles _sedregexp
 	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
-		_mountpoint="`df "${PWD}" | awk 'END{print $NF}'`"
+		_mountpoint="`df "$(pwd -P)" | awk 'END{print $NF}'`"
 		_sedregexp='-E'
 	else
-		_mountpoint="`stat -c '%m' \"${PWD}\"`"
+		_mountpoint="`stat -c '%m' \"$(pwd -P)\"`"
 		_sedregexp='-r'
 	fi
 	# Remove double slashes, see #125
@@ -17,8 +17,8 @@ autoenv_init() {
 	# We do this in a subshell so we can cd/chdir
 	_files="`
 		_hadone=''
-		while [ "${PWD}" != "${_mountpoint}" ]; do
-			_file="${PWD}/${AUTOENV_ENV_FILENAME}"
+		while [ "$(pwd -P)" != "${_mountpoint}" ]; do
+			_file="$(pwd -P)/${AUTOENV_ENV_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
 					echo -n "${_file}"
@@ -28,7 +28,7 @@ autoenv_init() {
 ${_file}"
 				fi
 			fi
-			command -v chdir >/dev/null 2>&1 && chdir .. || builtin cd ..
+			command -v chdir >/dev/null 2>&1 && chdir (pwd -P)/.. || builtin cd (pwd -P)/..
 		done
 	`"
 
