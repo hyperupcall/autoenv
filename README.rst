@@ -94,6 +94,7 @@ autoenv is tested on:
 - bash
 - zsh
 - dash
+- fish is supported by `autoenv_fish <https://github.com/loopbit/autoenv_fish>`_
 - more to come
 
 
