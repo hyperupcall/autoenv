@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Custom names for .env (#109)
 - Usage of double slashes (#125)
 - Infinite loop when symlinking across mountpoints (#133)
+- Don't allow chdir aliases
 
 ## [0.2.0] - 2016-08-08
 
