@@ -28,7 +28,7 @@ autoenv_init() {
 ${_file}"
 				fi
 			fi
-			command -v chdir >/dev/null 2>&1 && chdir (pwd -P)/.. || builtin cd (pwd -P)/..
+			command -v chdir >/dev/null 2>&1 && chdir "$(pwd -P)/.." || builtin cd "$(pwd -P)/.."
 		done
 	`"
 
