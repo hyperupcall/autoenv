@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Paths with spaces on dash
 - Custom names for .env
 - Usage of double slashes
+- Infinite loop when symlinking across mountpoints
 
 ## [0.2.0] - 2016-08-08
 
