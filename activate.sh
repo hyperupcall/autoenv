@@ -12,7 +12,7 @@ autoenv_init() {
 	fi
 	# Remove double slashes, see #125
 	PWD="`echo "${PWD}" | sed "${_sedregexp}" 's:/+:/:g'`"
-	command -v chdir >/dev/null 2>&1 && chdir "${PWD}" || builtin cd "${PWD}"
+	command -v chdir >/dev/null 2>&1 && \chdir "${PWD}" || builtin cd "${PWD}"
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
 	_files="`
@@ -28,7 +28,7 @@ autoenv_init() {
 ${_file}"
 				fi
 			fi
-			command -v chdir >/dev/null 2>&1 && chdir "$(pwd -P)/.." || builtin cd "$(pwd -P)/.."
+			command -v chdir >/dev/null 2>&1 && \chdir "$(pwd -P)/.." || builtin cd "$(pwd -P)/.."
 		done
 	`"
 
@@ -137,7 +137,7 @@ autoenv_source() {
 }
 
 autoenv_cd() {
-	command -v chdir >/dev/null 2>&1 && chdir "${@}" || builtin cd "${@}"
+	command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"
 	if [ "${?}" -eq 0 ]; then
 		autoenv_init
 		return 0
