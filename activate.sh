@@ -4,7 +4,7 @@ AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 autoenv_init() {
 	local _mountpoint _files _orderedfiles _sedregexp
 	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
-		_mountpoint="`df "$(pwd -P)" | awk 'END{print $NF}'`"
+		_mountpoint="`df "${PWD}" | awk 'END{print $NF}'`"
 		_sedregexp='-E'
 	else
 		_mountpoint="`stat -c '%m' \"$(pwd -P)\"`"
