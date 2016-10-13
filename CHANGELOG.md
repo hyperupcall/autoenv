@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Infinite loop when symlinking across mountpoints (#133)
 - Don't allow chdir aliases
 - Mountpoint detection (#138 #139)
+- Fix usage of `$OLDPWD` (#141)
 
 ## [0.2.0] - 2016-08-08
 
