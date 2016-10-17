@@ -2,7 +2,7 @@ AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE:-$HOME/.autoenv_authorized}"
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 
 autoenv_init() {
-	local _mountpoint _files _orderedfiles _sedregexp
+	local _mountpoint _files _orderedfiles _sedregexp _pwd
 	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
 		_sedregexp='-E'
 	else
@@ -10,8 +10,8 @@ autoenv_init() {
 	fi
 	_mountpoint="`df "${PWD}" | awk 'END{print $NF}'`"
 	# Remove double slashes, see #125
-	PWD="`echo "${PWD}" | sed "${_sedregexp}" 's:/+:/:g'`"
-	command -v chdir >/dev/null 2>&1 && \chdir "${PWD}" || builtin cd "${PWD}"
+	_pwd="`echo "${PWD}" | sed "${_sedregexp}" 's:/+:/:g'`"
+	command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || builtin cd "${_pwd}"
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
 	_files="`
