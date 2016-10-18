@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Don't allow chdir aliases
 - Mountpoint detection (#138 #139)
 - Fix usage of `$OLDPWD` (#141)
+- Fix .env files at mountpoint (#146)
 
 ## [0.2.0] - 2016-08-08
 

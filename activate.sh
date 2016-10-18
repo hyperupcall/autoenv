@@ -16,7 +16,7 @@ autoenv_init() {
 	# We do this in a subshell so we can cd/chdir
 	_files="`
 		_hadone=''
-		while [ "$(pwd -P)" != "${_mountpoint}" ]; do
+		while :; do
 			_file="$(pwd -P)/${AUTOENV_ENV_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
@@ -27,6 +27,7 @@ autoenv_init() {
 ${_file}"
 				fi
 			fi
+			[ "$(pwd -P)" = "${_mountpoint}" ] && break
 			command -v chdir >/dev/null 2>&1 && \chdir "$(pwd -P)/.." || builtin cd "$(pwd -P)/.."
 		done
 	`"
