@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/) 
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.2.1] - ??
+## [0.2.1] - 2016-10-18
 
 ### Fixed
 - Remove debug output (#126)
@@ -14,8 +14,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Infinite loop when symlinking across mountpoints (#133)
 - Don't allow chdir aliases
 - Mountpoint detection (#138 #139)
-- Fix usage of `$OLDPWD` (#141)
-- Fix .env files at mountpoint (#146)
+- No more override of `$OLDPWD` (#141)
+- .env files at mountpoint are now being found (#146)
 
 ## [0.2.0] - 2016-08-08
 
@@ -71,4 +71,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [0.0.1]: https://github.com/kennethreitz/autoenv/releases/tag/v0.0.1
 [0.1.0]: https://github.com/kennethreitz/autoenv/releases/tag/v0.1.0
 [0.2.0]: https://github.com/kennethreitz/autoenv/releases/tag/v0.2.0
-[0.2.1]: https://github.com/kennethreitz/autoenv
+[0.2.1]: https://github.com/kennethreitz/autoenv/releases/tag/v0.2.1
+[0.2.2]: https://github.com/kennethreitz/autoenv
