@@ -25,9 +25,9 @@ Usage
 
 Follow the white rabbit::
 
-    $ echo "echo 'woah'" > project/.env
+    $ echo "echo 'whoa'" > project/.env
     $ cd project
-    woah
+    whoa
 
 
 .. image:: http://media.tumblr.com/tumblr_ltuzjvbQ6L1qzgpx9.gif
