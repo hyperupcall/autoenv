@@ -11,10 +11,10 @@ autoenv_init() {
 	_mountpoint="`df "${PWD}" | awk 'END{print $NF}'`"
 	# Remove double slashes, see #125
 	_pwd="`echo "${PWD}" | sed "${_sedregexp}" 's:/+:/:g'`"
-	command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || builtin cd "${_pwd}"
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
 	_files="`
+		command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || builtin cd "${_pwd}"
 		_hadone=''
 		while :; do
 			_file="$(pwd -P)/${AUTOENV_ENV_FILENAME}"
