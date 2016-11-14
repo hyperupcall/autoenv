@@ -97,8 +97,7 @@ autoenv_check_authz_and_run() {
 		echo "autoenv:"
 		echo "autoenv:   --- (end contents) -----------------------------------------"
 		echo "autoenv:"
-		printf "%s" "autoenv: Are you sure you want to allow this? (y/N) "
-		read answer
+		read -n1 -rp "autoenv: Are you sure you want to allow this? (y/N) " answer
 		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
 			autoenv_authorize_env "${_envfile}"
 			autoenv_source "${_envfile}"
