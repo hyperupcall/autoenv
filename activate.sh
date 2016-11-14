@@ -129,7 +129,7 @@ autoenv_source() {
 	_allexport="$(set +o | \grep allexport)"
 	set -a
 	AUTOENV_CUR_FILE="${1}"
-	AUTOENV_CUR_DIR="$(dirname \"${1}\")"
+	AUTOENV_CUR_DIR="$(dirname "${1}")"
 	. "${1}"
 	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && set +a
 	eval "${_allexport}"
