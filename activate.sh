@@ -8,34 +8,34 @@ autoenv_init() {
 	else
 		_sedregexp='-r'
 	fi
-	_mountpoint="`df "${PWD}" | awk 'END{print $NF}'`"
+	_mountpoint="`\df "${PWD}" | \awk 'END{print $NF}'`"
 	# Remove double slashes, see #125
-	_pwd="`echo "${PWD}" | sed "${_sedregexp}" 's:/+:/:g'`"
+	_pwd="`\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g'`"
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
 	_files="`
-		command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || builtin cd "${_pwd}"
+		\command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || builtin cd "${_pwd}"
 		_hadone=''
 		while :; do
-			_file="$(pwd -P)/${AUTOENV_ENV_FILENAME}"
+			_file="$(\pwd -P)/${AUTOENV_ENV_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
-					echo -n "${_file}"
+					\echo -n "${_file}"
 					_hadone='1'
 				else
-					echo -n "
+					\echo -n "
 ${_file}"
 				fi
 			fi
-			[ "$(pwd -P)" = "${_mountpoint}" ] && break
-			command -v chdir >/dev/null 2>&1 && \chdir "$(pwd -P)/.." || builtin cd "$(pwd -P)/.."
+			[ "$(\pwd -P)" = "${_mountpoint}" ] && \break
+			\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd -P)/.." || builtin cd "$(pwd -P)/.."
 		done
 	`"
 
 	# ZSH: Use traditional for loop
-	zsh_shwordsplit="$( setopt > /dev/null 2>&1 | grep -q shwordsplit && echo 1 )"
+	zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \grep -q shwordsplit && \echo 1)"
 	if [ -z "${zsh_shwordsplit}" ]; then
-		setopt shwordsplit >/dev/null 2>&1
+		\setopt shwordsplit >/dev/null 2>&1
 	fi
 	# Custom IFS
 	origIFS="${IFS}"
@@ -61,22 +61,22 @@ ${_orderedfiles}"
 
 	# ZSH: Unset shwordsplit
 	if [ -z "${zsh_shwordsplit}" ]; then
-		unsetopt shwordsplit >/dev/null 2>&1
+		\unsetopt shwordsplit >/dev/null 2>&1
 	fi
 }
 
 autoenv_hashline() {
 	local _envfile _hash
 	_envfile="${1}"
-	_hash=$(autoenv_shasum "${_envfile}" | cut -d' ' -f 1)
-	echo "${_envfile}:${_hash}"
+	_hash=$(autoenv_shasum "${_envfile}" | \cut -d' ' -f 1)
+	\echo "${_envfile}:${_hash}"
 }
 
 autoenv_check_authz() {
 	local _envfile _hash
 	_envfile="${1}"
 	_hash=$(autoenv_hashline "${_envfile}")
-	touch "${AUTOENV_AUTH_FILE}"
+	\touch "${AUTOENV_AUTH_FILE}"
 	\grep -Gq "${_hash}" "${AUTOENV_AUTH_FILE}"
 }
 
@@ -85,20 +85,20 @@ autoenv_check_authz_and_run() {
 	_envfile="${1}"
 	if autoenv_check_authz "${_envfile}"; then
 		autoenv_source "${_envfile}"
-		return 0
+		\return 0
 	fi
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
-		echo "autoenv:"
-		echo "autoenv: WARNING:"
-		echo "autoenv: This is the first time you are about to source ${_envfile}":
-		echo "autoenv:"
-		echo "autoenv:   --- (begin contents) ---------------------------------------"
-		cat -e "${_envfile}" | sed 's/.*/autoenv:     &/'
-		echo "autoenv:"
-		echo "autoenv:   --- (end contents) -----------------------------------------"
-		echo "autoenv:"
-		printf "%s" "autoenv: Are you sure you want to allow this? (y/N) "
-		read answer
+		\echo "autoenv:"
+		\echo "autoenv: WARNING:"
+		\echo "autoenv: This is the first time you are about to source ${_envfile}":
+		\echo "autoenv:"
+		\echo "autoenv:   --- (begin contents) ---------------------------------------"
+		\cat -e "${_envfile}" | \sed 's/.*/autoenv:     &/'
+		\echo "autoenv:"
+		\echo "autoenv:   --- (end contents) -----------------------------------------"
+		\echo "autoenv:"
+		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N) "
+		\read answer
 		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
 			autoenv_authorize_env "${_envfile}"
 			autoenv_source "${_envfile}"
@@ -113,8 +113,8 @@ autoenv_deauthorize_env() {
 	_noclobber="$(set +o | \grep noclobber)"
 	set +C
 	\grep -Gv "${_envfile}:" "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
-	eval "${_noclobber}"
-	rm "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
+	\eval "${_noclobber}"
+	\rm "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
 autoenv_authorize_env() {
@@ -126,23 +126,23 @@ autoenv_authorize_env() {
 
 autoenv_source() {
 	local _allexport
-	_allexport="$(set +o | \grep allexport)"
+	_allexport="$(\set +o | \grep allexport)"
 	set -a
 	AUTOENV_CUR_FILE="${1}"
 	AUTOENV_CUR_DIR="$(dirname "${1}")"
 	. "${1}"
 	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && set +a
-	eval "${_allexport}"
-	unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
+	\eval "${_allexport}"
+	\unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
 }
 
 autoenv_cd() {
-	command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"
+	\command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"
 	if [ "${?}" -eq 0 ]; then
 		autoenv_init
-		return 0
+		\return 0
 	else
-		return "${?}"
+		\return "${?}"
 	fi
 }
 
@@ -156,21 +156,21 @@ enable_autoenv() {
 }
 
 # Probe to see if we have access to a shasum command, otherwise disable autoenv
-if which gsha1sum 2>/dev/null >&2 ; then
+if \which gsha1sum 2>/dev/null >&2 ; then
 	autoenv_shasum() {
 		gsha1sum "${@}"
 	}
 	enable_autoenv
-elif which sha1sum 2>/dev/null >&2; then
+elif \which sha1sum 2>/dev/null >&2; then
 	autoenv_shasum() {
 		sha1sum "${@}"
 	}
 	enable_autoenv
-elif which shasum 2>/dev/null >&2; then
+elif \which shasum 2>/dev/null >&2; then
 	autoenv_shasum() {
 		shasum "${@}"
 	}
 	enable_autoenv
 else
-	echo "autoenv: can not locate a compatible shasum binary; not enabling"
+	\echo "autoenv: can not locate a compatible shasum binary; not enabling"
 fi

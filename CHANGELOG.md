@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - `AUTOENV_CUR_DIR` contains leading double quote (#150)
 - Leave `$OLDPWD` intact (#141)
+- Prevent any alias usage (#144)
 
 ## [0.2.1] - 2016-10-18
 
