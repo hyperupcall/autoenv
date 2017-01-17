@@ -8,7 +8,7 @@ autoenv_init() {
 	else
 		_sedregexp='-r'
 	fi
-	_mountpoint="`\df "${PWD}" | \awk 'END{print $NF}'`"
+	_mountpoint="$(df -P "${PWD}" | tail -1 | awk '{ for(i=6; i<NF; i++) printf "%s",$i OFS; if(NF) printf "%s",$NF; printf ORS}')"
 	# Remove double slashes, see #125
 	_pwd="`\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g'`"
 	# Discover all files we need to source
