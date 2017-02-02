@@ -97,6 +97,13 @@ autoenv is tested on:
 - fish is supported by `autoenv_fish <https://github.com/loopbit/autoenv_fish>`_
 - more to come
 
+Alternatives
+------------
+
+Direnv is an excellent alternative to autoenv, and includes the ability to unset environment variables as well. It also supports the fish terminal. 
+
+`https://direnv.net <https://direnv.net>`_
+
 
 Disclaimer
 ----------
