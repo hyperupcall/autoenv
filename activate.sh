@@ -5,7 +5,7 @@ autoenv_init() {
 	local _mountpoint _files _orderedfiles _sedregexp _pwd
 	_sedregexp='-E'
 
-	_mountpoint="$(df -P "${PWD}" | tail -1 | awk '{ for(i=6; i<NF; i++) printf "%s",$i OFS; if(NF) printf "%s",$NF; printf ORS}')"
+	_mountpoint="$(df -P "${PWD}" | tail -n 1 | awk '{ for(i=6; i<NF; i++) printf "%s",$i OFS; if(NF) printf "%s",$NF; printf ORS}')"
 	# Remove double slashes, see #125
 	_pwd="`\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g'`"
 	# Discover all files we need to source
