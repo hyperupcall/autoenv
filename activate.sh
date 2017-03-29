@@ -7,27 +7,27 @@ autoenv_init() {
 
 	_mountpoint="$(df -P "${PWD}" | tail -n 1 | awk '{ for(i=6; i<NF; i++) printf "%s",$i OFS; if(NF) printf "%s",$NF; printf ORS}')"
 	# Remove double slashes, see #125
-	_pwd="`\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g'`"
+	_pwd=$(\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g')
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
-	_files="`
+	_files=$(
 		\command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || builtin cd "${_pwd}"
 		_hadone=''
 		while :; do
 			_file="$(\pwd -P)/${AUTOENV_ENV_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
-					\echo -n "${_file}"
+					\printf %s "${_file}"
 					_hadone='1'
 				else
-					\echo -n "
+					\printf %s "
 ${_file}"
 				fi
 			fi
 			[ "$(\pwd -P)" = "${_mountpoint}" ] && \break
 			\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd -P)/.." || builtin cd "$(pwd -P)/.."
 		done
-	`"
+	)
 
 	# ZSH: Use traditional for loop
 	zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \grep -q shwordsplit && \echo 1)"
@@ -39,6 +39,8 @@ ${_file}"
 	IFS='
 '
 
+	# Disable file globbing
+	set -f
 	# Turn around the env files order if needed
 	_orderedfiles=''
 	if [ -z "${AUTOENV_LOWER_FIRST}" ]; then
@@ -55,6 +57,8 @@ ${_orderedfiles}"
 		autoenv_check_authz_and_run "${_file}"
 	done
 	IFS="${origIFS}"
+	# Enable file globbing
+	set +f
 
 	# ZSH: Unset shwordsplit
 	if [ -z "${zsh_shwordsplit}" ]; then
@@ -66,15 +70,15 @@ autoenv_hashline() {
 	local _envfile _hash
 	_envfile="${1}"
 	_hash=$(autoenv_shasum "${_envfile}" | \cut -d' ' -f 1)
-	\echo "${_envfile}:${_hash}"
+	\printf '%s\n' "${_envfile}:${_hash}"
 }
 
 autoenv_check_authz() {
 	local _envfile _hash
 	_envfile="${1}"
 	_hash=$(autoenv_hashline "${_envfile}")
-	\touch "${AUTOENV_AUTH_FILE}"
-	\grep -Gq "${_hash}" "${AUTOENV_AUTH_FILE}"
+	\touch -- "${AUTOENV_AUTH_FILE}"
+	\grep -Gq "${_hash}" -- "${AUTOENV_AUTH_FILE}"
 }
 
 autoenv_check_authz_and_run() {
@@ -87,10 +91,10 @@ autoenv_check_authz_and_run() {
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
 		\echo "autoenv:"
 		\echo "autoenv: WARNING:"
-		\echo "autoenv: This is the first time you are about to source ${_envfile}":
+		\printf '%s\n' "autoenv: This is the first time you are about to source ${_envfile}":
 		\echo "autoenv:"
 		\echo "autoenv:   --- (begin contents) ---------------------------------------"
-		\cat -e "${_envfile}" | \sed 's/.*/autoenv:     &/'
+		\cat -e "${_envfile}" | LC_ALL=C \sed 's/.*/autoenv:     &/'
 		\echo "autoenv:"
 		\echo "autoenv:   --- (end contents) -----------------------------------------"
 		\echo "autoenv:"
@@ -106,12 +110,12 @@ autoenv_check_authz_and_run() {
 autoenv_deauthorize_env() {
 	local _envfile _noclobber
 	_envfile="${1}"
-	\cp "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
+	\cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
 	_noclobber="$(set +o | \grep noclobber)"
 	set +C
-	\grep -Gv "${_envfile}:" "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
+	\grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
 	\eval "${_noclobber}"
-	\rm "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
+	\rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
 autoenv_authorize_env() {
@@ -153,17 +157,17 @@ enable_autoenv() {
 }
 
 # Probe to see if we have access to a shasum command, otherwise disable autoenv
-if \which gsha1sum 2>/dev/null >&2 ; then
+if command -v gsha1sum 2>/dev/null >&2 ; then
 	autoenv_shasum() {
 		gsha1sum "${@}"
 	}
 	enable_autoenv
-elif \which sha1sum 2>/dev/null >&2; then
+elif command -v sha1sum 2>/dev/null >&2; then
 	autoenv_shasum() {
 		sha1sum "${@}"
 	}
 	enable_autoenv
-elif \which shasum 2>/dev/null >&2; then
+elif command -v shasum 2>/dev/null >&2; then
 	autoenv_shasum() {
 		shasum "${@}"
 	}
