@@ -3,11 +3,8 @@ AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 
 autoenv_init() {
 	local _mountpoint _files _orderedfiles _sedregexp _pwd
-	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
-		_sedregexp='-E'
-	else
-		_sedregexp='-r'
-	fi
+	_sedregexp='-E'
+
 	_mountpoint="$(df -P "${PWD}" | tail -1 | awk '{ for(i=6; i<NF; i++) printf "%s",$i OFS; if(NF) printf "%s",$NF; printf ORS}')"
 	# Remove double slashes, see #125
 	_pwd="`\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g'`"
