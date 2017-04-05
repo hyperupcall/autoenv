@@ -4,6 +4,11 @@ AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 # AUTOENV_ENABLE_LEAVE
 
 autoenv_init() {
+
+    if [ ! -z $AUTOENV_ENABLE_LEAVE ]; then
+        autoenv_leave "$@"
+    fi
+
 	local _mountpoint _files _orderedfiles _sedregexp _pwd
 	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
 		_sedregexp='-E'
@@ -65,10 +70,6 @@ ${_orderedfiles}"
 	if [ -z "${zsh_shwordsplit}" ]; then
 		\unsetopt shwordsplit >/dev/null 2>&1
 	fi
-
-    if [ ! -z $AUTOENV_ENABLE_LEAVE ]
-        autoenv_leave "$@"
-    fi
 }
 
 autoenv_hashline() {
