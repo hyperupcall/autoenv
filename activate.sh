@@ -78,7 +78,7 @@ autoenv_check_authz() {
 	_envfile="${1}"
 	_hash=$(autoenv_hashline "${_envfile}")
 	\touch -- "${AUTOENV_AUTH_FILE}"
-	\grep -Gq "${_hash}" -- "${AUTOENV_AUTH_FILE}"
+	\grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
 }
 
 autoenv_check_authz_and_run() {
