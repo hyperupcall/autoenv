@@ -1,19 +1,36 @@
 #!/usr/bin/env dash
 
+has_cmd() {
+	command -v -- "$1" >/dev/null 2>&1
+}
+
 # Check if all commands exist
 for cmd in bash zsh dash; do
-	if ! which "${cmd}" 2>/dev/null >&2; then
+	if ! has_cmd "$cmd"; then
 		echo ":: This test requires the ${cmd} executable."
 		exit 1
 	fi
 done
+
+MKTEMP=$(command -v mktemp)
+READLINK=$(command -v readlink)
+if [ "$(uname)" == "Darwin" ]; then
+	for cmd in gmktemp greadlink; do
+		if ! has_cmd "$cmd"; then
+			echo ":: This test requires the ${cmd} executable."
+			exit 1
+		fi
+	done
+	MKTEMP=gmktemp
+	READLINK=greadlink
+fi
 
 # Settings
 shells='bash:bash --noprofile --norc|zsh:zsh|sh:dash' # Shells to test. Shells separated by |, name/executable by :
 
 # Global variables
 TMPDIR='' # Global so we can react when the script fails
-basedir="$(readlink -f $(dirname $0))" # So we can find our tests
+basedir=$("$READLINK" -f "$(dirname $0)") # So we can find our tests
 oldpwd="`pwd`" # So we can come back after testing
 ZDOTDIR='/dev/null' # Don't use default ZSH files
 export ZDOTDIR
@@ -59,8 +76,8 @@ IFS='|'
 for shell in ${shells}; do
 	for current_test in ${tests}; do
 		# Prepare this test
-		echo -n ":: Running ${current_test} for `echo "${shell}" | cut -d':' -f1`..."
-		TMPDIR="`mktemp -dp ${basedir} ${current_test}.XXXXXX`"
+		printf %s ":: Running ${current_test} for `echo "${shell}" | cut -d':' -f1`..."
+		TMPDIR=$("$MKTEMP" -dp ${basedir} ${current_test}.XXXXXX)
 		AUTOENV_AUTH_FILE="${TMPDIR}/autoenv_authorized" # Don't use default auth file
 		export TMPDIR
 		export AUTOENV_AUTH_FILE
