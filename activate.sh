@@ -5,9 +5,9 @@ AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 
 autoenv_init() {
 
-    if [ ! -z $AUTOENV_ENABLE_LEAVE ]; then
-        autoenv_leave "$@"
-    fi
+	if [ ! -z $AUTOENV_ENABLE_LEAVE ]; then
+		autoenv_leave "$@"
+	fi
 
 	local _mountpoint _files _orderedfiles _sedregexp _pwd
 	if [ "${OSTYPE#darwin*}" != "${OSTYPE}" ]; then
@@ -100,7 +100,7 @@ autoenv_check_authz_and_run() {
 		\echo "autoenv: This is the first time you are about to source ${_envfile}":
 		\echo "autoenv:"
 		\echo "autoenv:   --- (begin contents) ---------------------------------------"
-		\cat -e "${_envfile}" | \sed 's/.*/autoenv:     &/'
+		\cat -e "${_envfile}" | \sed 's/.*/autoenv:	 &/'
 		\echo "autoenv:"
 		\echo "autoenv:   --- (end contents) -----------------------------------------"
 		\echo "autoenv:"
@@ -144,8 +144,8 @@ autoenv_source() {
 }
 
 autoenv_cd() {
-    local _pwd
-    _pwd=${PWD}
+	local _pwd
+	_pwd=${PWD}
 	\command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"
 	if [ "${?}" -eq 0 ]; then
 		autoenv_init "${_pwd}"
@@ -156,11 +156,11 @@ autoenv_cd() {
 }
 
 autoenv_leave() {
-    # execute file when leaving a directory
-    local target_file dir
-    dir="${@}"
-    target_file="${dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
-    [ -f "${target_file}" ] && autoenv_check_authz_and_run "${target_file}"
+	# execute file when leaving a directory
+	local target_file dir
+	dir="${@}"
+	target_file="${dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+	[ -f "${target_file}" ] && autoenv_check_authz_and_run "${target_file}"
 }
 
 # Override the cd alias
