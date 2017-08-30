@@ -88,6 +88,11 @@ autoenv_check_authz_and_run() {
 		autoenv_source "${_envfile}"
 		\return 0
 	fi
+	if [ -n "${AUTOENV_ASSUME_YES}" ]; then # Don't ask for permission if "assume yes" is switched on
+		autoenv_authorize_env "${_envfile}"
+		autoenv_source "${_envfile}"
+                \return 0
+        fi
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
 		\echo "autoenv:"
 		\echo "autoenv: WARNING:"

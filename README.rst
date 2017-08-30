@@ -87,6 +87,7 @@ Before sourcing activate.sh, you can set the following variables:
 - ``AUTOENV_AUTH_FILE``: Authorized env files, defaults to ``~/.autoenv_authorized``
 - ``AUTOENV_ENV_FILENAME``: Name of the ``.env`` file, defaults to ``.env``
 - ``AUTOENV_LOWER_FIRST``: Set this variable to flip the order of ``.env`` files executed
+- ``AUTOENV_ASSUME_YES``: Set this variable to silently authorize the initialization of new environments
 
 Shells
 ------
