@@ -3,6 +3,8 @@ Autoenv: Directory-based Environments
 
 Magic per-project shell environments. Very pretentious.
 
+**Note: you should probably use `direnv <https://direnv.net/>`_ instead. It is higher quality, and maintained.**
+
 
 What is it?
 -----------
@@ -89,6 +91,7 @@ Before sourcing activate.sh, you can set the following variables:
 - ``AUTOENV_LOWER_FIRST``: Set this variable to flip the order of ``.env`` files executed
 - ``AUTOENV_ENV_LEAVE_FILENAME``: Name of the ``.env.leave`` file, defaults to ``.env.leave``
 - ``AUTOENV_ENABLE_LEAVE``: Set this to a non-null string in order to enable source env when leaving
+- ``AUTOENV_ASSUME_YES``: Set this variable to silently authorize the initialization of new environments
 
 Shells
 ------
