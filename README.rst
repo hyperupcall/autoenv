@@ -3,7 +3,7 @@ Autoenv: Directory-based Environments
 
 Magic per-project shell environments. Very pretentious.
 
-**Note**: you should probably use `direnv <https://direnv.net/>`_ instead. Simply put, it is higher quality software. But, autoenv is still great, too. Maybe try both :)
+**Note**: you should probably use `direnv <https://direnv.net/>`_ instead. Simply put, it is higher quality software. But, autoenv is still great, too. Maybe try both? :)
 
 
 What is it?
