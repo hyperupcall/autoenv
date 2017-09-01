@@ -7,7 +7,7 @@ Magic per-project shell environments. Very pretentious.
 
 This image sums up the relationship between the two projects, very well:
 
-.. image:: http://share.kennethreitz.org/0p2B2E0a1Q0w/776204239940493426%3Faccount_id=8.jpg
+.. image:: http://share.kennethreitz.org/1u0j2s3M1w36/776204239940493426%3Faccount_id=8.jpg
 
 What is it?
 -----------
