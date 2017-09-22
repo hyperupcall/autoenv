@@ -154,7 +154,7 @@ autoenv_cd() {
 
 # Override the cd alias
 if setopt 2> /dev/null | grep -q aliasfuncdef; then
-	alias_func_def_status=true;
+	has_alias_func_def_enabled=true;
 else
 	setopt ALIAS_FUNC_DEF 2> /dev/null
 fi
@@ -167,7 +167,7 @@ enable_autoenv() {
 	cd "${PWD}"
 }
 
-if ! $alias_func_def_status; then
+if ! $has_alias_func_def_enabled; then
 	unsetopt ALIAS_FUNC_DEF 2> /dev/null
 fi
 
