@@ -153,6 +153,12 @@ autoenv_cd() {
 }
 
 # Override the cd alias
+if setopt 2> /dev/null | grep -q aliasfuncdef; then
+	has_alias_func_def_enabled=true;
+else
+	setopt ALIAS_FUNC_DEF 2> /dev/null
+fi
+
 enable_autoenv() {
 	cd() {
 		autoenv_cd "${@}"
@@ -160,6 +166,10 @@ enable_autoenv() {
 
 	cd "${PWD}"
 }
+
+if ! $has_alias_func_def_enabled; then
+	unsetopt ALIAS_FUNC_DEF 2> /dev/null
+fi
 
 # Probe to see if we have access to a shasum command, otherwise disable autoenv
 if command -v gsha1sum 2>/dev/null >&2 ; then
