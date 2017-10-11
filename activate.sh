@@ -5,7 +5,7 @@ AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 
 autoenv_init() {
 
-	if [ ! -z $AUTOENV_ENABLE_LEAVE ]; then
+	if [ -n "$AUTOENV_ENABLE_LEAVE" ]; then
 		autoenv_leave "$@"
 	fi
 
