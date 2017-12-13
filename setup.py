@@ -6,7 +6,7 @@ import setuptools
 
 
 setuptools.setup(
-    version='0.2.0',
+    version='0.2.1',
     name='autoenv',
     description='Directory-based environments.',
     author='Kenneth Reitz',
