@@ -1,5 +1,5 @@
 
-# Autoenv: Directory-based Environments
+# Autoenv: Directory-based Environments [![Build Status](https://travis-ci.com/inishchith/autoenv.svg?branch=master)](https://travis-ci.com/inishchith/autoenv)
 
 Magic per-project shell environments. Very pretentious.
 
@@ -59,7 +59,7 @@ Install it easily:
 
 ### Using git
 
-    $ git clone git://github.com/kennethreitz/autoenv.git ~/.autoenv
+    $ git clone git://github.com/inishchith/autoenv.git ~/.autoenv
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
 
 ### Using AUR
@@ -116,3 +116,7 @@ within your custom `cd` after sourcing `activate.sh`.
 Autoenv can be disabled via `unset cd` if you experience I/O issues with
 certain file systems, particularly those that are FUSE-based (such as
 `smbnetfs`).
+
+## Attributions
+
+> autoenv is one of [@kennethreitz](https://github.com/kennethreitz):org project and is now owned and maintained by [@inishchith](https://github.com/inishchith).
