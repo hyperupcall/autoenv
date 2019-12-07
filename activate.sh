@@ -32,6 +32,7 @@ ${_file}"
 				fi
 			fi
 			[ "$(\pwd -P)" = "${_mountpoint}" ] && \break
+			[ "$(\pwd -P)" = "/" ] && \break
 			\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd -P)/.." || builtin cd "$(pwd -P)/.."
 		done
 	)
