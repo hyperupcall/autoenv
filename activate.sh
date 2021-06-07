@@ -85,6 +85,7 @@ autoenv_check_authz() {
 	local _envfile _hash
 	_envfile="${1}"
 	_hash=$(autoenv_hashline "${_envfile}")
+	\command mkdir -p -- "$(\dirname "${AUTOENV_AUTH_FILE}")"
 	\command touch -- "${AUTOENV_AUTH_FILE}"
 	\command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
 }
