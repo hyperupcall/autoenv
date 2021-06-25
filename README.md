@@ -9,7 +9,7 @@ too. Maybe try both? :)
 
 This image sums up the relationship between the two projects, very well:
 
-![image](http://share.kennethreitz.org/1u0j2s3M1w36/776204239940493426%3Faccount_id=8.jpg)
+![image](https://d3vv6lp55qjaqc.cloudfront.net/items/2f103O1A1R2T1k2w2M3c/776204239940493426%3Faccount_id=8.jpg)
 
 ## What is it?
 
