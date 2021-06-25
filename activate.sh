@@ -38,10 +38,13 @@ ${_file}"
 	)
 
 	# ZSH: Use traditional for loop
-	zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \grep -q shwordsplit && \echo 1)"
-	if [ -z "${zsh_shwordsplit}" ]; then
-		\setopt shwordsplit >/dev/null 2>&1
+	if zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \grep -q shwordsplit && \echo 1)"; then
+
+		if [ -z "${zsh_shwordsplit}" ]; then
+			\setopt shwordsplit >/dev/null 2>&1
+		fi
 	fi
+
 	# Custom IFS
 	origIFS="${IFS}"
 	IFS='
@@ -70,7 +73,9 @@ ${_orderedfiles}"
 
 	# ZSH: Unset shwordsplit
 	if [ -z "${zsh_shwordsplit}" ]; then
-		\unsetopt shwordsplit >/dev/null 2>&1
+		if command -v unsetopt 2>/dev/null >&2; then
+			\unsetopt shwordsplit >/dev/null 2>&1
+		fi
 	fi
 }
 
@@ -174,7 +179,9 @@ autoenv_leave() {
 if setopt 2> /dev/null | grep -q aliasfuncdef; then
 	has_alias_func_def_enabled=true;
 else
-	setopt ALIAS_FUNC_DEF 2> /dev/null
+	if command -v setopt 2>/dev/null >&2; then
+		setopt ALIAS_FUNC_DEF 2> /dev/null
+	fi
 fi
 
 enable_autoenv() {

@@ -14,6 +14,7 @@ publish: clean
 
 test:
 	sh tests/test.sh
+	bats tests
 
 uninstall:
 	pip uninstall autoenv
