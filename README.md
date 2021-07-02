@@ -9,7 +9,7 @@ too. Maybe try both? :)
 
 This image sums up the relationship between the two projects, very well:
 
-![image](http://share.kennethreitz.org/1u0j2s3M1w36/776204239940493426%3Faccount_id=8.jpg)
+![image](https://d3vv6lp55qjaqc.cloudfront.net/items/2f103O1A1R2T1k2w2M3c/776204239940493426%3Faccount_id=8.jpg)
 
 ## What is it?
 
@@ -80,13 +80,13 @@ Before sourcing activate.sh, you can set the following variables:
   - `AUTOENV_AUTH_FILE`: Authorized env files, defaults to
     `~/.autoenv_authorized`
   - `AUTOENV_ENV_FILENAME`: Name of the `.env` file, defaults to `.env`
-  - `AUTOENV_LOWER_FIRST`: Set this variable to flip the order of `.env`
+  - `AUTOENV_LOWER_FIRST`: Set this variable to a non-null string to flip the order of `.env`
     files executed
   - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file,
     defaults to `.env.leave`
   - `AUTOENV_ENABLE_LEAVE`: Set this to a non-null string in order to
     enable source env when leaving
-  - `AUTOENV_ASSUME_YES`: Set this variable to silently authorize the
+  - `AUTOENV_ASSUME_YES`: Set this variable to a non-null string to silently authorize the
     initialization of new environments
 
 ## Shells
