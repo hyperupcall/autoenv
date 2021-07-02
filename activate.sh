@@ -12,7 +12,7 @@ autoenv_init() {
 	local _mountpoint _files _orderedfiles _sedregexp _pwd
 	_sedregexp='-E'
 
-	_mountpoint="$(df -P "${PWD}" | tail -n 1 | awk '$0=$NF')"
+	_mountpoint="$(\df -P "${PWD}" | \tail -n 1 | \awk '$0=$NF')"
 	# Remove double slashes, see #125
 	_pwd=$(\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g')
 	# Discover all files we need to source
@@ -38,7 +38,7 @@ ${_file}"
 	)
 
 	# ZSH: Use traditional for loop
-	zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \grep -q shwordsplit && \echo 1)"
+	zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \command grep -q shwordsplit && \echo 1)"
 	if [ -z "${zsh_shwordsplit}" ]; then
 		\setopt shwordsplit >/dev/null 2>&1
 	fi
@@ -85,8 +85,9 @@ autoenv_check_authz() {
 	local _envfile _hash
 	_envfile="${1}"
 	_hash=$(autoenv_hashline "${_envfile}")
-	\touch -- "${AUTOENV_AUTH_FILE}"
-	\grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
+	\command mkdir -p -- "$(\dirname "${AUTOENV_AUTH_FILE}")"
+	\command touch -- "${AUTOENV_AUTH_FILE}"
+	\command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
 }
 
 autoenv_check_authz_and_run() {
@@ -123,12 +124,12 @@ autoenv_check_authz_and_run() {
 autoenv_deauthorize_env() {
 	local _envfile _noclobber
 	_envfile="${1}"
-	\cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
-	_noclobber="$(set +o | \grep noclobber)"
+	\command cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
+	_noclobber="$(set +o | \command grep noclobber)"
 	set +C
-	\grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
+	\command grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
 	\eval "${_noclobber}"
-	\rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
+	\command rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
 autoenv_authorize_env() {
@@ -140,7 +141,7 @@ autoenv_authorize_env() {
 
 autoenv_source() {
 	local _allexport
-	_allexport="$(\set +o | \grep allexport)"
+	_allexport="$(\set +o | \command grep allexport)"
 	set -a
 	AUTOENV_CUR_FILE="${1}"
 	AUTOENV_CUR_DIR="$(dirname "${1}")"
@@ -171,7 +172,7 @@ autoenv_leave() {
 }
 
 # Override the cd alias
-if setopt 2> /dev/null | grep -q aliasfuncdef; then
+if setopt 2> /dev/null | \command grep -q aliasfuncdef; then
 	has_alias_func_def_enabled=true;
 else
 	setopt ALIAS_FUNC_DEF 2> /dev/null
