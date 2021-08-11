@@ -14,7 +14,7 @@ done
 
 MKTEMP=$(command -v mktemp)
 READLINK=$(command -v readlink)
-if [ "$(uname)" == "Darwin" ]; then
+if [ "$(uname)" = "Darwin" ]; then
 	for cmd in gmktemp greadlink; do
 		if ! has_cmd "$cmd"; then
 			echo ":: This test requires the ${cmd} executable."
