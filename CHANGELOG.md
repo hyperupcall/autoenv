@@ -4,18 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.2.2] - TBD
+## [0.3.0] - 2021-9-5
 
 ### Fixed
-- Updates PyPi version to latest (#161)
-
-## [0.2.1] - 2016-10-18
-
-### Fixed
-- `AUTOENV_CUR_DIR` contains leading double quote (#150)
 - Leave `$OLDPWD` intact (#141)
+- `AUTOENV_CUR_DIR` contains leading double quote (#150)
 - Prevent any alias usage (#144)
 - Broken mountpoint detection (#151)
+- Add `AUTOENV_ASSUME_YES` (#162)
+- Execute `.env.leave` when leaving directory (#167)
+- Ensure parent directory of `AUTOENV_AUTH_FILE` exists (#201)
+- Improve platform compatibility (#174, #176, #202)
 
 ## [0.2.1] - 2016-10-18
 
@@ -85,4 +84,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 [0.1.0]: https://github.com/inishchith/autoenv/releases/tag/v0.1.0
 [0.2.0]: https://github.com/inishchith/autoenv/releases/tag/v0.2.0
 [0.2.1]: https://github.com/inishchith/autoenv/releases/tag/v0.2.1
-[0.2.2]: https://github.com/inishchith/autoenv
+[0.3.0]: https://github.com/inishchith/autoenv/releases/tag/v0.3.0

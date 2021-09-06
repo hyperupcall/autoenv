@@ -47,17 +47,12 @@ Follow the white rabbit:
 
 Install it easily:
 
-### Mac OS X Using Homebrew
+### MacOS using Homebrew
 
     $ brew install autoenv
     $ echo "source $(brew --prefix autoenv)/activate.sh" >> ~/.bash_profile
 
-### Using pip
-
-    $ pip install autoenv
-    $ echo "source `which activate.sh`" >> ~/.bashrc
-
-### Using git
+### Using Git
 
     $ git clone git://github.com/inishchith/autoenv.git ~/.autoenv
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
@@ -72,6 +67,8 @@ their favorite AUR helper.
 You need to source activate.sh in your bashrc afterwards:
 
     $ echo 'source /usr/share/autoenv/activate.sh' >> ~/.bashrc
+
+Note that there was previously a [pip](https://pypi.org/project/autoenv) installation option, but it is no longer recommended as the package is severely out of date
 
 ## Configuration
 
