@@ -21,10 +21,7 @@ jobs:
 
     steps:
       - uses: 'actions/checkout@v2'
-        with:
-          submodules: true
-          path: 'source'
-
+        
       - name: Install Prerequisites
         run: |
           brew install coreutils bash zsh dash fish ksh tcsh
