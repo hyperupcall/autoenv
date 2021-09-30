@@ -1,5 +1,5 @@
 
-# Autoenv: Directory-based Environments ![Build Status](https://github.com/hyperupcall/autoenv/actions/workflows/ci.yml/badge.svg)]
+# Autoenv: Directory-based Environments ![Build Status](https://github.com/hyperupcall/autoenv/actions/workflows/ci.yml/badge.svg)
 
 Magic per-project shell environments
 
@@ -114,4 +114,4 @@ certain file systems, particularly those that are FUSE-based (such as
 
 ## Attributions
 
-autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Ownership was then transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project
+Autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Ownership was then transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project
