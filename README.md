@@ -1,15 +1,15 @@
 
-# Autoenv: Directory-based Environments [![Build Status](https://travis-ci.com/inishchith/autoenv.svg?branch=master)](https://travis-ci.com/inishchith/autoenv)
+# Autoenv: Directory-based Environments ![Build Status](https://github.com/hyperupcall/autoenv/actions/workflows/ci.yml/badge.svg)]
 
-Magic per-project shell environments. Very pretentious.
+Magic per-project shell environments
 
-**Note**: you should probably use [direnv](https://direnv.net/) instead.
+**Note**: you should probably use [direnv](https://direnv.net) instead.
 Simply put, it is higher quality software. But, autoenv is still great,
 too. Maybe try both? :)
 
 This image sums up the relationship between the two projects, very well:
 
-![image](https://d3vv6lp55qjaqc.cloudfront.net/items/2f103O1A1R2T1k2w2M3c/776204239940493426%3Faccount_id=8.jpg)
+<img src="https://d3vv6lp55qjaqc.cloudfront.net/items/2f103O1A1R2T1k2w2M3c/776204239940493426%3Faccount_id=8.jpg" alt="Image of text history" width="250"/>
 
 ## What is it?
 
@@ -25,7 +25,7 @@ This is great for...
   - project-specific environment variables
   - making millions
 
-You can also nest envs within each other. How awesome is that\!?
+You can also nest envs within each other. How awesome is that!?
 
 When executing, autoenv, will walk up the directories until the mount
 point and execute all `.env` files beginning at the top.
@@ -39,9 +39,7 @@ Follow the white rabbit:
     $ cd project
     whoa
 
-![image](http://media.tumblr.com/tumblr_ltuzjvbQ6L1qzgpx9.gif)
-
-
+![Mind blown GIF](http://media.tumblr.com/tumblr_ltuzjvbQ6L1qzgpx9.gif)
 
 ## Install
 
@@ -99,7 +97,7 @@ autoenv is tested on:
 
 ## Alternatives
 
-Direnv is an excellent alternative to autoenv, and includes the ability
+[direnv](https://direnv.net) is an excellent alternative to autoenv, and includes the ability
 to unset environment variables as well. It also supports the fish
 terminal.
 
@@ -116,4 +114,4 @@ certain file systems, particularly those that are FUSE-based (such as
 
 ## Attributions
 
-> autoenv is one of [@kennethreitz](https://github.com/kennethreitz):org project and is now owned and maintained by [@inishchith](https://github.com/inishchith).
+autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Ownership was then transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project
