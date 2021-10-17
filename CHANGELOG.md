@@ -41,7 +41,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Fix spaces in filenames
-- Strange grep behaviour
+- Strange grep behavior
 - Look for a .env file when activating autoenv
 - Fix sha1sum not being found
 - Support aliased cd
@@ -54,7 +54,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Updated readme
 - Export all variables
 - Rewrote tests
-- Follow .env files until the moutpoint
+- Follow .env files until the mountpoint
 
 ### Security
 - Add quotes everywhere in the shell script
@@ -75,7 +75,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - Initial public version of autoenv
-- Allwos executing .env files recursively
+- Allows executing .env files recursively
 - Makefile for testing
 - Unit tests with dtf
 - Travis file for testing
