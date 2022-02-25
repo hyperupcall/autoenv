@@ -1,7 +1,24 @@
 AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE:-$HOME/.autoenv_authorized}"
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
+AUTOENV_VIEWER=()
 # AUTOENV_ENABLE_LEAVE
+
+# choose a viewer if not already set
+autoenv_setup() {
+  [[ ${#AUTOENV_VIEWER[@]} -gt 0 ]] && return
+  while read -r prog args; do
+    if command -v $prog > /dev/null; then
+      AUTOENV_VIEWER=( "$prog" ${args[@]} )
+      return
+    fi
+  done <<EOF
+  bat --style=numbers
+  less -N
+  cat
+EOF
+}
+autoenv_setup
 
 autoenv_init() {
 
@@ -106,17 +123,12 @@ autoenv_message() {
 }
 
 autoenv_show_file() {
-  local viewer="less" file="$1"
-  local -a viewer=( "less" "-N" )
-
-  if command -v bat > /dev/null; then
-    viewer=( "bat" "--style=numbers" )
-  fi
+  local file="$1"
 
   \echo
   autoenv_message "New or modified env file detected:"
   \printf "\033[1m--- %s contents ----------------------------------------\033[0m\n" "${file##*/}"
-  "${viewer[@]}" "${file}"
+  "${AUTOENV_VIEWER[@]}" "${file}"
   \printf "\033[1m------------------------------------------------------------\033[0m\n\n"
 }
 
