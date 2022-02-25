@@ -148,7 +148,10 @@ autoenv_source() {
 	. "${1}"
 	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && set +a
 	\eval "${_allexport}"
-	\unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
+
+  if [[ "${AUTOENV_CUR_FILE}" == *"${AUTOENV_ENV_LEAVE_FILENAME}" ]]; then
+    \unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
+  fi
 }
 
 autoenv_cd() {
@@ -165,9 +168,13 @@ autoenv_cd() {
 
 autoenv_leave() {
 	# execute file when leaving a directory
-	local target_file dir
+	local target_file dir rootdir
 	dir="${@}"
 	target_file="${dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+
+  [[ "$PWD" == "$dir" ]] && return # don't source .leave if not changing dirs
+  [[ "$PWD" == "${AUTOENV_CUR_DIR}"* ]] && return # don't source .leave in a subdir of project root
+
 	[ -f "${target_file}" ] && autoenv_check_authz_and_run "${target_file}"
 }
 
