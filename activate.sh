@@ -107,6 +107,15 @@ autoenv_check_authz() {
 	\command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
 }
 
+# autoenv_message -- print a user message to stdout
+#
+# args:
+# -n          do not print trailing newline
+# MESSAGE     space seperated text of message
+#
+# usage: autoenv_message [-n] MESSAGE...
+#
+#
 autoenv_message() {
   local no_newline
 
@@ -115,21 +124,61 @@ autoenv_message() {
     shift
   fi
 
-  \printf "\033[33m[autoenv]\033[0m %s" "${*}"
+  if [[ -n "$NOCOLOR" ]]; then
+    \printf "[autoenv] %s" "${*}"
+  else
+    \printf "\033[33m[autoenv]\033[0m %s" "${*}"
+  fi
 
   if [[ -z "${no_newline}" ]]; then
     \printf "\n"
   fi
 }
 
+autoenv_error() {
+  if [[ -n "$NOCOLOR" ]]; then
+    \printf "[autoenv] Error %s" "${*}" >&2
+  else
+    \printf "\033[33m[autoenv]\033[0m \033[31mError\033[0m %s\n" "${*}" >&2
+  fi
+
+  return 1
+}
+
+# display the contents of a .env or .env.leave file
+#   using the $AUTOENV_VIEWER command
 autoenv_show_file() {
   local file="$1"
 
   \echo
   autoenv_message "New or modified env file detected:"
-  \printf "\033[1m--- %s contents ----------------------------------------\033[0m\n" "${file##*/}"
+  _autoenv_line "${file##*/} contents"
   "${AUTOENV_VIEWER[@]}" "${file}"
-  \printf "\033[1m------------------------------------------------------------\033[0m\n\n"
+  _autoenv_line
+}
+
+# _autoenv_line -- print a horizontal line
+#
+# args:
+# * TEXT: title to print near the beginning of the line
+#
+# usage: _autoenv_line [TEXT]
+#
+_autoenv_line() {
+  local text="${1}" char="-" width=${COLUMNS:-80}
+
+  if [[ -n "${text}" ]]; then
+    text="--- ${text} "
+    width=$((width-${#text}))
+  fi
+
+  read -r line < <(eval "printf -- '${char}%.0s' {1..${width}}")
+
+  if [[ -n "$NOCOLOR" ]]; then
+    \printf "%s%s\n\n" "${text}" "$line"
+  else
+    \printf "\033[1m%s%s\033[0m\n\n" "${text}" "$line"
+  fi
 }
 
 autoenv_check_authz_and_run() {
@@ -241,5 +290,5 @@ elif command -v shasum 2>/dev/null >&2; then
 	}
 	enable_autoenv
 else
-	autoenv_message "can not locate a compatible shasum binary; not enabling"
+	autoenv_error "can not locate a compatible shasum binary; not enabling"
 fi
