@@ -83,6 +83,9 @@ Before sourcing activate.sh, you can set the following variables:
     enable source env when leaving
   - `AUTOENV_ASSUME_YES`: Set this variable to a non-null string to silently authorize the
     initialization of new environments
+  - `AUTOENV_VIEWER`: Array containing external program and args used to view
+    env files prior to authorization. Should be a list with the program name
+    and any arguments. Default: `( less -N )`.
 
 ## Shells
 
