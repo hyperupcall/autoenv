@@ -90,6 +90,36 @@ autoenv_check_authz() {
 	\command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
 }
 
+autoenv_message() {
+  local no_newline
+
+  if [[ "$1" == "-n" ]]; then
+    no_newline=true
+    shift
+  fi
+
+  \printf "\033[33m[autoenv]\033[0m %s" "${*}"
+
+  if [[ -z "${no_newline}" ]]; then
+    \printf "\n"
+  fi
+}
+
+autoenv_show_file() {
+  local viewer="less" file="$1"
+  local -a viewer=( "less" "-N" )
+
+  if command -v bat > /dev/null; then
+    viewer=( "bat" "--style=numbers" )
+  fi
+
+  \echo
+  autoenv_message "New or modified env file detected:"
+  \printf "\033[1m--- %s contents ----------------------------------------\033[0m\n" "${file##*/}"
+  "${viewer[@]}" "${file}"
+  \printf "\033[1m------------------------------------------------------------\033[0m\n\n"
+}
+
 autoenv_check_authz_and_run() {
 	local _envfile
 	_envfile="${1}"
@@ -103,16 +133,8 @@ autoenv_check_authz_and_run() {
                 \return 0
         fi
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
-		\echo "autoenv:"
-		\echo "autoenv: WARNING:"
-		\printf '%s\n' "autoenv: This is the first time you are about to source ${_envfile}":
-		\echo "autoenv:"
-		\echo "autoenv:   --- (begin contents) ---------------------------------------"
-		\cat -e "${_envfile}" | LC_ALL=C \sed 's/.*/autoenv:     &/'
-		\echo "autoenv:"
-		\echo "autoenv:   --- (end contents) -----------------------------------------"
-		\echo "autoenv:"
-		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N) "
+    autoenv_show_file "${_envfile}"
+    autoenv_message -n "Authorize this file? (y/N) "
 		\read answer
 		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
 			autoenv_authorize_env "${_envfile}"
@@ -207,5 +229,5 @@ elif command -v shasum 2>/dev/null >&2; then
 	}
 	enable_autoenv
 else
-	\echo "autoenv: can not locate a compatible shasum binary; not enabling"
+	\echo "[autoenv] can not locate a compatible shasum binary; not enabling"
 fi
