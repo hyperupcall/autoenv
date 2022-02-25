@@ -208,7 +208,7 @@ _autoenv_var_def() {
   fi
 
   # get the definition from export
-  if export | command grep "^export ${var}="; then
+  if export -p | command grep "^export ${var}="; then
     return
   fi
 
