@@ -1,7 +1,9 @@
 AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE:-$HOME/.autoenv_authorized}"
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
+AUTOENV_CACHED=()
 # AUTOENV_ENABLE_LEAVE
+
 
 autoenv_init() {
 
@@ -169,6 +171,7 @@ autoenv_leave() {
 	dir="${@}"
 	target_file="${dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
 	[ -f "${target_file}" ] && autoenv_check_authz_and_run "${target_file}"
+  autoenv_revert
 }
 
 # Override the cd alias
@@ -184,6 +187,34 @@ enable_autoenv() {
 	}
 
 	cd "${PWD}"
+}
+
+# cache the previous value of a variable in AUTOENV_CACHED
+autoenv_cache() {
+  local current
+
+	if [ -z "$AUTOENV_ENABLE_LEAVE" ]; then
+    autoenv_message "Error autoenv_cache is only available with AUTOENV_ENABLE_LEAVE"
+    return
+  fi
+
+  while [[ $# -gt 0 ]]; do
+    if read -r current < <(declare -p $1 2>/dev/null); then
+      AUTOENV_CACHED+=( "${current}" )
+    else
+      AUTOENV_CACHED+=( "unset $1" )
+    fi
+    shift
+  done
+}
+
+# revert all cached variables and clear AUTOENV_CACHE
+autoenv_revert() {
+  local expr
+  for expr in "${AUTOENV_CACHED[@]}"; do
+    eval "${expr}"
+  done
+  AUTOENV_CACHED=()
 }
 
 if ! $has_alias_func_def_enabled; then
