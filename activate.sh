@@ -241,5 +241,5 @@ elif command -v shasum 2>/dev/null >&2; then
 	}
 	enable_autoenv
 else
-	\echo "[autoenv] can not locate a compatible shasum binary; not enabling"
+	autoenv_message "can not locate a compatible shasum binary; not enabling"
 fi
