@@ -199,7 +199,7 @@ autoenv_cache() {
   fi
 
   while [[ $# -gt 0 ]]; do
-    if read -r current < <(declare -p $1 2>/dev/null); then
+    if declare -p $1 2>/dev/null | read -r current; then
       AUTOENV_CACHED+=( "${current}" )
     else
       AUTOENV_CACHED+=( "unset $1" )
