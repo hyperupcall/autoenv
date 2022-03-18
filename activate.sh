@@ -1,7 +1,119 @@
 AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE:-$HOME/.autoenv_authorized}"
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
+# AUTOENV_VIEWER
 # AUTOENV_ENABLE_LEAVE
+
+# _autoenv_info -- print a user message to stdout
+#
+# args:
+# -b[NUM]     number of lines to print before message
+# -a[NUM]     number of lines to print after message (default=1)
+# -n          do not print trailing newline (same as -a0)
+# MESSAGE     space seperated text of message
+#
+# usage: _autoenv_info [-n] [-b[NUM]] MESSAGE...
+#
+_autoenv_info() {
+  local after=1 before=0
+
+  while : ; do
+    case "$1" in
+      -n)  after=0                           ;;
+      -b*) before=${1#-b} ; : "${before:=1}" ;;
+      -a*) after=${1#-a}  ; : "${after:=1}"  ;;
+      *)   break                             ;;
+    esac
+    shift
+  done
+
+  [ $before -gt 0 ] && printf '%*s' ${before} | tr " " "\n"
+
+  if [ -n "$NO_COLOR" ]; then
+    \printf "[autoenv] %s" "${*}"
+  else
+    \printf "\033[33m[autoenv]\033[0m %s" "${*}"
+  fi
+
+  [ $after -gt 0 ] && printf '%*s' ${after} | tr " " "\n"
+}
+
+# _autoenv_err -- print a message to stderr
+#
+# args:
+# MESSAGE     space seperated text of message
+#
+# usage: _autoenv_err MESSAGE...
+#
+_autoenv_err() {
+  if [ -n "$NO_COLOR" ]; then
+    \printf "[autoenv] Error %s" "${*}" >&2
+  else
+    \printf "\033[33m[autoenv]\033[0m \033[31mError\033[0m %s\n" "${*}" >&2
+  fi
+
+  return 1
+}
+
+# _autoenv_find_viewer -- set AUTOENV_VIEWER program is missing
+#                         (a one-time setup function)
+#
+_autoenv_find_viewer() {
+  [ -n "${AUTOENV_VIEWER}" ] && return
+
+  while read -r prog args; do
+    if command -v $prog > /dev/null; then
+      AUTOENV_VIEWER="$prog $args"
+      return
+    fi
+  done <<EOF
+  less -N
+  nl -ba
+  cat
+EOF
+
+}
+_autoenv_find_viewer
+
+# _autoenv_draw_line -- print a horizontal line
+#
+# args:
+# * TEXT: title to print near the beginning of the line
+#
+# usage: _autoenv_draw_line [TEXT]
+#
+_autoenv_draw_line() {
+  local text="${1}" char="-" width=${COLUMNS:-80} margin=3 line
+
+  if [ -n "${text}" ]; then
+    text="--- ${text} "
+  fi
+
+  width=$((width-${#text}-margin))
+  line=$(printf '%*s\n' ${width} | tr " " "${char}")
+
+  if [ -n "$NO_COLOR" ]; then
+    \printf "%s%s\n\n" "${text}" "$line"
+  else
+    \printf "\033[1m%s%s\033[0m\n\n" "${text}" "$line"
+  fi
+}
+
+# _autoenv_show_file -- display the contents of a .env or .env.leave file
+#                      using the $AUTOENV_VIEWER command
+#
+# usage: _autoenv_show_file FILE
+#
+_autoenv_show_file() {
+  local file="$1" ofs="$IFS"
+
+  _autoenv_info -b "New or modified env file detected:"
+  _autoenv_draw_line "${file##*/} contents"
+  IFS=" "
+  $AUTOENV_VIEWER "${file}"
+  IFS="$ofs"
+  _autoenv_draw_line
+}
 
 autoenv_init() {
 
@@ -103,17 +215,9 @@ autoenv_check_authz_and_run() {
                 \return 0
         fi
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
-		\echo "autoenv:"
-		\echo "autoenv: WARNING:"
-		\printf '%s\n' "autoenv: This is the first time you are about to source ${_envfile}":
-		\echo "autoenv:"
-		\echo "autoenv:   --- (begin contents) ---------------------------------------"
-		\cat -e "${_envfile}" | LC_ALL=C \sed 's/.*/autoenv:     &/'
-		\echo "autoenv:"
-		\echo "autoenv:   --- (end contents) -----------------------------------------"
-		\echo "autoenv:"
-		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N) "
-		\read answer
+    _autoenv_show_file "${_envfile}"
+    _autoenv_info -n "Authorize this file? (y/N) "
+		\read -r answer
 		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
 			autoenv_authorize_env "${_envfile}"
 			autoenv_source "${_envfile}"
@@ -154,8 +258,7 @@ autoenv_source() {
 autoenv_cd() {
 	local _pwd
 	_pwd=${PWD}
-	\command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"
-	if [ "${?}" -eq 0 ]; then
+  if \command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"; then
 		autoenv_init "${_pwd}"
 		\return 0
 	else
@@ -207,5 +310,5 @@ elif command -v shasum 2>/dev/null >&2; then
 	}
 	enable_autoenv
 else
-	\echo "autoenv: can not locate a compatible shasum binary; not enabling"
+	_autoenv_err "can not locate a compatible shasum binary; not enabling"
 fi
