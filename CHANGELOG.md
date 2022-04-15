@@ -1,12 +1,13 @@
 # Change Log
+
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/)
-and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.3.0] - 2021-9-5
+## [v0.3.0] - 2021-9-5
 
 ### Fixed
+
 - Leave `$OLDPWD` intact (#141)
 - `AUTOENV_CUR_DIR` contains leading double quote (#150)
 - Prevent any alias usage (#144)
@@ -16,9 +17,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Ensure parent directory of `AUTOENV_AUTH_FILE` exists (#201)
 - Improve platform compatibility (#174, #176, #202)
 
-## [0.2.1] - 2016-10-18
+## [v0.2.1] - 2016-10-18
 
 ### Fixed
+
 - Remove debug output (#126)
 - Paths with spaces on dash
 - Custom names for .env (#109)
@@ -29,9 +31,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - No more override of `$OLDPWD` (#141)
 - .env files at mountpoint are now being found (#146)
 
-## [0.2.0] - 2016-08-08
+## [v0.2.0] - 2016-08-08
 
 ### Added
+
 - setup.py for pyPi
 - setup.py in the Makefile
 - Support for OS X
@@ -40,6 +43,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Expose `AUTOENV_CUR_FILE` and `AUTOENV_CUR_DIR`
 
 ### Fixed
+
 - Fix spaces in filenames
 - Strange grep behavior
 - Look for a .env file when activating autoenv
@@ -50,6 +54,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Crash with zsh 5.1
 
 ### Changed
+
 - Don't run in mc
 - Updated readme
 - Export all variables
@@ -57,23 +62,28 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Follow .env files until the mountpoint
 
 ### Security
+
 - Add quotes everywhere in the shell script
 - Print hidden characters
 
-## [0.1.0] - 2012-02-15
+## [v0.1.0] - 2012-02-15
 
 ### Added
+
 - .env files need approval now
 
 ### Fixed
+
 - Execution on zsh
 
 ### Changed
+
 - Put autoenv under a public license
 
-## [0.0.1] - 2012-02-13
+## [v0.0.1] - 2012-02-13
 
 ### Added
+
 - Initial public version of autoenv
 - Allows executing .env files recursively
 - Makefile for testing
