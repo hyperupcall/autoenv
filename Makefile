@@ -3,8 +3,11 @@
 test:
 	sh tests/test.sh
 
+SHELL := /bin/bash
+
 test2:
-	shelltest -s bash,zsh,dash ./tests2
+# FIXME: add dash,yash,ksh,mksh
+	shelltest -s sh,bash,zsh ./shelltest
 	
 publish:
 	npm publish
