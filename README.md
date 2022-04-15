@@ -55,6 +55,15 @@ Install it easily:
     $ git clone git://github.com/inishchith/autoenv.git ~/.autoenv
     $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
 
+## Using npm
+
+Download the [@hyperupcall/autoenv](https://www.npmjs.com/package/@hyperupcall/autoenv) package
+
+```sh
+$ npm install -g '@hyperupcall/autoenv'
+$ echo "source \"\$(npm root -g)/@hyperupcall/autoenv/activate.sh\"" >> ~/.bashrc
+```
+
 ### Using AUR
 
 Arch Linux users can install
