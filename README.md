@@ -1,4 +1,3 @@
-
 # Autoenv: Directory-based Environments ![Build Status](https://github.com/hyperupcall/autoenv/actions/workflows/ci.yml/badge.svg)
 
 Magic per-project shell environments
@@ -20,10 +19,10 @@ automatically be executed when you leave it.
 
 This is great for...
 
-  - auto-activating virtualenvs
-  - auto-deactivating virtualenvs
-  - project-specific environment variables
-  - making millions
+- auto-activating virtualenvs
+- auto-deactivating virtualenvs
+- project-specific environment variables
+- making millions
 
 You can also nest envs within each other. How awesome is that!?
 
@@ -32,12 +31,13 @@ point and execute all `.env` files beginning at the top.
 
 ## Usage
 
-
 Follow the white rabbit:
 
-    $ echo "echo 'whoa'" > project/.env
-    $ cd project
-    whoa
+```sh
+$ echo "echo 'whoa'" > project/.env
+$ cd project
+whoa
+```
 
 ![Mind blown GIF](http://media.tumblr.com/tumblr_ltuzjvbQ6L1qzgpx9.gif)
 
@@ -47,15 +47,19 @@ Install it easily:
 
 ### MacOS using Homebrew
 
-    $ brew install autoenv
-    $ echo "source $(brew --prefix autoenv)/activate.sh" >> ~/.bash_profile
+```sh
+$ brew install autoenv
+$ echo "source $(brew --prefix autoenv)/activate.sh" >> ~/.bash_profile
+```
 
 ### Using Git
 
-    $ git clone git://github.com/inishchith/autoenv.git ~/.autoenv
-    $ echo 'source ~/.autoenv/activate.sh' >> ~/.bashrc
+```sh
+$ git clone git://github.com/inishchith/autoenv.git ~/.autoenv
+$ echo "source ~/.autoenv/activate.sh" >> ~/.bashrc
+```
 
-## Using npm
+### Using npm
 
 Download the [@hyperupcall/autoenv](https://www.npmjs.com/package/@hyperupcall/autoenv) package
 
@@ -73,7 +77,9 @@ their favorite AUR helper.
 
 You need to source activate.sh in your bashrc afterwards:
 
-    $ echo 'source /usr/share/autoenv/activate.sh' >> ~/.bashrc
+```sh
+$ echo 'source /usr/share/autoenv/activate.sh' >> ~/.bashrc
+```
 
 Note that there was previously a [pip](https://pypi.org/project/autoenv) installation option, but it is no longer recommended as the package is severely out of date
 
@@ -81,30 +87,30 @@ Note that there was previously a [pip](https://pypi.org/project/autoenv) install
 
 Before sourcing activate.sh, you can set the following variables:
 
-  - `AUTOENV_AUTH_FILE`: Authorized env files, defaults to
-    `~/.autoenv_authorized`
-  - `AUTOENV_ENV_FILENAME`: Name of the `.env` file, defaults to `.env`
-  - `AUTOENV_LOWER_FIRST`: Set this variable to a non-null string to flip the order of `.env`
-    files executed
-  - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file,
-    defaults to `.env.leave`
-  - `AUTOENV_ENABLE_LEAVE`: Set this to a non-null string in order to
-    enable source env when leaving
-  - `AUTOENV_ASSUME_YES`: Set this variable to a non-null string to silently authorize the
-    initialization of new environments
-  - `AUTOENV_VIEWER`: Program used to display env files prior to authorization.
-    Default: `"less -N"`.
+- `AUTOENV_AUTH_FILE`: Authorized env files, defaults to
+  `~/.autoenv_authorized`
+- `AUTOENV_ENV_FILENAME`: Name of the `.env` file, defaults to `.env`
+- `AUTOENV_LOWER_FIRST`: Set this variable to a non-null string to flip the order of `.env`
+  files executed
+- `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file,
+  defaults to `.env.leave`
+- `AUTOENV_ENABLE_LEAVE`: Set this to a non-null string in order to
+  enable source env when leaving
+- `AUTOENV_ASSUME_YES`: Set this variable to a non-null string to silently authorize the
+  initialization of new environments
+- `AUTOENV_VIEWER`: Program used to display env files prior to authorization.
+  Default: `"less -N"`.
 
 ## Shells
 
 autoenv is tested on:
 
-  - bash
-  - zsh
-  - dash
-  - fish is supported by
-    [autoenv\_fish](https://github.com/loopbit/autoenv_fish)
-  - more to come
+- bash
+- zsh
+- dash
+- fish is supported by
+  [autoenv_fish](https://github.com/loopbit/autoenv_fish)
+- more to come
 
 ## Alternatives
 
