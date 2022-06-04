@@ -268,10 +268,55 @@ autoenv_cd() {
 
 autoenv_leave() {
 	# execute file when leaving a directory
-	local target_file dir
-	dir="${@}"
-	target_file="${dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
-	[ -f "${target_file}" ] && autoenv_check_authz_and_run "${target_file}"
+ 	local from_dir to_dir _sedregexp _files
+	_sedregexp='-E'
+	from_dir="${@}"
+	to_dir=$(\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g')
+
+	# Discover all files we need to source
+	# We do this in a subshell so we can cd/chdir
+  _files=$(
+		\command -v chdir >/dev/null 2>&1 && \chdir "${from_dir}" || builtin cd "${from_dir}"
+		_hadone=''
+		while [ "$(\pwd)" != "" ] && [[ $to_dir != $(\pwd)* ]]; do
+			_file="$(\pwd)/${AUTOENV_ENV_LEAVE_FILENAME}"
+			if [ -f "${_file}" ]; then
+				if [ -z "${_hadone}" ]; then
+					\printf %s "${_file}"
+					_hadone='1'
+				else
+					\printf %s "
+${_file}"
+				fi
+			fi
+			\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd)/.." || builtin cd "$(pwd)/.."
+		done
+	)
+
+	# ZSH: Use traditional for loop
+	zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \command grep -q shwordsplit && \echo 1)"
+	if [ -z "${zsh_shwordsplit}" ]; then
+		\setopt shwordsplit >/dev/null 2>&1
+	fi
+	# Custom IFS
+	origIFS="${IFS}"
+	IFS='
+'
+
+	# Disable file globbing
+	set -f
+	# Execute the env files
+	for _file in ${_files}; do
+		autoenv_check_authz_and_run "${_file}"
+	done
+	IFS="${origIFS}"
+	# Enable file globbing
+	set +f
+
+	# ZSH: Unset shwordsplit
+	if [ -z "${zsh_shwordsplit}" ]; then
+		\unsetopt shwordsplit >/dev/null 2>&1
+	fi
 }
 
 # Override the cd alias
