@@ -1,4 +1,16 @@
-AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE:-$HOME/.autoenv_authorized}"
+# shellcheck shell=sh
+if [ -n "$AUTOENV_AUTH_FILE" ]; then
+	AUTOENV_AUTH_FILE="$AUTOENV_AUTH_FILE"
+elif [ -f "$HOME/.autoenv_authorized" ]; then
+	AUTOENV_AUTH_FILE="$HOME/.autoenv_authorized"
+else
+	_autoenv_state_dir="$XDG_STATE_HOME"
+	case $_autoenv_state_dir in
+		/*) AUTOENV_AUTH_FILE="$_autoenv_state_dir/autoenv/authorized_list" ;;
+		*) AUTOENV_AUTH_FILE="$HOME/.local/state/autoenv/authorized_list" ;;
+	esac
+	unset -v _autoenv_state_dir
+fi
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 # AUTOENV_VIEWER
