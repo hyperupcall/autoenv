@@ -21,11 +21,12 @@ jobs:
 
     steps:
       - uses: 'actions/checkout@v2'
-        
+
       - name: Install Prerequisites
         run: |
           brew install coreutils bash zsh dash fish ksh tcsh
-     
+
       - name: Run tests
         run: |
           time make test
+          time make test2
