@@ -116,7 +116,6 @@ _autoenv_show_file() {
 }
 
 autoenv_init() {
-
 	if [ -n "$AUTOENV_ENABLE_LEAVE" ]; then
 		autoenv_leave "$@"
 	fi
@@ -127,6 +126,7 @@ autoenv_init() {
 	_mountpoint="$(\df -P "${PWD}" | \tail -n 1 | \awk '$0=$NF')"
 	# Remove double slashes, see #125
 	_pwd=$(\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g')
+	
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
 	_files=$(
@@ -150,10 +150,17 @@ ${_file}"
 	)
 
 	# ZSH: Use traditional for loop
-	zsh_shwordsplit="$(\setopt > /dev/null 2>&1 | \command grep -q shwordsplit && \echo 1)"
-	if [ -z "${zsh_shwordsplit}" ]; then
-		\setopt shwordsplit >/dev/null 2>&1
+	if [ -n "$ZSH_VERSION" ]; then
+		if zsh_shwordsplit="$(\setopt >/dev/null 2>&1 | \command grep -q shwordsplit && \echo 1)"; then
+			:
+		else
+			:
+		fi
+		if [ -z "${zsh_shwordsplit}" ]; then
+			\setopt shwordsplit >/dev/null 2>&1
+		fi
 	fi
+
 	# Custom IFS
 	origIFS="${IFS}"
 	IFS='
@@ -181,8 +188,10 @@ ${_orderedfiles}"
 	set +f
 
 	# ZSH: Unset shwordsplit
-	if [ -z "${zsh_shwordsplit}" ]; then
-		\unsetopt shwordsplit >/dev/null 2>&1
+	if [ -n "$ZSH_VERSION" ]; then
+		if [ -z "${zsh_shwordsplit}" ]; then
+			\unsetopt shwordsplit >/dev/null 2>&1
+		fi
 	fi
 }
 
@@ -258,7 +267,7 @@ autoenv_source() {
 autoenv_cd() {
 	local _pwd
 	_pwd=${PWD}
-  if \command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"; then
+	if \command -v chdir >/dev/null 2>&1 && \chdir "${@}" || builtin cd "${@}"; then
 		autoenv_init "${_pwd}"
 		\return 0
 	else
@@ -275,10 +284,12 @@ autoenv_leave() {
 }
 
 # Override the cd alias
-if setopt 2> /dev/null | \command grep -q aliasfuncdef; then
-	has_alias_func_def_enabled=true;
-else
-	setopt ALIAS_FUNC_DEF 2> /dev/null
+if command -v setopt >/dev/null 2>&1; then
+	if setopt 2> /dev/null | \command grep -q aliasfuncdef; then
+		has_alias_func_def_enabled=true;
+	else
+		setopt ALIAS_FUNC_DEF 2> /dev/null
+	fi
 fi
 
 enable_autoenv() {
