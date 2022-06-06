@@ -5,7 +5,7 @@ setup_file() {
 	. ./activate.sh
 }
 
-# TODO: remov when shelltest uses tempdirs
+# TODO: remove when shelltest uses tempdirs
 teardown_file() {
 	rm -rf './dir' './d ir' './d:ir'
 }

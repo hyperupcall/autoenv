@@ -3,11 +3,13 @@
 test:
 	sh tests/test.sh
 
-SHELL := /bin/bash
-
 test2:
-# FIXME: add dash,yash,ksh,mksh
-	shelltest -s sh,bash,zsh ./shelltest
+	@echo "=== AUTOENV TESTING SH ==="
+	sh ./shelltestrunner.sh
+	@echo "=== AUTOENV TESTING BASH ==="
+	bash ./shelltestrunner.sh
+	@echo "=== AUTOENV TESTING ZSH ==="
+	zsh ./shelltestrunner.sh
 	
 publish:
 	npm publish

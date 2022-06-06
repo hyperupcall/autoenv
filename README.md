@@ -68,19 +68,6 @@ $ npm install -g '@hyperupcall/autoenv'
 $ echo "source \"\$(npm root -g)/@hyperupcall/autoenv/activate.sh\"" >> ~/.bashrc
 ```
 
-### Using AUR
-
-Arch Linux users can install
-[autoenv](https://aur.archlinux.org/packages/autoenv/) or
-[autoenv-git](https://aur.archlinux.org/packages/autoenv-git/) with
-their favorite AUR helper.
-
-You need to source activate.sh in your bashrc afterwards:
-
-```sh
-$ echo 'source /usr/share/autoenv/activate.sh' >> ~/.bashrc
-```
-
 Note that there was previously a [pip](https://pypi.org/project/autoenv) installation option, but it is no longer recommended as the package is severely out of date
 
 ## Configuration

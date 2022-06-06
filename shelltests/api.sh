@@ -6,7 +6,7 @@ setup_file() {
 }
 
 # The following functions must exist for API stability
-test_defined_functions() {
+test_has_defined_functions() {
 	t_is_function 'enable_autoenv'
 	t_is_function 'autoenv_init'
 }
