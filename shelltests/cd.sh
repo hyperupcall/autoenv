@@ -33,7 +33,7 @@ test_cd_dir() {
 test_cd_subdir() {
 	mkdir -p './dir/subdir'
 	printf '%s\n' "printf '%s\n' 'something2'" > './dir/.env'
-	
+
 	output=$(cd './dir/subdir')
 	t_assert [ "$output" = 'something2' ]
 }

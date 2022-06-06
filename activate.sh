@@ -126,7 +126,7 @@ autoenv_init() {
 	_mountpoint="$(\df -P "${PWD}" | \tail -n 1 | \awk '$0=$NF')"
 	# Remove double slashes, see #125
 	_pwd=$(\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g')
-	
+
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
 	_files=$(

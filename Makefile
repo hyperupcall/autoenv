@@ -10,6 +10,6 @@ test2:
 	bash ./shelltestrunner.sh
 	@echo "=== AUTOENV TESTING ZSH ==="
 	zsh ./shelltestrunner.sh
-	
+
 publish:
 	npm publish

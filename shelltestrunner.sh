@@ -16,7 +16,7 @@ t_is_function() {
 		"$1 is a function"*) return 0 ;;
 		"$1 is a shell function"*) return 0 ;;
 	esac
-	
+
 	return 1
 }
 
@@ -45,7 +45,7 @@ main() {
 	done
 	teardown_file
 	printf '%s\n\n'
-	
+
 
 	printf '%s\n' "Sourcing cd.sh"
 	setup_file() { :; }
