@@ -2,14 +2,6 @@
 
 Magic per-project shell environments
 
-**Note**: you should probably use [direnv](https://direnv.net) instead.
-Simply put, it is higher quality software. But, autoenv is still great,
-too. Maybe try both? :)
-
-This image sums up the relationship between the two projects, very well:
-
-<img src="https://d3vv6lp55qjaqc.cloudfront.net/items/2f103O1A1R2T1k2w2M3c/776204239940493426%3Faccount_id=8.jpg" alt="Image of text history" width="250"/>
-
 ## What is it?
 
 If a directory contains a `.env` file, it will automatically be executed
@@ -68,8 +60,6 @@ $ npm install -g '@hyperupcall/autoenv'
 $ echo "source \"\$(npm root -g)/@hyperupcall/autoenv/activate.sh\"" >> ~/.bashrc
 ```
 
-Note that there was previously a [pip](https://pypi.org/project/autoenv) installation option, but it is no longer recommended as the package is severely out of date
-
 ## Configuration
 
 Before sourcing activate.sh, you can set the following variables:
@@ -92,29 +82,22 @@ Before sourcing activate.sh, you can set the following variables:
 
 autoenv is tested on:
 
-- bash
-- zsh
-- dash
-- fish is supported by
+- Bash
+- ZSH
+- Dash
+- Fish is supported by
   [autoenv_fish](https://github.com/loopbit/autoenv_fish)
-- more to come
+- More to come
 
 ## Alternatives
 
-[direnv](https://direnv.net) is an excellent alternative to autoenv, and includes the ability
-to unset environment variables as well. It also supports the fish
-terminal.
-
-<https://direnv.net>
+[direnv](https://direnv.net) is an excellent alternative to autoenv, and includes the ability to unset environment variables as well. It also supports the Fish terminal.
 
 ## Disclaimer
 
-Autoenv overrides `cd`. If you already do this, invoke `autoenv_init`
-within your custom `cd` after sourcing `activate.sh`.
+Autoenv overrides `cd`. If you already do this, invoke `autoenv_init` within your custom `cd` after sourcing `activate.sh`.
 
-Autoenv can be disabled via `unset cd` if you experience I/O issues with
-certain file systems, particularly those that are FUSE-based (such as
-`smbnetfs`).
+Autoenv can be disabled via `unset cd` if you experience I/O issues with certain file systems, particularly those that are FUSE-based (such as `smbnetfs`).
 
 ## Attributions
 

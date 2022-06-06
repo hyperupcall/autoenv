@@ -2,7 +2,7 @@
 	"name": "@hyperupcall/autoenv",
 	"version": "0.3.0",
 	"description": "Magic per-project shell environments",
-	"author": "Edwin Kofler <edwin@kofler.dev> (https://edwinkofler.com/)",
+	"author": "Edwin Kofler <edwin@kofler.dev> (https://edwinkofler.com)",
 	"license": "MIT",
 	"files": [
 		"activate.sh",
@@ -13,9 +13,9 @@
 		"type": "git",
 		"url": "https://github.com/hyperupcall/autoenv.git"
 	},
-	"homepage": "https://github.com/owner/project#readme",
+	"homepage": "https://github.com/hyperupcall/autoenv#readme",
 	"bugs": {
-		"url": "https://github.com/owner/project#readme",
+		"url": "https://github.com/hyperupcall/autoenv/issues",
 		"email": "edwin@kofler.dev"
 	},
 	"keywords": [
