@@ -47,7 +47,7 @@ $ echo "source $(brew --prefix autoenv)/activate.sh" >> ~/.bash_profile
 ### Using Git
 
 ```sh
-$ git clone git://github.com/inishchith/autoenv.git ~/.autoenv
+$ git clone https://github.com/hyperupcall/autoenv ~/.autoenv
 $ echo "source ~/.autoenv/activate.sh" >> ~/.bashrc
 ```
 
