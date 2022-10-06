@@ -65,15 +65,15 @@ $ echo "source \"\$(npm root -g)/@hyperupcall/autoenv/activate.sh\"" >> ~/.bashr
 Before sourcing activate.sh, you can set the following variables:
 
 - `AUTOENV_AUTH_FILE`: Authorized env files, defaults to
-  `~/.autoenv_authorized`
+  `~/.autoenv_authorized` if it exists; otherwise, `~/.local/state/autoenv/authorized_list`
 - `AUTOENV_ENV_FILENAME`: Name of the `.env` file, defaults to `.env`
-- `AUTOENV_LOWER_FIRST`: Set this variable to a non-null string to flip the order of `.env`
+- `AUTOENV_LOWER_FIRST`: Set this variable to a non-empty string to flip the order of `.env`
   files executed
 - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file,
   defaults to `.env.leave`
-- `AUTOENV_ENABLE_LEAVE`: Set this to a non-null string in order to
+- `AUTOENV_ENABLE_LEAVE`: Set this to a non-empty string in order to
   enable source env when leaving
-- `AUTOENV_ASSUME_YES`: Set this variable to a non-null string to silently authorize the
+- `AUTOENV_ASSUME_YES`: Set this variable to a non-empty string to silently authorize the
   initialization of new environments
 - `AUTOENV_VIEWER`: Program used to display env files prior to authorization.
   Default: `"less -N"`.
@@ -83,7 +83,7 @@ Before sourcing activate.sh, you can set the following variables:
 autoenv is tested on:
 
 - Bash
-- ZSH
+- Zsh
 - Dash
 - Fish is supported by
   [autoenv_fish](https://github.com/loopbit/autoenv_fish)
@@ -101,4 +101,4 @@ Autoenv can be disabled via `unset cd` if you experience I/O issues with certain
 
 ## Attributions
 
-Autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Ownership was then transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project
+Autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Later, ownership was transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project
