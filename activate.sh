@@ -1,6 +1,6 @@
 # shellcheck shell=sh
 if [ -n "$AUTOENV_AUTH_FILE" ]; then
-	AUTOENV_AUTH_FILE="$AUTOENV_AUTH_FILE"
+	:
 elif [ -f "$HOME/.autoenv_authorized" ]; then
 	AUTOENV_AUTH_FILE="$HOME/.autoenv_authorized"
 else
@@ -27,27 +27,27 @@ AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 # usage: _autoenv_info [-n] [-b[NUM]] MESSAGE...
 #
 _autoenv_info() {
-  local after=1 before=0
+	local after=1 before=0
 
-  while : ; do
-    case "$1" in
-      -n)  after=0                           ;;
-      -b*) before=${1#-b} ; : "${before:=1}" ;;
-      -a*) after=${1#-a}  ; : "${after:=1}"  ;;
-      *)   break                             ;;
-    esac
-    shift
-  done
+	while : ; do
+		case "$1" in
+		-n)  after=0                           ;;
+		-b*) before=${1#-b} ; : "${before:=1}" ;;
+		-a*) after=${1#-a}  ; : "${after:=1}"  ;;
+		*)   break                             ;;
+		esac
+		shift
+	done
 
-  [ $before -gt 0 ] && printf '%*s' ${before} | tr " " "\n"
+	[ $before -gt 0 ] && printf '%*s' ${before} | tr " " "\n"
 
-  if [ -n "$NO_COLOR" ]; then
-    \printf "[autoenv] %s" "${*}"
-  else
-    \printf "\033[33m[autoenv]\033[0m %s" "${*}"
-  fi
+	if [ -n "$NO_COLOR" ]; then
+		\printf "[autoenv] %s" "${*}"
+	else
+		\printf "\033[33m[autoenv]\033[0m %s" "${*}"
+	fi
 
-  [ $after -gt 0 ] && printf '%*s' ${after} | tr " " "\n"
+	[ $after -gt 0 ] && printf '%*s' ${after} | tr " " "\n"
 }
 
 # _autoenv_err -- print a message to stderr
@@ -58,27 +58,27 @@ _autoenv_info() {
 # usage: _autoenv_err MESSAGE...
 #
 _autoenv_err() {
-  if [ -n "$NO_COLOR" ]; then
-    \printf "[autoenv] Error %s" "${*}" >&2
-  else
-    \printf "\033[33m[autoenv]\033[0m \033[31mError\033[0m %s\n" "${*}" >&2
-  fi
+	if [ -n "$NO_COLOR" ]; then
+		\printf "[autoenv] Error %s" "${*}" >&2
+	else
+		\printf "\033[33m[autoenv]\033[0m \033[31mError\033[0m %s\n" "${*}" >&2
+	fi
 
-  return 1
+	return 1
 }
 
 # _autoenv_find_viewer -- set AUTOENV_VIEWER program is missing
 #                         (a one-time setup function)
 #
 _autoenv_find_viewer() {
-  [ -n "${AUTOENV_VIEWER}" ] && return
+	[ -n "${AUTOENV_VIEWER}" ] && return
 
-  while read -r prog args; do
-    if command -v $prog > /dev/null; then
-      AUTOENV_VIEWER="$prog $args"
-      return
-    fi
-  done <<EOF
+	while read -r prog args; do
+		if command -v "$prog" > /dev/null; then
+		AUTOENV_VIEWER="$prog $args"
+		return
+		fi
+	done <<EOF
   less -N
   nl -ba
   cat
@@ -95,20 +95,20 @@ _autoenv_find_viewer
 # usage: _autoenv_draw_line [TEXT]
 #
 _autoenv_draw_line() {
-  local text="${1}" char="-" width=${COLUMNS:-80} margin=3 line
+	local text="${1}" char="-" width=${COLUMNS:-80} margin=3 line
 
-  if [ -n "${text}" ]; then
-    text="--- ${text} "
-  fi
+	if [ -n "${text}" ]; then
+		text="--- ${text} "
+	fi
 
-  width=$((width-${#text}-margin))
-  line=$(printf '%*s\n' ${width} | tr " " "${char}")
+	width=$((width - ${#text} - margin))
+	line=$(printf '%*s\n' ${width} | tr " " "${char}")
 
-  if [ -n "$NO_COLOR" ]; then
-    \printf "%s%s\n\n" "${text}" "$line"
-  else
-    \printf "\033[1m%s%s\033[0m\n\n" "${text}" "$line"
-  fi
+	if [ -n "$NO_COLOR" ]; then
+		\printf "%s%s\n\n" "${text}" "$line"
+	else
+		\printf "\033[1m%s%s\033[0m\n\n" "${text}" "$line"
+fi
 }
 
 # _autoenv_show_file -- display the contents of a .env or .env.leave file
@@ -117,14 +117,14 @@ _autoenv_draw_line() {
 # usage: _autoenv_show_file FILE
 #
 _autoenv_show_file() {
-  local file="$1" ofs="$IFS"
+	local file="$1" ofs="$IFS"
 
-  _autoenv_info -b "New or modified env file detected:"
-  _autoenv_draw_line "${file##*/} contents"
-  IFS=" "
-  $AUTOENV_VIEWER "${file}"
-  IFS="$ofs"
-  _autoenv_draw_line
+	_autoenv_info -b "New or modified env file detected:"
+	_autoenv_draw_line "${file##*/} contents"
+	IFS=" "
+	$AUTOENV_VIEWER "${file}"
+	IFS="$ofs"
+	_autoenv_draw_line
 }
 
 autoenv_init() {
@@ -233,11 +233,11 @@ autoenv_check_authz_and_run() {
 	if [ -n "${AUTOENV_ASSUME_YES}" ]; then # Don't ask for permission if "assume yes" is switched on
 		autoenv_authorize_env "${_envfile}"
 		autoenv_source "${_envfile}"
-                \return 0
-        fi
+		\return 0
+		fi
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
-    _autoenv_show_file "${_envfile}"
-    _autoenv_info -n "Authorize this file? (y/N) "
+		_autoenv_show_file "${_envfile}"
+		_autoenv_info -n "Authorize this file? (y/N) "
 		\read -r answer
 		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
 			autoenv_authorize_env "${_envfile}"
@@ -289,14 +289,14 @@ autoenv_cd() {
 
 autoenv_leave() {
 	# execute file when leaving a directory
- 	local from_dir to_dir _sedregexp _files
+	local from_dir to_dir _sedregexp _files
 	_sedregexp='-E'
-	from_dir="${@}"
+	from_dir="${*}"
 	to_dir=$(\echo "${PWD}" | \sed "${_sedregexp}" 's:/+:/:g')
 
 	# Discover all files we need to source
 	# We do this in a subshell so we can cd/chdir
-  _files=$(
+	_files=$(
 		\command -v chdir >/dev/null 2>&1 && \chdir "${from_dir}" || builtin cd "${from_dir}"
 		_hadone=''
 		while [ "$(\pwd)" != "" ] && [[ $to_dir != $(\pwd)* ]]; do
