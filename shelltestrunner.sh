@@ -35,7 +35,7 @@ main() {
 	teardown_file() { :; }
 	setup() { :; }
 	teardown() { :; }
-	source ./shelltests/api.sh
+	source ./shelltest/api.sh
 	setup_file
 	for fn in test_has_defined_functions; do
 		printf '%s\n' "Running: $fn"
@@ -52,7 +52,7 @@ main() {
 	teardown_file() { :; }
 	setup() { :; }
 	teardown() { :; }
-	source ./shelltests/cd.sh
+	source ./shelltest/cd.sh
 	setup_file
 	for fn in test_cd_noenv test_cd_dir test_cd_subdir test_cd_dir_and_subdir test_cd_dir_and_subdir_spaces test_cd_dir_and_subdir_colons; do
 		printf '%s\n' "Running: $fn"
@@ -68,7 +68,7 @@ main() {
 	teardown_file() { :; }
 	setup() { :; }
 	teardown() { :; }
-	source ./shelltests/env.sh
+	source ./shelltest/env.sh
 	setup_file
 	for fn in test_AUTOENV_ENV_FILENAME_works test_AUTOENV_ENV_FILENAME_works2; do
 		printf '%s\n' "Running: $fn"
