@@ -1,4 +1,5 @@
 {
 	"commands-show-output": false,
-	"line-length": false
+	"line-length": false,
+	"no-inline-html": false
 }
