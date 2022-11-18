@@ -52,7 +52,7 @@ Note that these are NEW instructions. If you are experiencing problems, please [
 
 When installing manually, you first install autoenv with either Homebrew, npm, or Git. Then, you run a command to ensure autoenv is loaded when you open a terminal (this command depends on your [default shell](https://askubuntu.com/a/590901)).
 
-### 1. Installation Method
+### Installation Method
 
 #### Using Homebrew
 
@@ -131,7 +131,7 @@ $ printf '%s\n' "source ~/.autoenv/activate.sh" >> ~/.bash_profile
 
 ## Configuration
 
-_Before_ sourcing `activate.sh`, you can set the following variables:
+_Before_ `source`ing `activate.sh`, you can set the following variables:
 
 - `AUTOENV_AUTH_FILE`: Authorized env files; defaults to `~/.autoenv_authorized` if it exists, otherwise, `~/.local/state/autoenv/authorized_list`
 - `AUTOENV_ENV_FILENAME`: Name of the `.env` file; defaults to `.env`
