@@ -350,9 +350,11 @@ if command -v setopt >/dev/null 2>&1; then
 fi
 
 enable_autoenv() {
-	cd() {
-		autoenv_cd "${@}"
-	}
+	if [ -z "${AUTOENV_PRESERVE_CD}" ]; then
+		cd() {
+			autoenv_cd "${@}"
+		}
+	fi
 
 	cd "${PWD}"
 }
@@ -366,17 +368,17 @@ if command -v gsha1sum 2>/dev/null >&2 ; then
 	autoenv_shasum() {
 		gsha1sum "${@}"
 	}
-	enable_autoenv
+	enable_autoenv "$@"
 elif command -v sha1sum 2>/dev/null >&2; then
 	autoenv_shasum() {
 		sha1sum "${@}"
 	}
-	enable_autoenv
+	enable_autoenv "$@"
 elif command -v shasum 2>/dev/null >&2; then
 	autoenv_shasum() {
 		shasum "${@}"
 	}
-	enable_autoenv
+	enable_autoenv "$@"
 else
 	_autoenv_err "can not locate a compatible shasum binary; not enabling"
 fi

@@ -140,6 +140,7 @@ _Before_ `source`ing `activate.sh`, you can set the following variables:
 - `AUTOENV_ENABLE_LEAVE`: Set this to a non-empty string in order to enable source env when leaving
 - `AUTOENV_ASSUME_YES`: Set this variable to a non-empty string to silently authorize the initialization of new environments
 - `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `less -N`
+- `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own)
 
 ## Shells
 
@@ -153,7 +154,7 @@ autoenv is tested on:
 
 ## Disclaimer
 
-Autoenv overrides `cd`. If you already do this, invoke `autoenv_init` within your custom `cd` after sourcing `activate.sh`.
+Autoenv overrides `cd` (unless `AUTOENV_PRESERVE_CD` is set to a non-empty string). If you already do this, invoke `autoenv_init` within your custom `cd` after sourcing `activate.sh`.
 
 Autoenv can be disabled via `unset -f cd` if you experience I/O issues with certain file systems, particularly those that are FUSE-based (such as `smbnetfs`).
 
