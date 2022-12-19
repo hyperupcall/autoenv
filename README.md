@@ -4,9 +4,7 @@ Magic per-project shell environments
 
 ## What is it?
 
-If a directory contains a `.env` file, it will automatically be executed
-when you `cd` into it. When enabled (set `AUTOENV_ENABLE_LEAVE` to a non-empty string), if a directory contains a `.env.leave` file, it will
-automatically be executed when you leave it.
+If a directory contains a `.env` file, it will automatically be executed when you `cd` into it. When enabled (set `AUTOENV_ENABLE_LEAVE` to a non-empty string), if a directory contains a `.env.leave` file, it will automatically be executed when you leave it.
 
 This is great for...
 
@@ -160,10 +158,10 @@ Autoenv can be disabled via `unset -f cd` if you experience I/O issues with cert
 
 ## Other info
 
-To uninstall autoenv, see [`./docs/uninstall.md`](./docs/uninstall.md)
+To uninstall autoenv, see [`./docs/uninstall.md`](./docs/uninstall.md).
 
-To update autoenv, see [`./docs/updating.md`](./docs/updating.md)
+To update autoenv, see [`./docs/updating.md`](./docs/updating.md).
 
 ## Attributions
 
-Autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Later, ownership was transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project
+Autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Later, ownership was transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project.
