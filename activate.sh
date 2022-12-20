@@ -16,16 +16,14 @@ AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 # AUTOENV_VIEWER
 # AUTOENV_ENABLE_LEAVE
 
-# _autoenv_info -- print a user message to stdout
-#
-# args:
-# -b[NUM]     number of lines to print before message
-# -a[NUM]     number of lines to print after message (default=1)
-# -n          do not print trailing newline (same as -a0)
-# MESSAGE     space seperated text of message
-#
-# usage: _autoenv_info [-n] [-b[NUM]] MESSAGE...
-#
+# @description print a user message to stdout
+# @args
+#   -b[NUM]: number of lines to print before message
+#   -a[NUM]: number of lines to print after message (default=1)
+#   -n: do not print trailing newline (same as -a0)
+#   message: space seperated text of message
+# @example _autoenv_info -n -b1 'my message'
+# @internal
 _autoenv_info() {
 	local after=1 before=0
 
@@ -50,13 +48,11 @@ _autoenv_info() {
 	[ $after -gt 0 ] && printf '%*s' ${after} | tr " " "\n"
 }
 
-# _autoenv_err -- print a message to stderr
-#
-# args:
-# MESSAGE     space seperated text of message
-#
-# usage: _autoenv_err MESSAGE...
-#
+# @description print a message to stderr
+# @args
+#   message: space seperated text of message
+# @example _autoenv_err 'there was an error'
+# @internal
 _autoenv_err() {
 	if [ -n "$NO_COLOR" ]; then
 		\printf "[autoenv] Error %s" "${*}" >&2
@@ -67,9 +63,8 @@ _autoenv_err() {
 	return 1
 }
 
-# _autoenv_find_viewer -- set AUTOENV_VIEWER program is missing
-#                         (a one-time setup function)
-#
+# @description set `AUTOENV_VIEWER` program is missing (a one-time setup function)
+# @internal
 _autoenv_find_viewer() {
 	[ -n "${AUTOENV_VIEWER}" ] && return
 
@@ -87,13 +82,11 @@ EOF
 }
 _autoenv_find_viewer
 
-# _autoenv_draw_line -- print a horizontal line
-#
-# args:
-# * TEXT: title to print near the beginning of the line
-#
-# usage: _autoenv_draw_line [TEXT]
-#
+# @description print a horizontal line
+# @args
+#   text: title to print near the beginning of the line
+# @example _autoenv_draw_line 'text'
+# @internal
 _autoenv_draw_line() {
 	local text="${1}" char="-" width=${COLUMNS:-80} margin=3 line
 
@@ -111,11 +104,9 @@ _autoenv_draw_line() {
 fi
 }
 
-# _autoenv_show_file -- display the contents of a .env or .env.leave file
-#                      using the $AUTOENV_VIEWER command
-#
-# usage: _autoenv_show_file FILE
-#
+# @description display the contents of a `.env` or `.env.leave` file using the `$AUTOENV_VIEWER`` command
+# @example _autoenv_show_file './.env_file'
+# @internal
 _autoenv_show_file() {
 	local file="$1" ofs="$IFS"
 
@@ -127,6 +118,8 @@ _autoenv_show_file() {
 	_autoenv_draw_line
 }
 
+# @description Main initialization function
+# @internal
 autoenv_init() {
 	if [ -n "$AUTOENV_ENABLE_LEAVE" ]; then
 		autoenv_leave "$@"
@@ -207,6 +200,8 @@ ${_orderedfiles}"
 	fi
 }
 
+# @description Checks the hash
+# @internal
 autoenv_hashline() {
 	local _envfile _hash
 	_envfile="${1}"
@@ -214,6 +209,8 @@ autoenv_hashline() {
 	\printf '%s\n' "${_envfile}:${_hash}"
 }
 
+# @description Determines if a file is authorized to be sourced
+# @internal
 autoenv_check_authz() {
 	local _envfile _hash
 	_envfile="${1}"
@@ -223,6 +220,8 @@ autoenv_check_authz() {
 	\command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
 }
 
+# @description Source an env file if is able to do so
+# @internal
 autoenv_check_authz_and_run() {
 	local _envfile
 	_envfile="${1}"
@@ -246,6 +245,8 @@ autoenv_check_authz_and_run() {
 	fi
 }
 
+# @description Mark an env file as able to be sourced
+# @internal
 autoenv_deauthorize_env() {
 	local _envfile _noclobber
 	_envfile="${1}"
@@ -257,6 +258,8 @@ autoenv_deauthorize_env() {
 	\command rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
+# @description Mark an env file as not able to be sourced
+# @internal
 autoenv_authorize_env() {
 	local _envfile
 	_envfile="${1}"
@@ -264,6 +267,8 @@ autoenv_authorize_env() {
 	autoenv_hashline "${_envfile}" >> "${AUTOENV_AUTH_FILE}"
 }
 
+# @description Actually source a file
+# @internal
 autoenv_source() {
 	local _allexport
 	_allexport="$(\set +o | \command grep allexport)"
@@ -276,6 +281,7 @@ autoenv_source() {
 	\unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
 }
 
+# @description Function to override the 'cd' builtin
 autoenv_cd() {
 	local _pwd
 	_pwd=${PWD}
@@ -287,6 +293,7 @@ autoenv_cd() {
 	fi
 }
 
+# @description Cleanup autoenv
 autoenv_leave() {
 	# execute file when leaving a directory
 	local from_dir to_dir _sedregexp _files
@@ -349,6 +356,7 @@ if command -v setopt >/dev/null 2>&1; then
 	fi
 fi
 
+# @description Run to automatically replace the cd builtin with our improved one
 enable_autoenv() {
 	if [ -z "${AUTOENV_PRESERVE_CD}" ]; then
 		cd() {
