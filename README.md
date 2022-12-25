@@ -52,6 +52,8 @@ When installing manually, you first install autoenv with either Homebrew, npm, o
 
 ### Installation Method
 
+Note that if writing to `.zprofile` or `.bash_profile` doesn't work, you may need to write to `.zshrc` or `.bashrc`, respectively, depending on operating system.
+
 #### Using Homebrew
 
 Prefer this if you're running macOS. Homebrew [must be installed](https://brew.sh).
@@ -137,8 +139,8 @@ _Before_ `source`ing `activate.sh`, you can set the following variables:
 - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file; defaults to `.env.leave`
 - `AUTOENV_ENABLE_LEAVE`: Set this to a non-empty string in order to enable source env when leaving
 - `AUTOENV_ASSUME_YES`: Set this variable to a non-empty string to silently authorize the initialization of new environments
-- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `less -N`
-- `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own)
+- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `less -N` (`master` branch only)
+- `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own) (`master` branch only)
 
 ## Shells
 
