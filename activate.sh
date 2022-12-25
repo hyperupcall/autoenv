@@ -13,7 +13,7 @@ else
 fi
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
-# AUTOENV_VIEWER
+AUTOENV_VIEWER="${AUTOENV_VIEWER:-cat}"
 # AUTOENV_ENABLE_LEAVE
 
 # @description print a user message to stdout
@@ -62,25 +62,6 @@ _autoenv_err() {
 
 	return 1
 }
-
-# @description set `AUTOENV_VIEWER` program is missing (a one-time setup function)
-# @internal
-_autoenv_find_viewer() {
-	[ -n "${AUTOENV_VIEWER}" ] && return
-
-	while read -r prog args; do
-		if command -v "$prog" > /dev/null; then
-		AUTOENV_VIEWER="$prog $args"
-		return
-		fi
-	done <<EOF
-  less -N
-  nl -ba
-  cat
-EOF
-
-}
-_autoenv_find_viewer
 
 # @description print a horizontal line
 # @args

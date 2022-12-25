@@ -139,7 +139,7 @@ _Before_ `source`ing `activate.sh`, you can set the following variables:
 - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file; defaults to `.env.leave`
 - `AUTOENV_ENABLE_LEAVE`: Set this to a non-empty string in order to enable source env when leaving
 - `AUTOENV_ASSUME_YES`: Set this variable to a non-empty string to silently authorize the initialization of new environments
-- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `less -N` (`master` branch only)
+- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat` (`master` branch only)
 - `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own) (`master` branch only)
 
 ## Shells
