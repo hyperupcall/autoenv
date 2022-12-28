@@ -52,7 +52,7 @@ When installing manually, you first install autoenv with either Homebrew, npm, o
 
 ### Installation Method
 
-Note that if writing to `.zprofile` or `.bash_profile` doesn't work, you may need to write to `.zshrc` or `.bashrc`, respectively, depending on operating system.
+Note that depending on your shell and operating system, you may need to write to `.zprofile` instead of `.zshrc`, or write to `.bash_profile` instead of `.bashrc` (or visa-versa).
 
 #### Using Homebrew
 
@@ -70,10 +70,13 @@ $ brew install 'autoenv'
 Then, execute run of the following to ensure autoenv is loaded when you open a terminal:
 
 ```sh
-# For Zsh shell (default on macOS since Catalina)
+# For Zsh shell (on Linux or macOS)
 $ printf '%s\n' "source $(brew --prefix autoenv)/activate.sh" >> "${ZDOTDIR:-$HOME}/.zprofile"
 
-# For Bash shell (default on most Linux distributions)
+# For Bash shell (on Linux)
+$ printf '%s\n' "source $(brew --prefix autoenv)/activate.sh" >> ~/.bashrc
+
+# For Bash shell (on macOS)
 $ printf '%s\n' "source $(brew --prefix autoenv)/activate.sh" >> ~/.bash_profile
 ```
 
@@ -95,10 +98,13 @@ $ npm install -g '@hyperupcall/autoenv'
 Then, execute run of the following to ensure autoenv is loaded when you open a terminal:
 
 ```sh
-# For Zsh shell (default on macOS since Catalina)
+# For Zsh shell (on Linux or macOS)
 $ printf '%s\n' "source $(npm root -g)/activate.sh" >> "${ZDOTDIR:-$HOME}/.zprofile"
 
-# For Bash shell (default on most Linux distributions)
+# For Bash shell (on Linux)
+$ printf '%s\n' "source $(npm root -g)/activate.sh" >> ~/.bashrc
+
+# For Bash shell (on macOS)
 $ printf '%s\n' "source $(npm root -g)/activate.sh" >> ~/.bash_profile
 ```
 
@@ -120,10 +126,13 @@ $ git clone 'https://github.com/hyperupcall/autoenv' ~/.autoenv
 Then, execute run of the following to ensure autoenv is loaded when you open a terminal:
 
 ```sh
-# For Zsh shell (default on macOS since Catalina)
+# For Zsh shell (on Linux or macOS)
 $ printf '%s\n' "source ~/.autoenv/activate.sh" >> "${ZDOTDIR:-$HOME}/.zprofile"
 
-# For Bash shell (default on most Linux distributions)
+# For Bash shell (on Linux)
+$ printf '%s\n' "source ~/.autoenv/activate.sh" >> ~/.bashrc
+
+# For Bash shell (on macOS)
 $ printf '%s\n' "source ~/.autoenv/activate.sh" >> ~/.bash_profile
 ```
 
