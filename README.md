@@ -32,8 +32,6 @@ whoa
 
 ## Installation (automated)
 
-Note that these are NEW instructions. If you are experiencing problems, please [file an issue](https://github.com/hyperupcall/autoenv/issues).
-
 ```sh
 # with cURL
 curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/master/scripts/install.sh' | sh
@@ -45,8 +43,6 @@ wget --show-progress -o /dev/null -O- 'https://raw.githubusercontent.com/hyperup
 If you encounter some variant of a `curl: command not found` or `wget: command not found` error, please install either cURL or wget (with your package manager) and try again.
 
 ## Installation (manual)
-
-Note that these are NEW instructions. If you are experiencing problems, please [file an issue](https://github.com/hyperupcall/autoenv/issues).
 
 When installing manually, you first install autoenv with either Homebrew, npm, or Git. Then, you run a command to ensure autoenv is loaded when you open a terminal (this command depends on your [default shell](https://askubuntu.com/a/590901)).
 
