@@ -1,0 +1,29 @@
+# Maintainer: hyperupcall <edwin@kofler.dev>
+
+pkgname=autoenv-git
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='Directory based enviroments'
+arch=('any')
+url='https://github.com/hyperupcall/autoenv'
+license=('MIT')
+source=("$pkgname"::'git+https://github.com/hyperupcall/autoenv.git')
+sha256sums=('SKIP')
+depends=('bash')
+optdepends=('zsh: if preferred over bash')
+makedepends=('git')
+conflicts=('autoenv')
+
+pkgver() {
+	cd "$pkgname" || exit
+
+	set -o pipefail
+	git describe --tags --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+package() {
+	cd "$pkgname" || exit
+
+	install -D -m755 activate.sh "${pkgdir}/usr/share/${pkgname}/activate.sh"
+	install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
