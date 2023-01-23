@@ -1,4 +1,5 @@
-# Autoenv: Directory-based Environments ![Build Status](https://github.com/hyperupcall/autoenv/actions/workflows/ci.yml/badge.svg)
+# Autoenv: Directory-based Environments 
+[✓[Build Status](https://github.com/hyperupcall/autoenv/actions/workflows/ci.yml/badge.svg)
 
 Magic per-project shell environments
 
