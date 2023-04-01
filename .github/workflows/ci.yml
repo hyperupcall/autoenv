@@ -24,9 +24,10 @@ jobs:
 
       - name: Install Prerequisites
         run: |
-          brew install coreutils bash zsh dash fish ksh tcsh
+          brew install coreutils bash zsh dash fish ksh tcsh bats-core
 
       - name: Run tests
         run: |
           time make test
+          time make test-bats
           # time make test2

@@ -1,7 +1,10 @@
-.PHONY: test publish
+.PHONY: test test-bats publish
 
 test:
 	sh tests/test.sh
+
+test-bats:
+	bats tests
 
 test2:
 	@echo "=== AUTOENV TESTING SH ==="
