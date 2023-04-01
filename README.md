@@ -139,6 +139,7 @@ $ printf '%s\n' "source ~/.autoenv/activate.sh" >> ~/.bash_profile
 _Before_ `source`ing `activate.sh`, you can set the following variables:
 
 - `AUTOENV_AUTH_FILE`: Authorized env files; defaults to `~/.autoenv_authorized` if it exists, otherwise, `~/.local/state/autoenv/authorized_list`
+- `AUTOENV_NOTAUTH_FILE`: Env files not authorized to be sourced; defaults to a file in the same directory as `~/.autoenv_authorized` (`master` branch only)
 - `AUTOENV_ENV_FILENAME`: Name of the `.env` file; defaults to `.env`
 - `AUTOENV_LOWER_FIRST`: Set this variable to a non-empty string to flip the order of `.env` files executed
 - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file; defaults to `.env.leave`
