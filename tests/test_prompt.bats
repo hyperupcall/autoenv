@@ -16,16 +16,20 @@ setup() {
 		source '$BATS_TEST_DIRNAME/../activate.sh'
 		cd './dir' <<< 'y'
 	"
-	[[ "$output" == *'New or modified env file detected'* ]]
-	[[ "$output" == *'echo 123'* ]]
+
+	assert_success
+	assert_line -p 'New or modified env file detected'
+	assert_line -p 'echo 123'
 
 	run bash -c "
 		source '$BATS_TEST_DIRNAME/../activate.sh'
 		cd './dir'
 	"
-	[[ "$output" != *'New or modified env file detected'* ]]
-	[[ "$output" != *'echo 123'* ]]
-	[[ "$output" == *'123'* ]]
+
+	assert_success
+	refute_line -p 'New or modified env file detected'
+	refute_line -p 'echo 123'
+	assert_line '123'
 }
 
 @test "Entering 'n' prompts again" {
@@ -36,15 +40,17 @@ setup() {
 		source '$BATS_TEST_DIRNAME/../activate.sh'
 		cd './dir' <<< 'n'
 	"
-	[[ "$output" == *'New or modified env file detected'* ]]
-	[[ "$output" == *'echo 123'* ]]
+	assert_success
+	assert_line -p 'New or modified env file detected'
+	assert_line -p 'echo 123'
 
 	run bash -c "
 		source '$BATS_TEST_DIRNAME/../activate.sh'
 		cd './dir' <<< 'n'
 	"
-	[[ "$output" == *'New or modified env file detected'* ]]
-	[[ "$output" == *'echo 123'* ]]
+	assert_success
+	assert_line -p 'New or modified env file detected'
+	assert_line -p 'echo 123'
 }
 
 @test "Entering 'd' does not prompt again" {
@@ -55,15 +61,15 @@ setup() {
 		source '$BATS_TEST_DIRNAME/../activate.sh'
 		cd './dir' <<< 'd'
 	"
-	[[ "$output" == *'New or modified env file detected'* ]]
-	[[ "$output" == *'echo 123'* ]]
+	assert_success
+	assert_line -p 'New or modified env file detected'
+	assert_line -p 'echo 123'
 
 	run bash -c "
 		source '$BATS_TEST_DIRNAME/../activate.sh'
 		cd './dir' <<< 'y'
 	"
-	[[ "$output" != *'New or modified env file detected'* ]]
-	[[ "$output" != *'echo 123'* ]]
-	[[ "$output" != *'123'* ]]
+	assert_success
+	assert_output ''
 }
 

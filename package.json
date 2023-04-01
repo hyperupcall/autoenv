@@ -5,9 +5,7 @@
 	"author": "Edwin Kofler <edwin@kofler.dev> (https://edwinkofler.com)",
 	"license": "MIT",
 	"files": [
-		"activate.sh",
-		"LICENSE",
-		"README.md"
+		"activate.sh"
 	],
 	"repository": {
 		"type": "git",
@@ -19,6 +17,10 @@
 		"email": "edwin@kofler.dev"
 	},
 	"keywords": [
-		"autoenv"
-	]
+		"autoenv",
+		"shell"
+	],
+	"devDependencies": {
+		"@hyperupcall/bats-all": "^5.1.1"
+	}
 }

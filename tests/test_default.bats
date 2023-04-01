@@ -10,39 +10,42 @@ load './util/init.sh'
 
 
 @test "Works by default" {
-	mkdir -p './d ir'
-	printf '%s\n' 'echo abc' > './d ir/.env'
+	mkdir -p './dir'
+	printf '%s\n' 'echo abc' > './dir/.env'
 
 	run bash -c "
 		source '$BATS_TEST_DIRNAME/../activate.sh'
-		cd './d ir'
+		cd './dir'
 	"
 
-	[[ "$output" == *'abc'* ]]
+	assert_success
+	assert_line 'abc'
 }
 
 @test "Fails by default" {
-	mkdir -p './d ir'
+	mkdir -p './dir'
 
 	run bash -c "
 		source '$BATS_TEST_DIRNAME/../activate.sh'
-		cd './d ir'
+		cd './dir'
 	"
 
-	[ -z "$output" ]
+	assert_success
+	assert_output ''
 }
 
 @test "Works with 'AUTOENV_ENV_FILENAME'" {
-	mkdir -p './d ir'
-	printf '%s\n' 'echo special_filename' > './d ir/coolenv'
+	mkdir -p './dir'
+	printf '%s\n' 'echo special_filename' > './dir/coolenv'
 
 	run bash -c "
 		AUTOENV_ENV_FILENAME='coolenv'
 		source '$BATS_TEST_DIRNAME/../activate.sh'
-		cd './d ir'
+		cd './dir'
 	"
 
-	[[ "$output" == *'special_filename'* ]]
+	assert_success
+	assert_line 'special_filename'
 }
 
 
