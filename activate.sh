@@ -11,6 +11,19 @@ else
 	esac
 	unset -v _autoenv_state_dir
 fi
+if [ -n "$AUTOENV_NOTAUTH_FILE" ]; then
+	:
+elif [ -f "$HOME/.autoenv_authorized" ]; then
+	# If `.autoenv_authorized` is in home, don't suprise the user by using XDG Base Dir
+	AUTOENV_NOTAUTH_FILE="$HOME/.autoenv_not_authorized"
+else
+	_autoenv_state_dir="$XDG_STATE_HOME"
+	case $_autoenv_state_dir in
+		/*) AUTOENV_NOTAUTH_FILE="$_autoenv_state_dir/autoenv/not_authorized_list" ;;
+		*) AUTOENV_NOTAUTH_FILE="$HOME/.local/state/autoenv/not_authorized_list" ;;
+	esac
+	unset -v _autoenv_state_dir
+fi
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 AUTOENV_VIEWER="${AUTOENV_VIEWER:-cat}"
@@ -191,14 +204,25 @@ autoenv_hashline() {
 }
 
 # @description Determines if a file is authorized to be sourced
+# @exitcode 0 Do source auth file
+# @exitcode 1 Do not source auth file (will prompt again)
+# @exitcode 2 Never source auth file
 # @internal
 autoenv_check_authz() {
 	local _envfile _hash
 	_envfile="${1}"
 	_hash=$(autoenv_hashline "${_envfile}")
-	\command mkdir -p -- "$(\dirname "${AUTOENV_AUTH_FILE}")"
-	\command touch -- "${AUTOENV_AUTH_FILE}"
-	\command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"
+	\command mkdir -p -- "$(\dirname "${AUTOENV_AUTH_FILE}")" "$(\dirname "${AUTOENV_NOTAUTH_FILE}")"
+	\command touch -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_NOTAUTH_FILE}"
+
+	if command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"; then
+		return 0
+	elif command grep -q "${_hash}" -- "${AUTOENV_NOTAUTH_FILE}"; then
+		return 2
+	else
+		return 1
+	fi
+
 }
 
 # @description Source an env file if is able to do so
@@ -209,6 +233,13 @@ autoenv_check_authz_and_run() {
 	if autoenv_check_authz "${_envfile}"; then
 		autoenv_source "${_envfile}"
 		\return 0
+	else
+		local status=$?
+		if [ "$status" = '1' ]; then
+			:
+		elif [ "$status" = '2' ]; then
+			return 0
+		fi
 	fi
 	if [ -n "${AUTOENV_ASSUME_YES}" ]; then # Don't ask for permission if "assume yes" is switched on
 		autoenv_authorize_env "${_envfile}"
@@ -217,11 +248,13 @@ autoenv_check_authz_and_run() {
 		fi
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
 		_autoenv_show_file "${_envfile}"
-		_autoenv_info -n "Authorize this file? (y/N) "
+		_autoenv_info -n "Authorize this file? (y/N/D) "
 		\read -r answer
 		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
 			autoenv_authorize_env "${_envfile}"
 			autoenv_source "${_envfile}"
+		elif [ "${answer}" = "d" ] || [ "${answer}" = "D" ]; then
+			autoenv_unauthorize_env "${_envfile}"
 		fi
 	fi
 }
@@ -240,6 +273,14 @@ autoenv_deauthorize_env() {
 }
 
 # @description Mark an env file as not able to be sourced
+# @internal
+autoenv_unauthorize_env() {
+	local _envfile="$1"
+	autoenv_deauthorize_env "$_envfile"
+	autoenv_hashline "$_envfile" >> "$AUTOENV_NOTAUTH_FILE"
+}
+
+# @description Mark an env file as able to be sourced
 # @internal
 autoenv_authorize_env() {
 	local _envfile

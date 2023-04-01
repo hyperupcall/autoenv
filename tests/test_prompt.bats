@@ -46,3 +46,24 @@ setup() {
 	[[ "$output" == *'New or modified env file detected'* ]]
 	[[ "$output" == *'echo 123'* ]]
 }
+
+@test "Entering 'd' does not prompt again" {
+	mkdir -p './dir'
+	printf '%s\n' 'echo 123' > './dir/.env'
+
+	run bash -c "
+		source '$BATS_TEST_DIRNAME/../activate.sh'
+		cd './dir' <<< 'd'
+	"
+	[[ "$output" == *'New or modified env file detected'* ]]
+	[[ "$output" == *'echo 123'* ]]
+
+	run bash -c "
+		source '$BATS_TEST_DIRNAME/../activate.sh'
+		cd './dir' <<< 'y'
+	"
+	[[ "$output" != *'New or modified env file detected'* ]]
+	[[ "$output" != *'echo 123'* ]]
+	[[ "$output" != *'123'* ]]
+}
+
