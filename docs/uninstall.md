@@ -31,7 +31,7 @@ rm -rf ~/.autoenv
 
 ## Post Cleanup
 
-After uninstalling autoenv, your shell may still contain parts of `autoenv` in memory. To remove these, run the following in each open terminal:
+After uninstalling autoenv, your shell may still contain parts of autoenv in memory. To prevent executing these parts, run the following in each open terminal:
 
 ```sh
 unset -f 'cd'
