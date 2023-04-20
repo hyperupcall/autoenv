@@ -234,10 +234,10 @@ autoenv_check_authz_and_run() {
 		autoenv_source "${_envfile}"
 		return 0
 	else
-		local status=$?
-		if [ "$status" = '1' ]; then
+		local exit_status=$?
+		if [ "$exit_status" = '1' ]; then
 			:
-		elif [ "$status" = '2' ]; then
+		elif [ "$exit_status" = '2' ]; then
 			return 0
 		fi
 	fi
