@@ -37,8 +37,8 @@ export ZDOTDIR
 
 # Discover tests
 tests=''
-for file in $(find "${basedir}" -type f -name 'test_*.sh'); do
-	tests="${tests}|`basename \"$file\" .sh`"
+for file in $(find "${basedir}" -maxdepth 1 -type f -name 'test_*.sh'); do
+	tests="${tests}|$(basename "$file" .sh)"
 done
 tests="${tests#|}"
 
