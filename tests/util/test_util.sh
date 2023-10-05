@@ -7,7 +7,7 @@ test_util.init_env() {
 
 test_util.activate_env() {
 	run bash -c "
-		source '$BATS_TEST_DIRNAME/../activate.sh'
+		source '${BATS_TEST_DIRNAME}/../activate.sh'
 		cd './dir'
 		$1
 	"

@@ -1,3 +1,5 @@
+# shellcheck shell=sh
+
 AUTOENV_AUTH_FILE="${AUTOENV_AUTH_FILE} with spaces"
 
 . "${FUNCTIONS}"

@@ -1,17 +1,18 @@
+# shellcheck shell=sh
+
 # Calls command, checks return code and output
 # Call: patterntest [command] [output pattern]
 patterntest() {
-	out=`eval "${1}"`
+	out=$(eval "${1}")
 	ret="$?"
-	if [ -z ${ret} -o ${ret} -ne 0 ]; then
+	if [ -z ${ret} ] || [ ${ret} -ne 0 ]; then
 		echo "Call completed with exit code ${ret}."
 		exit 1
 	fi
 	echo "Output was:"
 	echo "${out}"
 	# Pattern test
-	echo "${out}" | grep -q "${2}"
-	if ! test $? -eq 0; then
+	if ! printf '%s\n' "${out}" | grep -q "${2}" ; then
 		echo "Output did not match pattern ${2}"
 		exit 1
 	fi

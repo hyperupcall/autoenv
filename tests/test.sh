@@ -1,4 +1,4 @@
-#!/usr/bin/env dash
+#!/usr/bin/env sh
 
 has_cmd() {
 	command -v -- "$1" >/dev/null 2>&1
@@ -31,9 +31,8 @@ shells='bash:bash --noprofile --norc|zsh:zsh|sh:dash' # Shells to test. Shells s
 # Global variables
 TMPDIR='' # Global so we can react when the script fails
 basedir=$("$READLINK" -f "$(dirname "$0")") # So we can find our tests
-oldpwd="$(pwd)" # So we can come back after testing
-ZDOTDIR='/dev/null' # Don't use default ZSH files
-export ZDOTDIR
+oldpwd=$PWD # So we can come back after testing
+export ZDOTDIR='/dev/null' # Don't use default ZSH files
 
 # Discover tests
 tests=''
@@ -54,22 +53,8 @@ fail() {
 trap fail EXIT INT TERM
 set -e
 
-# Try to find autoenv
-ACTIVATE_SH=''
-if [ -f "${oldpwd}/activate.sh" ]; then
-	ACTIVATE_SH="${oldpwd}/activate.sh"
-elif [ -f "${basedir}/activate.sh" ]; then
-	ACTIVATE_SH="${basedir}/activate.sh"
-elif [ -f "${basedir}/../activate.sh" ]; then
-	ACTIVATE_SH="${basedir}/../activate.sh"
-else
-	echo ":: Can not find autoenv"
-	exit 1
-fi
-export ACTIVATE_SH
-# Useful functions
-FUNCTIONS="${basedir}/functions"
-export FUNCTIONS
+export ACTIVATE_SH="${oldpwd}/activate.sh"
+export FUNCTIONS="${basedir}/functions"
 
 # Execute each test for each shell
 IFS='|'
@@ -78,9 +63,8 @@ for shell in ${shells}; do
 		# Prepare this test
 		printf %s ":: Running ${current_test} for $(echo "${shell}" | cut -d':' -f1)..."
 		TMPDIR=$("$MKTEMP" -dp "${basedir}" "${current_test}.XXXXXX")
-		AUTOENV_AUTH_FILE="${TMPDIR}/autoenv_authorized" # Don't use default auth file
+		export AUTOENV_AUTH_FILE="${TMPDIR}/autoenv_authorized" # Don't use default auth file
 		export TMPDIR
-		export AUTOENV_AUTH_FILE
 		cd "${TMPDIR}"
 		# Run this test
 		eval "$(echo "$shell" | cut -d':' -f2) ${basedir}/$current_test.sh" > "${basedir}/lasttest.log" 2>&1
@@ -90,6 +74,6 @@ for shell in ${shells}; do
 		rm -rf "${TMPDIR}"
 	done
 done
-unset IFS
+unset -v IFS
 
 trap '' EXIT INT TERM

@@ -1,3 +1,5 @@
+# shellcheck shell=sh
+
 . "${FUNCTIONS}"
 
 AUTOENV_ENV_FILENAME='.autoenv'

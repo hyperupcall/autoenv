@@ -1,3 +1,5 @@
+# shellcheck shell=sh
+
 . "${FUNCTIONS}"
 . "${ACTIVATE_SH}"
 
