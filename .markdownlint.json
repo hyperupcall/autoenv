@@ -1,5 +1,6 @@
 {
 	"commands-show-output": false,
 	"line-length": false,
-	"no-inline-html": false
+	"no-inline-html": false,
+	"no-duplicate-heading": false
 }

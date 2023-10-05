@@ -1,4 +1,3 @@
-
 # Uninstall
 
 The uninstallation procedure depends on your installation method.

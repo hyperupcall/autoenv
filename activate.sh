@@ -119,15 +119,12 @@ autoenv_init() {
 		autoenv_leave "$@"
 	fi
 
-	local _mountpoint _files _orderedfiles _sedregexp _pwd
-	_sedregexp='-E'
-
+	local _mountpoint _pwd
 	_mountpoint="$(command df -P "${PWD}" | command tail -n 1 | command awk '$0=$NF')"
-	# Remove double slashes, see #125
-	_pwd=$(echo "${PWD}" | command sed "${_sedregexp}" 's:/+:/:g')
+	_pwd=$(echo "${PWD}" | command sed -E 's:/+:/:g') # Removes double slashes. (see #125)
 
-	# Discover all files we need to source
-	# We do this in a subshell so we can cd/chdir
+	# Discover all files that we need to source.
+	local _files
 	_files=$(
 		command -v chdir >/dev/null 2>&1 && chdir "${_pwd}" || builtin cd "${_pwd}"
 		_hadone=''
@@ -150,14 +147,7 @@ ${_file}"
 
 	# ZSH: Use traditional for loop
 	if [ -n "$ZSH_VERSION" ]; then
-		if zsh_shwordsplit="$(setopt >/dev/null 2>&1 | command grep -q shwordsplit && echo 1)"; then
-			:
-		else
-			:
-		fi
-		if [ -z "${zsh_shwordsplit}" ]; then
-			setopt shwordsplit >/dev/null 2>&1
-		fi
+		setopt shwordsplit >/dev/null 2>&1
 	fi
 
 	# Custom IFS
@@ -165,10 +155,9 @@ ${_file}"
 	IFS='
 '
 
-	# Disable file globbing
 	set -f
 	# Turn around the env files order if needed
-	_orderedfiles=''
+	local _orderedfiles=''
 	if [ -z "${AUTOENV_LOWER_FIRST}" ]; then
 		for _file in ${_files}; do
 			_orderedfiles="${_file}
@@ -177,20 +166,17 @@ ${_orderedfiles}"
 	else
 		_orderedfiles="${_files}"
 	fi
-
 	# Execute the env files
 	for _file in ${_orderedfiles}; do
-		autoenv_check_authz_and_run "${_file}"
+		_autoenv_check_authz_and_run "${_file}"
 	done
+	unset -v _orderedfiles
 	IFS="${origIFS}"
-	# Enable file globbing
 	set +f
 
 	# ZSH: Unset shwordsplit
 	if [ -n "$ZSH_VERSION" ]; then
-		if [ -z "${zsh_shwordsplit}" ]; then
-			unsetopt shwordsplit >/dev/null 2>&1
-		fi
+		unsetopt shwordsplit >/dev/null 2>&1
 	fi
 }
 
@@ -203,49 +189,28 @@ autoenv_hashline() {
 	printf '%s\n' "${_envfile}:${_hash}"
 }
 
-# @description Determines if a file is authorized to be sourced
-# @exitcode 0 Do source auth file
-# @exitcode 1 Do not source auth file (will prompt again)
-# @exitcode 2 Never source auth file
-# @internal
-autoenv_check_authz() {
-	local _envfile _hash
-	_envfile="${1}"
-	_hash=$(autoenv_hashline "${_envfile}")
-	command mkdir -p -- "$(dirname "${AUTOENV_AUTH_FILE}")" "$(dirname "${AUTOENV_NOTAUTH_FILE}")"
-	command touch -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_NOTAUTH_FILE}"
-
-	if command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"; then
-		return 0
-	elif command grep -q "${_hash}" -- "${AUTOENV_NOTAUTH_FILE}"; then
-		return 2
-	else
-		return 1
-	fi
-
-}
-
 # @description Source an env file if is able to do so
 # @internal
-autoenv_check_authz_and_run() {
-	local _envfile
-	_envfile="${1}"
-	if autoenv_check_authz "${_envfile}"; then
+_autoenv_check_authz_and_run() {
+	local _envfile="${1}"
+	local _hash
+	_hash=$(autoenv_hashline "${_envfile}")
+
+	command mkdir -p -- "$(dirname "${AUTOENV_AUTH_FILE}")" "$(dirname "${AUTOENV_NOTAUTH_FILE}")"
+	command touch -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_NOTAUTH_FILE}"
+	if command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"; then
 		autoenv_source "${_envfile}"
 		return 0
-	else
-		local exit_status=$?
-		if [ "$exit_status" = '1' ]; then
-			:
-		elif [ "$exit_status" = '2' ]; then
-			return 0
-		fi
+	elif command grep -q "${_hash}" -- "${AUTOENV_NOTAUTH_FILE}"; then
+		return 0
 	fi
+
 	if [ -n "${AUTOENV_ASSUME_YES}" ]; then # Don't ask for permission if "assume yes" is switched on
 		autoenv_authorize_env "${_envfile}"
 		autoenv_source "${_envfile}"
 		return 0
-		fi
+	fi
+
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
 		_autoenv_show_file "${_envfile}"
 		_autoenv_info -n "Authorize this file? (y/N/D) "
@@ -318,13 +283,12 @@ autoenv_cd() {
 # @description Cleanup autoenv
 autoenv_leave() {
 	# execute file when leaving a directory
-	local from_dir to_dir _sedregexp _files
-	_sedregexp='-E'
+	local from_dir to_dir
 	from_dir="${*}"
-	to_dir=$(echo "${PWD}" | command sed "${_sedregexp}" 's:/+:/:g')
+	to_dir=$(echo "${PWD}" | command sed -E 's:/+:/:g')
 
-	# Discover all files we need to source
-	# We do this in a subshell so we can cd/chdir
+	# Discover all files that we need to source.
+	local _files
 	_files=$(
 		command -v chdir >/dev/null 2>&1 && chdir "${from_dir}" || builtin cd "${from_dir}"
 		_hadone=''
@@ -344,27 +308,25 @@ ${_file}"
 	)
 
 	# ZSH: Use traditional for loop
-	zsh_shwordsplit="$(setopt > /dev/null 2>&1 | command grep -q shwordsplit && echo 1)"
-	if [ -z "${zsh_shwordsplit}" ]; then
+	if [ -n "$ZSH_VERSION" ]; then
 		setopt shwordsplit >/dev/null 2>&1
 	fi
+
 	# Custom IFS
 	origIFS="${IFS}"
 	IFS='
 '
 
-	# Disable file globbing
-	set -f
 	# Execute the env files
+	set -f
 	for _file in ${_files}; do
-		autoenv_check_authz_and_run "${_file}"
+		_autoenv_check_authz_and_run "${_file}"
 	done
 	IFS="${origIFS}"
-	# Enable file globbing
 	set +f
 
 	# ZSH: Unset shwordsplit
-	if [ -z "${zsh_shwordsplit}" ]; then
+	if [ -n "$ZSH_VERSION" ]; then
 		unsetopt shwordsplit >/dev/null 2>&1
 	fi
 }
@@ -372,9 +334,9 @@ ${_file}"
 # Override the cd alias
 if command -v setopt >/dev/null 2>&1; then
 	if setopt 2> /dev/null | command grep -q aliasfuncdef; then
-		has_alias_func_def_enabled=true;
+		has_alias_func_def_enabled=true
 	else
-		setopt ALIAS_FUNC_DEF 2> /dev/null
+		setopt ALIAS_FUNC_DEF 2>/dev/null
 	fi
 fi
 
@@ -394,17 +356,17 @@ if ! $has_alias_func_def_enabled; then
 fi
 
 # Probe to see if we have access to a shasum command, otherwise disable autoenv
-if command -v gsha1sum 2>/dev/null >&2 ; then
+if command -v gsha1sum >/dev/null 2>&1; then
 	autoenv_shasum() {
 		gsha1sum "${@}"
 	}
 	enable_autoenv "$@"
-elif command -v sha1sum 2>/dev/null >&2; then
+elif command -v sha1sum >/dev/null 2>&1; then
 	autoenv_shasum() {
 		sha1sum "${@}"
 	}
 	enable_autoenv "$@"
-elif command -v shasum 2>/dev/null >&2; then
+elif command -v shasum >/dev/null 2>&1; then
 	autoenv_shasum() {
 		shasum "${@}"
 	}
