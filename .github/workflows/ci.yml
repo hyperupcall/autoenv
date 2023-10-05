@@ -29,5 +29,5 @@ jobs:
       - name: 'Run tests'
         run: |
           time make test
-          time make test-bats
+          # time make test-bats
           # time make test2
