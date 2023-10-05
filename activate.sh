@@ -16,6 +16,9 @@ if [ -n "$AUTOENV_NOTAUTH_FILE" ]; then
 elif [ -f "$HOME/.autoenv_authorized" ]; then
 	# If `.autoenv_authorized` is in home, don't suprise the user by using XDG Base Dir
 	AUTOENV_NOTAUTH_FILE="$HOME/.autoenv_not_authorized"
+elif [ -f "$HOME/.autoenv_not_authorized" ]; then
+	# Ensure file in ~/ is used, even if the authorized file has been moved or deleted
+	AUTOENV_NOTAUTH_FILE="$HOME/.autoenv_not_authorized"
 else
 	_autoenv_state_dir="$XDG_STATE_HOME"
 	case $_autoenv_state_dir in
