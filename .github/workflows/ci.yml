@@ -1,13 +1,13 @@
 name: 'ci'
 
-on: [push, pull_request]
+on: ['push', 'pull_request']
 
-permissions: read-all
+permissions: 'read-all'
 
 defaults:
   run:
-    shell: bash
-    working-directory: ./
+    shell: 'bash'
+    working-directory: './'
 
 jobs:
   test-mac:
@@ -15,18 +15,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: ['macos-10.15'] # macos-10.15, macos-11, macos-latest
+        os: ['macos-latest']
 
     runs-on: '${{ matrix.os }}'
 
     steps:
       - uses: 'actions/checkout@v2'
 
-      - name: Install Prerequisites
+      - name: 'Install Prerequisites'
         run: |
           brew install coreutils bash zsh dash fish ksh tcsh bats-core
 
-      - name: Run tests
+      - name: 'Run tests'
         run: |
           time make test
           time make test-bats

@@ -10,3 +10,4 @@ insert_final_newline = true
 [*.{md,yaml,yml}]
 indent_style = space
 indent_size = 2
+quote_type = single
