@@ -1,10 +1,10 @@
 # Autoenv: Directory-based Environments ![Build Status](https://github.com/hyperupcall/autoenv/actions/workflows/ci.yml/badge.svg)
 
-Magic per-project shell environments
+Magic per-project shell environments.
 
 ## What is it?
 
-If a directory contains a `.env` file, it will automatically be executed when you `cd` into it. When enabled (set `AUTOENV_ENABLE_LEAVE` to a non-empty string), if a directory contains a `.env.leave` file, it will automatically be executed when you leave it.
+If a directory contains an `.env` file, it will automatically be executed when you `cd` into it. And, if a directory contains an `.env.leave` file (and `AUTOENV_ENABLE_LEAVE` is a non-empty string), the file will automatically be executed when `cd`'ing away from the directory that contains that file.
 
 This is great for...
 
