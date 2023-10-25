@@ -260,12 +260,15 @@ autoenv_authorize_env() {
 # @description Actually source a file
 # @internal
 autoenv_source() {
-	local _allexport
+	local _allexport p
+	p="$PWD"
 	_allexport="$(set +o | command grep allexport)"
 	set -a
 	AUTOENV_CUR_FILE="${1}"
 	AUTOENV_CUR_DIR="$(dirname "${1}")"
+	builtin cd "${AUTOENV_CUR_DIR}"
 	. "${1}"
+	builtin cd "$p"
 	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && set +a
 	eval "${_allexport}"
 	unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
