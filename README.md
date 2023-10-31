@@ -63,7 +63,7 @@ First, download the [autoenv](https://formulae.brew.sh/formula/autoenv) homebrew
 $ brew install 'autoenv'
 ```
 
-Then, execute run of the following to ensure autoenv is loaded when you open a terminal:
+Then, execute one of the following to ensure autoenv is loaded when you open a terminal:
 
 ```sh
 # For Zsh shell (on Linux or macOS)
@@ -91,7 +91,7 @@ First, download the [@hyperupcall/autoenv](https://www.npmjs.com/package/@hyperu
 $ npm install -g '@hyperupcall/autoenv'
 ```
 
-Then, execute run of the following to ensure autoenv is loaded when you open a terminal:
+Then, execute one of the following to ensure autoenv is loaded when you open a terminal:
 
 ```sh
 # For Zsh shell (on Linux or macOS)
@@ -119,7 +119,7 @@ First, clone this repository:
 $ git clone 'https://github.com/hyperupcall/autoenv' ~/.autoenv
 ```
 
-Then, execute run of the following to ensure autoenv is loaded when you open a terminal:
+Then, execute one of the following to ensure autoenv is loaded when you open a terminal:
 
 ```sh
 # For Zsh shell (on Linux or macOS)
