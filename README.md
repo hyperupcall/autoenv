@@ -95,13 +95,13 @@ Then, execute one of the following to ensure autoenv is loaded when you open a t
 
 ```sh
 # For Zsh shell (on Linux or macOS)
-$ printf '%s\n' "source $(npm root -g)/activate.sh" >> "${ZDOTDIR:-$HOME}/.zprofile"
+$ printf '%s\n' "source $(npm root -g)/@hyperupcall/autoenv/activate.sh" >> "${ZDOTDIR:-$HOME}/.zprofile"
 
 # For Bash shell (on Linux)
-$ printf '%s\n' "source $(npm root -g)/activate.sh" >> ~/.bashrc
+$ printf '%s\n' "source $(npm root -g)/@hyperupcall/autoenv/activate.sh" >> ~/.bashrc
 
 # For Bash shell (on macOS)
-$ printf '%s\n' "source $(npm root -g)/activate.sh" >> ~/.bash_profile
+$ printf '%s\n' "source $(npm root -g)/@hyperupcall/autoenv/activate.sh" >> ~/.bash_profile
 ```
 
 </details>
