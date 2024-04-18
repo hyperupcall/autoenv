@@ -172,4 +172,4 @@ To update autoenv, see [`./docs/updating.md`](./docs/updating.md).
 
 ## Attributions
 
-Autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Later, ownership was transfered to [@inishchith](https://github.com/inishchith). Starting from August 22nd, 2021 and ending in April 2024, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owned and maintained the project. Since April 2024, the repository was transferred back to Kenneth Reitz ([@kennethreitz](https://github.com/kennethreitz)).
+Autoenv was originally created by [@kennethreitz](https://github.com/kennethreitz). Later, ownership was transfered to [@inishchith](https://github.com/inishchith). As of August 22nd, 2021, Edwin Kofler ([@hyperupcall](https://github.com/hyperupcall)) owns and maintains the project.
