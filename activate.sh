@@ -115,23 +115,35 @@ _autoenv_show_file() {
 	_autoenv_draw_line
 }
 
-# @description Main initialization function
+# @description Main initialization function, sourcing all .env files from the
+#              current directory up to the common ancestor between the current
+#              directory and arg from_dir (exclusive).
+# @args
+#   from_dir: Previous directory.
 # @internal
 autoenv_init() {
 	if [ -n "$AUTOENV_ENABLE_LEAVE" ]; then
 		autoenv_leave "$@"
 	fi
 
-	local _mountpoint _pwd
+	local _mountpoint _pwd _from_dir
 	_mountpoint="$(command df -P "${PWD}" | command tail -n 1 | command awk '$0=$NF')"
 	_pwd=$(echo "${PWD}" | command sed -E 's:/+:/:g') # Removes double slashes. (see #125)
+	_from_dir="${*}/"
 
 	# Discover all files that we need to source.
 	local _files
 	_files=$(
 		command -v chdir >/dev/null 2>&1 && chdir "${_pwd}" || builtin cd "${_pwd}"
 		_hadone=''
-		while :; do
+		if [ "$_pwd" = "/" ]; then
+			# Special case because the while loop condition doesn't
+			# correctly handle the case where $(pwd -P) == "/".
+			exit 0
+		fi
+		# This condition is similar [[ $_from_dir != $(pwd -P)/* ]] but
+		# works in POSIX sh.
+		while [ "$_from_dir" = "${_from_dir#$(pwd -P)/}" ]; do
 			_file="$(pwd -P)/${AUTOENV_ENV_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
@@ -349,9 +361,16 @@ enable_autoenv() {
 		cd() {
 			autoenv_cd "${@}"
 		}
-	fi
 
-	cd "${PWD}"
+		# Invoke /.env if it exists, otherwise autoenv_init never
+		# invokes it.
+		local _file="/${AUTOENV_ENV_FILENAME}"
+		if [ -f "${_file}" ]; then
+			_autoenv_check_authz_and_run "${_file}"
+		fi
+		# Invoke env files of current directory and its ancestors.
+		autoenv_init "/"
+	fi
 }
 
 if ! $has_alias_func_def_enabled; then
