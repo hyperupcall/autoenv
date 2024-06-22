@@ -295,7 +295,7 @@ autoenv_leave() {
 	_files=$(
 		command -v chdir >/dev/null 2>&1 && chdir "${from_dir}" || builtin cd "${from_dir}"
 		_hadone=''
-		while [ "$PWD" != "" ] && [[ $to_dir != $PWD* ]]; do
+		while [ "$PWD" != "" ] && [ "$PWD" != "/" ] && [[ $to_dir/ != $PWD/* ]]; do
 			_file="$PWD/${AUTOENV_ENV_LEAVE_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
