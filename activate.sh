@@ -295,18 +295,25 @@ autoenv_leave() {
 	_files=$(
 		command -v chdir >/dev/null 2>&1 && chdir "${from_dir}" || builtin cd "${from_dir}"
 		_hadone=''
-		while [ "$PWD" != "" ] && [ "$PWD" != "/" ] && [[ $to_dir/ != $PWD/* ]]; do
-			_file="$PWD/${AUTOENV_ENV_LEAVE_FILENAME}"
-			if [ -f "${_file}" ]; then
-				if [ -z "${_hadone}" ]; then
-					printf %s "${_file}"
-					_hadone='1'
-				else
-					printf %s "
+		while [ "$PWD" != "" ] && [ "$PWD" != "/" ]; do
+			case $to_dir/ in
+				$PWD/*)
+				break
+				;;
+			*)
+				_file="$PWD/${AUTOENV_ENV_LEAVE_FILENAME}"
+				if [ -f "${_file}" ]; then
+					if [ -z "${_hadone}" ]; then
+						printf %s "${_file}"
+						_hadone='1'
+					else
+						printf %s "
 ${_file}"
+					fi
 				fi
-			fi
-			command -v chdir >/dev/null 2>&1 && chdir "$(pwd)/.." || builtin cd "$PWD/.."
+				command -v chdir >/dev/null 2>&1 && chdir "$(pwd)/.." || builtin cd "$PWD/.."
+				;;
+			esac
 		done
 	)
 
