@@ -148,6 +148,13 @@ _Before_ `source`ing `activate.sh`, you can set the following variables:
 - `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat` (`master` branch only)
 - `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own) (`master` branch only)
 
+### API
+
+Inside the `.env` file, two _environment variables_ can be accessed:
+
+- `AUTOENV_CUR_FILE` - The file being sourced
+- `AUTOENV_CUR_DIR` - Equivalent to `dirname "$AUTOENV_CUR_FILE"`
+
 ## Shells
 
 autoenv is tested on:
