@@ -139,14 +139,14 @@ $ printf '%s\n' "source ~/.autoenv/activate.sh" >> ~/.bash_profile
 _Before_ `source`ing `activate.sh`, you can set the following variables:
 
 - `AUTOENV_AUTH_FILE`: Files authorized to be sourced; defaults to `~/.autoenv_authorized` if it exists, otherwise, `~/.local/state/autoenv/authorized_list`
-- `AUTOENV_NOTAUTH_FILE`: Files not authorized to be sourced; defaults to `~/.autoenv_not_authorized` if it exists, otherwise, `~/.local/state/autoenv/not_authorized_list` (`main` branch only)
+- `AUTOENV_NOTAUTH_FILE`: Files not authorized to be sourced; defaults to `~/.autoenv_not_authorized` if it exists, otherwise, `~/.local/state/autoenv/not_authorized_list`
 - `AUTOENV_ENV_FILENAME`: Name of the `.env` file; defaults to `.env`
 - `AUTOENV_LOWER_FIRST`: Set this variable to a non-empty string to flip the order of `.env` files executed
 - `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file; defaults to `.env.leave`
 - `AUTOENV_ENABLE_LEAVE`: Set this to a non-empty string in order to enable source env when leaving
 - `AUTOENV_ASSUME_YES`: Set this variable to a non-empty string to silently authorize the initialization of new environments
-- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat` (`main` branch only)
-- `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own) (`main` branch only)
+- `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat`
+- `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own)
 
 ### API
 
