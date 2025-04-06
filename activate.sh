@@ -41,27 +41,11 @@ AUTOENV_VIEWER="${AUTOENV_VIEWER:-cat}"
 # @example _autoenv_info -n -b1 'my message'
 # @internal
 _autoenv_info() {
-	local after=1 before=0
-
-	while : ; do
-		case "$1" in
-		-n)  after=0                           ;;
-		-b*) before=${1#-b} ; : "${before:=1}" ;;
-		-a*) after=${1#-a}  ; : "${after:=1}"  ;;
-		*)   \break                            ;;
-		esac
-		\shift
-	done
-
-	[ $before -gt 0 ] && \printf '%*s' ${before} | \command tr " " "\n"
-
 	if [ -n "$NO_COLOR" ]; then
 		\printf "[autoenv] %s" "${*}"
 	else
 		\printf "\033[33m[autoenv]\033[0m %s" "${*}"
 	fi
-
-	[ $after -gt 0 ] && \printf '%*s' ${after} | \command tr " " "\n"
 }
 
 # @description print a message to stderr
@@ -95,24 +79,10 @@ _autoenv_draw_line() {
 	line=$(\printf '%*s\n' ${width} | \command tr " " "${char}")
 
 	if [ -n "$NO_COLOR" ]; then
-		\printf "%s%s\n\n" "${text}" "$line"
+		\printf "%s%s\n" "${text}" "${line}"
 	else
-		\printf "\033[1m%s%s\033[0m\n\n" "${text}" "$line"
+		\printf "\033[1m%s%s\033[0m\n" "${text}" "${line}"
 fi
-}
-
-# @description display the contents of a `.env` or `.env.leave` file using the `$AUTOENV_VIEWER`` command
-# @example _autoenv_show_file './.env_file'
-# @internal
-_autoenv_show_file() {
-	local file="$1" ofs="$IFS"
-
-	_autoenv_info -b "New or modified env file detected:"
-	_autoenv_draw_line "${file##*/} contents"
-	IFS=" "
-	$AUTOENV_VIEWER "${file}"
-	IFS="$ofs"
-	_autoenv_draw_line
 }
 
 # @description Main initialization function
@@ -214,16 +184,38 @@ _autoenv_check_authz_and_run() {
 		\return 0
 	fi
 
-	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
-		_autoenv_show_file "${_envfile}"
-		_autoenv_info -n "Authorize this file? (y/N/D) "
-		\read -r answer
-		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
-			autoenv_authorize_env "${_envfile}"
-			autoenv_source "${_envfile}"
-		elif [ "${answer}" = "d" ] || [ "${answer}" = "D" ]; then
-			autoenv_unauthorize_env "${_envfile}"
-		fi
+	if [ -n "${MC_SID}" ]; then # Make sure mc is not running
+		\return 0
+	fi
+
+	if [ -z "$AUTOENV_VIEWER" ]; then
+		\echo "autoenv:"
+		\echo "autoenv: WARNING:"
+		\printf '%s\n' "autoenv: This is the first time you are about to source ${_envfile}":
+		\echo "autoenv:"
+		\echo "autoenv:   --- (begin contents) ---------------------------------------"
+		\cat -e "${_envfile}" | LC_ALL=C \command sed 's/.*/autoenv:     &/'
+		\echo "autoenv:"
+		\echo "autoenv:   --- (end contents) -----------------------------------------"
+		\echo "autoenv:"
+		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N/D) "
+	else
+		_autoenv_info "New or modified env file detected"
+		printf '\n'
+		_autoenv_draw_line "Contents of \"${_envfile##*/}\""
+		local ofs="${IFS}"
+		IFS=" "
+		$AUTOENV_VIEWER "${_envfile}"
+		IFS="${ofs}"
+		_autoenv_draw_line
+		_autoenv_info "Authorize this file? (y/N/D) "
+	fi
+	\read -r answer
+	if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
+		autoenv_authorize_env "${_envfile}"
+		autoenv_source "${_envfile}"
+	elif [ "${answer}" = "d" ] || [ "${answer}" = "D" ]; then
+		autoenv_unauthorize_env "${_envfile}"
 	fi
 }
 
