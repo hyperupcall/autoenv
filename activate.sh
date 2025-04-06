@@ -48,20 +48,20 @@ _autoenv_info() {
 		-n)  after=0                           ;;
 		-b*) before=${1#-b} ; : "${before:=1}" ;;
 		-a*) after=${1#-a}  ; : "${after:=1}"  ;;
-		*)   break                             ;;
+		*)   \break                            ;;
 		esac
-		shift
+		\shift
 	done
 
-	[ $before -gt 0 ] && printf '%*s' ${before} | tr " " "\n"
+	[ $before -gt 0 ] && \printf '%*s' ${before} | \command tr " " "\n"
 
 	if [ -n "$NO_COLOR" ]; then
-		printf "[autoenv] %s" "${*}"
+		\printf "[autoenv] %s" "${*}"
 	else
-		printf "\033[33m[autoenv]\033[0m %s" "${*}"
+		\printf "\033[33m[autoenv]\033[0m %s" "${*}"
 	fi
 
-	[ $after -gt 0 ] && printf '%*s' ${after} | tr " " "\n"
+	[ $after -gt 0 ] && \printf '%*s' ${after} | \command tr " " "\n"
 }
 
 # @description print a message to stderr
@@ -71,12 +71,12 @@ _autoenv_info() {
 # @internal
 _autoenv_err() {
 	if [ -n "$NO_COLOR" ]; then
-		printf "[autoenv] Error %s" "${*}" >&2
+		\printf "[autoenv] Error %s" "${*}" >&2
 	else
-		printf "\033[33m[autoenv]\033[0m \033[31mError\033[0m %s\n" "${*}" >&2
+		\printf "\033[33m[autoenv]\033[0m \033[31mError\033[0m %s\n" "${*}" >&2
 	fi
 
-	return 1
+	\return 1
 }
 
 # @description print a horizontal line
@@ -92,12 +92,12 @@ _autoenv_draw_line() {
 	fi
 
 	width=$((width - ${#text} - margin))
-	line=$(printf '%*s\n' ${width} | tr " " "${char}")
+	line=$(\printf '%*s\n' ${width} | \command tr " " "${char}")
 
 	if [ -n "$NO_COLOR" ]; then
-		printf "%s%s\n\n" "${text}" "$line"
+		\printf "%s%s\n\n" "${text}" "$line"
 	else
-		printf "\033[1m%s%s\033[0m\n\n" "${text}" "$line"
+		\printf "\033[1m%s%s\033[0m\n\n" "${text}" "$line"
 fi
 }
 
@@ -123,34 +123,34 @@ autoenv_init() {
 	fi
 
 	local _mountpoint _pwd
-	_mountpoint="$(command df -P "${PWD}" | command tail -n 1 | command awk '$0=$NF')"
-	_pwd=$(echo "${PWD}" | command sed -E 's:/+:/:g') # Removes double slashes. (see #125)
+	_mountpoint="$(\command df -P "${PWD}" | \command tail -n 1 | \command awk '$0=$NF')"
+	_pwd=$(\echo "${PWD}" | \command sed -E 's:/+:/:g') # Removes double slashes. (see #125)
 
 	# Discover all files that we need to source.
 	local _files
 	_files=$(
-		command -v chdir >/dev/null 2>&1 && chdir "${_pwd}" || builtin cd "${_pwd}"
+		\command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || \builtin cd "${_pwd}"
 		_hadone=''
 		while :; do
-			_file="$(pwd -P)/${AUTOENV_ENV_FILENAME}"
+			_file="$(\pwd -P)/${AUTOENV_ENV_FILENAME}"
 			if [ -f "${_file}" ]; then
 				if [ -z "${_hadone}" ]; then
-					printf %s "${_file}"
+					\printf %s "${_file}"
 					_hadone='1'
 				else
-					printf %s "
+					\printf %s "
 ${_file}"
 				fi
 			fi
-			[ "$(pwd -P)" = "${_mountpoint}" ] && break
-			[ "$(pwd -P)" = "/" ] && break
-			command -v chdir >/dev/null 2>&1 && chdir "$(pwd -P)/.." || builtin cd "$(pwd -P)/.."
+			[ "$(\pwd -P)" = "${_mountpoint}" ] && \break
+			[ "$(\pwd -P)" = "/" ] && \break
+			\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd -P)/.." || \builtin cd "$(\pwd -P)/.."
 		done
 	)
 
 	# ZSH: Use traditional for loop
 	if [ -n "$ZSH_VERSION" ]; then
-		setopt shwordsplit >/dev/null 2>&1
+		\setopt shwordsplit >/dev/null 2>&1
 	fi
 
 	# Custom IFS
@@ -158,7 +158,7 @@ ${_file}"
 	IFS='
 '
 
-	set -f
+	\set -f
 	# Turn around the env files order if needed
 	local _orderedfiles=''
 	if [ -z "${AUTOENV_LOWER_FIRST}" ]; then
@@ -173,13 +173,13 @@ ${_orderedfiles}"
 	for _file in ${_orderedfiles}; do
 		_autoenv_check_authz_and_run "${_file}"
 	done
-	unset -v _orderedfiles
+	\unset -v _orderedfiles
 	IFS="${origIFS}"
-	set +f
+	\set +f
 
 	# ZSH: Unset shwordsplit
 	if [ -n "$ZSH_VERSION" ]; then
-		unsetopt shwordsplit >/dev/null 2>&1
+		\unsetopt shwordsplit >/dev/null 2>&1
 	fi
 }
 
@@ -188,8 +188,8 @@ ${_orderedfiles}"
 autoenv_hashline() {
 	local _envfile _hash
 	_envfile="${1}"
-	_hash=$(autoenv_shasum "${_envfile}" | command cut -d' ' -f 1)
-	printf '%s\n' "${_envfile}:${_hash}"
+	_hash=$(autoenv_shasum "${_envfile}" | \command cut -d' ' -f 1)
+	\printf '%s\n' "${_envfile}:${_hash}"
 }
 
 # @description Source an env file if is able to do so
@@ -199,25 +199,25 @@ _autoenv_check_authz_and_run() {
 	local _hash
 	_hash=$(autoenv_hashline "${_envfile}")
 
-	command mkdir -p -- "$(dirname "${AUTOENV_AUTH_FILE}")" "$(dirname "${AUTOENV_NOTAUTH_FILE}")"
-	command touch -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_NOTAUTH_FILE}"
-	if command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"; then
+	\command mkdir -p -- "$(\command dirname "${AUTOENV_AUTH_FILE}")" "$(\command dirname "${AUTOENV_NOTAUTH_FILE}")"
+	\command touch -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_NOTAUTH_FILE}"
+	if \command grep -q "${_hash}" -- "${AUTOENV_AUTH_FILE}"; then
 		autoenv_source "${_envfile}"
-		return 0
-	elif command grep -q "${_hash}" -- "${AUTOENV_NOTAUTH_FILE}"; then
-		return 0
+		\return 0
+	elif \command grep -q "${_hash}" -- "${AUTOENV_NOTAUTH_FILE}"; then
+		\return 0
 	fi
 
 	if [ -n "${AUTOENV_ASSUME_YES}" ]; then # Don't ask for permission if "assume yes" is switched on
 		autoenv_authorize_env "${_envfile}"
 		autoenv_source "${_envfile}"
-		return 0
+		\return 0
 	fi
 
 	if [ -z "${MC_SID}" ]; then # Make sure mc is not running
 		_autoenv_show_file "${_envfile}"
 		_autoenv_info -n "Authorize this file? (y/N/D) "
-		read -r answer
+		\read -r answer
 		if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
 			autoenv_authorize_env "${_envfile}"
 			autoenv_source "${_envfile}"
@@ -232,12 +232,12 @@ _autoenv_check_authz_and_run() {
 autoenv_deauthorize_env() {
 	local _envfile _noclobber
 	_envfile="${1}"
-	command cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
-	_noclobber="$(set +o | command grep noclobber)"
-	set +C
-	command grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
-	eval "${_noclobber}"
-	command rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
+	\command cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
+	_noclobber="$(\set +o | \command grep noclobber)"
+	\set +C
+	\command grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
+	\eval "${_noclobber}"
+	\command rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
 # @description Mark an env file as not able to be sourced
@@ -261,25 +261,25 @@ autoenv_authorize_env() {
 # @internal
 autoenv_source() {
 	local _allexport
-	_allexport="$(set +o | command grep allexport)"
-	set -a
+	_allexport="$(\set +o | \command grep allexport)"
+	\set -a
 	AUTOENV_CUR_FILE="${1}"
-	AUTOENV_CUR_DIR="$(dirname "${1}")"
+	AUTOENV_CUR_DIR="$(\command dirname "${1}")"
 	. "${1}"
-	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && set +a
-	eval "${_allexport}"
-	unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
+	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && \set +a
+	\eval "${_allexport}"
+	\unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
 }
 
 # @description Function to override the 'cd' builtin
 autoenv_cd() {
 	local _pwd
 	_pwd=${PWD}
-	if command -v chdir >/dev/null 2>&1 && chdir "${@}" || builtin cd "${@}"; then
+	if \command -v chdir >/dev/null 2>&1 && \chdir "${@}" || \builtin cd "${@}"; then
 		autoenv_init "${_pwd}"
-		return 0
+		\return 0
 	else
-		return "${?}"
+		\return "${?}"
 	fi
 }
 
@@ -288,30 +288,30 @@ autoenv_leave() {
 	# execute file when leaving a directory
 	local from_dir to_dir
 	from_dir="${*}"
-	to_dir=$(echo "${PWD}" | command sed -E 's:/+:/:g')
+	to_dir=$(\echo "${PWD}" | \command sed -E 's:/+:/:g')
 
 	# Discover all files that we need to source.
 	local _files
 	_files=$(
-		command -v chdir >/dev/null 2>&1 && chdir "${from_dir}" || builtin cd "${from_dir}"
+		\command -v chdir >/dev/null 2>&1 && \chdir "${from_dir}" || \builtin cd "${from_dir}"
 		_hadone=''
 		while [ "$PWD" != "" ] && [ "$PWD" != "/" ]; do
 			case $to_dir/ in
 				$PWD/*)
-				break
+				\break
 				;;
 			*)
 				_file="$PWD/${AUTOENV_ENV_LEAVE_FILENAME}"
 				if [ -f "${_file}" ]; then
 					if [ -z "${_hadone}" ]; then
-						printf %s "${_file}"
+						\printf %s "${_file}"
 						_hadone='1'
 					else
-						printf %s "
+						\printf %s "
 ${_file}"
 					fi
 				fi
-				command -v chdir >/dev/null 2>&1 && chdir "$(pwd)/.." || builtin cd "$PWD/.."
+				\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd)/.." || \builtin cd "$PWD/.."
 				;;
 			esac
 		done
@@ -319,7 +319,7 @@ ${_file}"
 
 	# ZSH: Use traditional for loop
 	if [ -n "$ZSH_VERSION" ]; then
-		setopt shwordsplit >/dev/null 2>&1
+		\setopt shwordsplit >/dev/null 2>&1
 	fi
 
 	# Custom IFS
@@ -328,25 +328,25 @@ ${_file}"
 '
 
 	# Execute the env files
-	set -f
+	\set -f
 	for _file in ${_files}; do
 		_autoenv_check_authz_and_run "${_file}"
 	done
 	IFS="${origIFS}"
-	set +f
+	\set +f
 
 	# ZSH: Unset shwordsplit
 	if [ -n "$ZSH_VERSION" ]; then
-		unsetopt shwordsplit >/dev/null 2>&1
+		\unsetopt shwordsplit >/dev/null 2>&1
 	fi
 }
 
 # Override the cd alias
-if command -v setopt >/dev/null 2>&1; then
-	if setopt 2> /dev/null | command grep -q aliasfuncdef; then
+if \command -v setopt >/dev/null 2>&1; then
+	if \setopt 2> /dev/null | \command grep -q aliasfuncdef; then
 		has_alias_func_def_enabled=true
 	else
-		setopt ALIAS_FUNC_DEF 2>/dev/null
+		\setopt ALIAS_FUNC_DEF 2>/dev/null
 	fi
 fi
 
@@ -362,21 +362,21 @@ enable_autoenv() {
 }
 
 if ! $has_alias_func_def_enabled; then
-	unsetopt ALIAS_FUNC_DEF 2> /dev/null
+	\unsetopt ALIAS_FUNC_DEF 2> /dev/null
 fi
 
 # Probe to see if we have access to a shasum command, otherwise disable autoenv
-if command -v gsha1sum >/dev/null 2>&1; then
+if \command -v gsha1sum >/dev/null 2>&1; then
 	autoenv_shasum() {
 		gsha1sum "${@}"
 	}
 	enable_autoenv "$@"
-elif command -v sha1sum >/dev/null 2>&1; then
+elif \command -v sha1sum >/dev/null 2>&1; then
 	autoenv_shasum() {
 		sha1sum "${@}"
 	}
 	enable_autoenv "$@"
-elif command -v shasum >/dev/null 2>&1; then
+elif \command -v shasum >/dev/null 2>&1; then
 	autoenv_shasum() {
 		shasum "${@}"
 	}
