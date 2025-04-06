@@ -148,12 +148,14 @@ _Before_ `source`ing `activate.sh`, you can set the following variables:
 - `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat`
 - `AUTOENV_PRESERVE_CD`: Set this variable to a non-empty string to prevent the `cd` builtin from being overridden (to active autoenv, you must invoke `autoenv_init` within a `cd` function of your own)
 
-We recommend setting the following configuration. These options are not set by default as to conform to the expectations of backwards-compatible behavior.
+We recommend setting the following configuration variables:
 
 ```bash
 AUTOENV_ENABLE_LEAVE=yes
 AUTOENV_VIEWER=cat
 ```
+
+These options are not set by default as to conform to the expectations of backwards-compatible behavior.
 
 ### API
 
