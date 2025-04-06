@@ -1,4 +1,6 @@
 # shellcheck shell=sh
+# shellcheck disable=SC2216,SC3043
+
 if [ -n "$AUTOENV_AUTH_FILE" ]; then
 	:
 elif [ -f "$HOME/.autoenv_authorized" ]; then
@@ -14,10 +16,10 @@ fi
 if [ -n "$AUTOENV_NOTAUTH_FILE" ]; then
 	:
 elif [ -f "$HOME/.autoenv_authorized" ]; then
-	# If `.autoenv_authorized` is in home, don't suprise the user by using XDG Base Dir
+	# If `.autoenv_authorized` is in home, don't suprise the user by using XDG Base Dir.
 	AUTOENV_NOTAUTH_FILE="$HOME/.autoenv_not_authorized"
 elif [ -f "$HOME/.autoenv_not_authorized" ]; then
-	# Ensure file in ~/ is used, even if the authorized file has been moved or deleted
+	# Ensure file in ~/ is used, even if the authorized file has been moved or deleted.
 	AUTOENV_NOTAUTH_FILE="$HOME/.autoenv_not_authorized"
 else
 	_autoenv_state_dir="$XDG_STATE_HOME"
@@ -60,10 +62,8 @@ _autoenv_print() {
 	fi
 }
 
-# @description print a horizontal line
-# @args
-#   text: title to print near the beginning of the line
-# @example _autoenv_draw_line 'text'
+# @description Prints a horizontal line
+# @args $1: title text to print near the beginning of the line
 # @internal
 _autoenv_draw_line() {
 	local text="${1}" char="-" width=${COLUMNS:-80} margin=3 line
@@ -150,11 +150,11 @@ ${_orderedfiles}"
 	fi
 }
 
-# @description Checks the hash
+# @description Checks the expected hash entry of the file
 # @internal
 autoenv_hashline() {
-	local _envfile _hash
-	_envfile="${1}"
+	local _envfile="${1}"
+	local hash
 	_hash=$(autoenv_shasum "${_envfile}" | \command cut -d' ' -f 1)
 	\printf '%s\n' "${_envfile}:${_hash}"
 }
@@ -162,8 +162,7 @@ autoenv_hashline() {
 # @description Source an env file if is able to do so
 # @internal
 _autoenv_check_authz_and_run() {
-	local _envfile="${1}"
-	local _hash
+	local _envfile="${1}" _hash
 	_hash=$(autoenv_hashline "${_envfile}")
 
 	\command mkdir -p -- "$(\command dirname "${AUTOENV_AUTH_FILE}")" "$(\command dirname "${AUTOENV_NOTAUTH_FILE}")"
@@ -175,7 +174,8 @@ _autoenv_check_authz_and_run() {
 		\return 0
 	fi
 
-	if [ -n "${AUTOENV_ASSUME_YES}" ]; then # Don't ask for permission if "assume yes" is switched on
+	# Don't ask for permission if "assume yes" is switched on
+	if [ -n "${AUTOENV_ASSUME_YES}" ]; then
 		autoenv_authorize_env "${_envfile}"
 		autoenv_source "${_envfile}"
 		\return 0
@@ -195,7 +195,7 @@ _autoenv_check_authz_and_run() {
 		\echo "autoenv:"
 		\echo "autoenv:   --- (end contents) -----------------------------------------"
 		\echo "autoenv:"
-		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N/D) "
+		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N/D) " # Keep (y/N/D) for compatibility.
 	else
 		_autoenv_print 'autoenv' 'New or modified env file detected\n' 36
 		_autoenv_draw_line "Contents of \"${_envfile##*/}\""
@@ -204,7 +204,7 @@ _autoenv_check_authz_and_run() {
 		$AUTOENV_VIEWER "${_envfile}"
 		IFS="${ofs}"
 		_autoenv_draw_line
-		_autoenv_print 'autoenv' "Authorize this file? (y/N/D) " 36
+		_autoenv_print 'autoenv' "Authorize this file? (y/n/d) " 36
 	fi
 	\read -r answer
 	if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
@@ -218,8 +218,7 @@ _autoenv_check_authz_and_run() {
 # @description Mark an env file as able to be sourced
 # @internal
 autoenv_deauthorize_env() {
-	local _envfile _noclobber
-	_envfile="${1}"
+	local _envfile="${1}" _noclobber
 	\command cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
 	_noclobber="$(\set +o | \command grep noclobber)"
 	\set +C
@@ -239,8 +238,7 @@ autoenv_unauthorize_env() {
 # @description Mark an env file as able to be sourced
 # @internal
 autoenv_authorize_env() {
-	local _envfile
-	_envfile="${1}"
+	local _envfile="${1}"
 	autoenv_deauthorize_env "${_envfile}"
 	autoenv_hashline "${_envfile}" >> "${AUTOENV_AUTH_FILE}"
 }
@@ -261,8 +259,7 @@ autoenv_source() {
 
 # @description Function to override the 'cd' builtin
 autoenv_cd() {
-	local _pwd
-	_pwd=${PWD}
+	local _pwd=${PWD}
 	if \command -v chdir >/dev/null 2>&1 && \chdir "${@}" || \builtin cd "${@}"; then
 		autoenv_init "${_pwd}"
 		\return 0
@@ -273,9 +270,7 @@ autoenv_cd() {
 
 # @description Cleanup autoenv
 autoenv_leave() {
-	# execute file when leaving a directory
-	local from_dir to_dir
-	from_dir="${*}"
+	local from_dir="${*}" to_dir
 	to_dir=$(\echo "${PWD}" | \command sed -E 's:/+:/:g')
 
 	# Discover all files that we need to source.
@@ -353,7 +348,7 @@ if ! $has_alias_func_def_enabled; then
 	\unsetopt ALIAS_FUNC_DEF 2> /dev/null
 fi
 
-# Probe to see if we have access to a shasum command, otherwise disable autoenv
+# If some shasum exists, specifically use it. Otherwise, do not enable autoenv.
 if \command -v gsha1sum >/dev/null 2>&1; then
 	autoenv_shasum() {
 		gsha1sum "${@}"
