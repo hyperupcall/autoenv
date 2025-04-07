@@ -365,7 +365,7 @@ fi
 __autoenv_has_builtin=no
 if __autoenv_output=$(type builtin); then
 	if [ "${__autoenv_output}" = 'builtin is a shell builtin' ]; then
-	__autoenv_has_builtin=yes
+		__autoenv_has_builtin=yes
 	fi
 fi
 unset -v __autoenv_output
