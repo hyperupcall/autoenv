@@ -55,11 +55,12 @@ __autoenv_use_color() {
 # @description Prints a user message to standard output
 # @internal
 _autoenv_print() {
+	local title="${1}" color="${2}" text="${3}"
 	# shellcheck disable=SC2059
 	if __autoenv_use_color; then
-		\printf "\033[${3}m[$1]\033[0m $2"
+		\printf "\033[${color}m[${title}]\033[0m ${text}"
 	else
-		\printf "[$1] $2"
+		\printf "[${title}] ${text}"
 	fi
 }
 
@@ -198,14 +199,14 @@ _autoenv_check_authz_and_run() {
 		\echo "autoenv:"
 		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N/D) " # Keep (y/N/D) for compatibility.
 	else
-		_autoenv_print 'autoenv' 'New or modified env file detected\n' 36
+		_autoenv_print 'autoenv' 36 'New or modified env file detected\n'
 		_autoenv_draw_line "Contents of \"${_envfile##*/}\""
 		local ofs="${IFS}"
 		IFS=" "
 		$AUTOENV_VIEWER "${_envfile}"
 		IFS="${ofs}"
 		_autoenv_draw_line
-		_autoenv_print 'autoenv' "Authorize this file? (y/n/d) " 36
+		_autoenv_print 'autoenv' 36 "Authorize this file? (y/n/d) "
 	fi
 	\read -r answer
 	if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
@@ -366,5 +367,5 @@ elif \command -v shasum >/dev/null 2>&1; then
 	}
 	enable_autoenv "$@"
 else
-	_autoenv_print 'autoenv error' "Failed to locate a compatible shasum binary; autoenv will not be enabled\n" 31 >&2
+	_autoenv_print 'autoenv error' 31 "Failed to locate a compatible shasum binary; autoenv will not be enabled\n" >&2
 fi
