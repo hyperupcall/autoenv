@@ -76,9 +76,9 @@ _autoenv_draw_line() {
 	line=$(\printf '%*s\n' ${width} | \command tr " " "${char}")
 
 	if __autoenv_use_color; then
-		\printf "%s%s\n" "${text}" "${line}"
-	else
 		\printf "\033[1m%s%s\033[0m\n" "${text}" "${line}"
+	else
+		\printf "%s%s\n" "${text}" "${line}"
 	fi
 }
 
