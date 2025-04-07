@@ -265,17 +265,11 @@ autoenv_source() {
 	AUTOENV_CUR_FILE="${1}"
 	AUTOENV_CUR_DIR="$(\command dirname "${1}")"
 	. "${1}"
-<<<<<<< Updated upstream
-	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && \set +a
-	\eval "${_allexport}"
-	\unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
-=======
 
 	if [ "${__autoenv_set_allexport:-}" = 'yes' ]; then
 		\set +a
 	fi
 	\unset -v AUTOENV_CUR_FILE AUTOENV_CUR_DIR
->>>>>>> Stashed changes
 }
 
 # @description Function to override the 'cd' builtin
