@@ -231,12 +231,9 @@ _autoenv_check_authz_and_run() {
 # @description Mark an env file as able to be sourced
 # @internal
 autoenv_deauthorize_env() {
-	local _envfile="${1}" _noclobber
+	local _envfile="${1}"
 	\command cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
-	_noclobber="$(\set +o | \command grep noclobber)"
-	\set +C
-	\command grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
-	\eval "${_noclobber}"
+	\command grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" >| "${AUTOENV_AUTH_FILE}"
 	\command rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
@@ -259,9 +256,11 @@ autoenv_authorize_env() {
 # @description Actually source a file
 # @internal
 autoenv_source() {
-	local _allexport
-	_allexport="$(\set +o | \command grep allexport)"
-	\set -a
+	case $- in
+	*a*) ;;
+	*) \set -a; local __autoenv_set_allexport=yes ;;
+	esac
+
 	AUTOENV_CUR_FILE="${1}"
 	AUTOENV_CUR_DIR="$(\command dirname "${1}")"
 	. "${1}"
@@ -339,13 +338,10 @@ ${_file}"
 	fi
 }
 
-# Override the cd alias
-if \command -v setopt >/dev/null 2>&1; then
-	if \setopt 2> /dev/null | \command grep -q aliasfuncdef; then
-		has_alias_func_def_enabled=true
-	else
-		\setopt ALIAS_FUNC_DEF 2>/dev/null
-	fi
+# Set Zsh option to prevent errors when "cd" is already an alias.
+if [ -n "${ZSH_VERSION:-}" ] && [[ ! -o aliasfuncdef ]]; then
+	__autoenv_unset_aliasfuncdef=yes
+	\setopt ALIAS_FUNC_DEF 2>/dev/null
 fi
 
 # @description Run to automatically replace the cd builtin with our improved one
@@ -360,8 +356,9 @@ enable_autoenv() {
 	cd "${PWD}"
 }
 
-if ! $has_alias_func_def_enabled; then
-	\unsetopt ALIAS_FUNC_DEF 2> /dev/null
+if [ "${__autoenv_unset_aliasfuncdef:-}" = 'yes' ]; then
+	\unsetopt ALIAS_FUNC_DEF 2>/dev/null
+	\unset -v __autoenv_unset_aliasfuncdef
 fi
 
 __autoenv_has_builtin=no
