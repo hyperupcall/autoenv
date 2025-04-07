@@ -37,10 +37,10 @@ AUTOENV_VIEWER="${AUTOENV_VIEWER:-cat}"
 # @internal
 __autoenv_cd() {
 	if [ "${__autoenv_has_builtin}" = 'yes' ]; then
-		\builtin cd "${1}"
+		\builtin cd "${1}" || return
 	else
 		# Some shells like "dash" do not have "builtin".
-		\chdir "${1}"
+		\chdir "${1}" || return
 	fi
 }
 
@@ -354,6 +354,7 @@ enable_autoenv() {
 		}
 	fi
 
+	# shellcheck disable=SC2164
 	cd "${PWD}"
 }
 
