@@ -231,12 +231,9 @@ _autoenv_check_authz_and_run() {
 # @description Mark an env file as able to be sourced
 # @internal
 autoenv_deauthorize_env() {
-	local _envfile="${1}" _noclobber
+	local _envfile="${1}"
 	\command cp -- "${AUTOENV_AUTH_FILE}" "${AUTOENV_AUTH_FILE}.tmp"
-	_noclobber="$(\set +o | \command grep noclobber)"
-	\set +C
-	\command grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" > "${AUTOENV_AUTH_FILE}"
-	\eval "${_noclobber}"
+	\command grep -Gv "${_envfile}:" -- "${AUTOENV_AUTH_FILE}.tmp" >| "${AUTOENV_AUTH_FILE}"
 	\command rm -- "${AUTOENV_AUTH_FILE}.tmp" 2>/dev/null || :
 }
 
@@ -259,14 +256,18 @@ autoenv_authorize_env() {
 # @description Actually source a file
 # @internal
 autoenv_source() {
-	local _allexport
-	_allexport="$(\set +o | \command grep allexport)"
-	\set -a
+	case $- in
+	*a*) ;;
+	*) \set -a; local __autoenv_set_allexport=yes ;;
+	esac
+
 	AUTOENV_CUR_FILE="${1}"
 	AUTOENV_CUR_DIR="$(\command dirname "${1}")"
 	. "${1}"
-	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && \set +a
-	\eval "${_allexport}"
+
+	if [ "${__autoenv_set_allexport:-}" = 'yes' ]; then
+		\set +a
+	fi
 	\unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
 }
 
