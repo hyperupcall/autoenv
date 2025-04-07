@@ -67,7 +67,7 @@ for shell in ${shells}; do
 		export TMPDIR
 		cd "${TMPDIR}"
 		# Run this test
-		eval "$(echo "$shell" | cut -d':' -f2) -u ${basedir}/$current_test.sh" > "${basedir}/lasttest.log" 2>&1
+		eval "$(echo "$shell" | cut -d':' -f2) ${basedir}/$current_test.sh" > "${basedir}/lasttest.log" 2>&1
 		# Tear this test down
 		echo "Success."
 		cd "${oldpwd}"
