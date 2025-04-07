@@ -31,7 +31,7 @@ else
 fi
 AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
 AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
-AUTOENV_VIEWER="${AUTOENV_VIEWER:-cat}"
+# AUTOENV_VIEWER
 # AUTOENV_ENABLE_LEAVE
 
 # @internal
@@ -198,7 +198,7 @@ _autoenv_check_authz_and_run() {
 		\return 0
 	fi
 
-	if [ -z "$AUTOENV_VIEWER" ]; then
+	if [ -z "${AUTOENV_VIEWER:-}" ]; then
 		\echo "autoenv:"
 		\echo "autoenv: WARNING:"
 		\printf '%s\n' "autoenv: This is the first time you are about to source ${_envfile}":
