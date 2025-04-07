@@ -337,13 +337,10 @@ ${_file}"
 	fi
 }
 
-# Override the cd alias
-if \command -v setopt >/dev/null 2>&1; then
-	if \setopt 2> /dev/null | \command grep -q aliasfuncdef; then
-		has_alias_func_def_enabled=true
-	else
-		\setopt ALIAS_FUNC_DEF 2>/dev/null
-	fi
+# Set Zsh option to prevent errors when "cd" is already an alias.
+if [ -n "${ZSH_VERSION:-}" ] && [[ ! -o aliasfuncdef ]]; then
+	__autoenv_unset_aliasfuncdef=yes
+	\setopt ALIAS_FUNC_DEF 2>/dev/null
 fi
 
 # @description Run to automatically replace the cd builtin with our improved one
@@ -358,8 +355,9 @@ enable_autoenv() {
 	cd "${PWD}"
 }
 
-if ! $has_alias_func_def_enabled; then
-	\unsetopt ALIAS_FUNC_DEF 2> /dev/null
+if [ "${__autoenv_unset_aliasfuncdef:-}" = 'yes' ]; then
+	\unsetopt ALIAS_FUNC_DEF 2>/dev/null
+	\unset -v __autoenv_unset_aliasfuncdef
 fi
 
 __autoenv_has_builtin=no
