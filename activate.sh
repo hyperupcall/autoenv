@@ -337,30 +337,30 @@ ${_file}"
 	fi
 }
 
-# Override the cd alias
-if \command -v setopt >/dev/null 2>&1; then
-	if \setopt 2> /dev/null | \command grep -q aliasfuncdef; then
-		has_alias_func_def_enabled=true
-	else
-		\setopt ALIAS_FUNC_DEF 2>/dev/null
-	fi
-fi
-
 # @description Run to automatically replace the cd builtin with our improved one
 enable_autoenv() {
 	if [ -z "${AUTOENV_PRESERVE_CD}" ]; then
+		# Override the cd alias
+		if [ -n "$ZSH_VERSION" ] && [[ ! -o aliasfuncdef ]]; then
+			# if \setopt 2> /dev/null | \command grep -q aliasfuncdef; then
+				has_alias_func_def_enabled=yes
+			# else
+				\setopt ALIAS_FUNC_DEF 2>/dev/null
+			# fi
+		fi
+
 		cd() {
 			autoenv_cd "${@}"
 		}
+
+		if [ "$has_alias_func_def_enabled" = 'yes' ]; then
+			\unsetopt ALIAS_FUNC_DEF 2> /dev/null
+		fi
 	fi
 
 	# shellcheck disable=SC2164
 	cd "${PWD}"
 }
-
-if ! $has_alias_func_def_enabled; then
-	\unsetopt ALIAS_FUNC_DEF 2> /dev/null
-fi
 
 __autoenv_has_builtin=no
 if __autoenv_output=$(\type builtin); then
