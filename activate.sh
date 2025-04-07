@@ -258,7 +258,7 @@ autoenv_authorize_env() {
 autoenv_source() {
 	case $-) in
 	*a*) ;;
-	*) \set -a; __autoenv_set_allexport=yes ;;
+	*) \set -a; local __autoenv_set_allexport=yes ;;
 	esac
 
 	AUTOENV_CUR_FILE="${1}"
