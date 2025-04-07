@@ -1,7 +1,7 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2216,SC3043
 
-if [ -n "$AUTOENV_AUTH_FILE" ]; then
+if [ -n "${AUTOENV_AUTH_FILE:-}" ]; then
 	:
 elif [ -f "$HOME/.autoenv_authorized" ]; then
 	AUTOENV_AUTH_FILE="$HOME/.autoenv_authorized"
@@ -13,7 +13,7 @@ else
 	esac
 	unset -v _autoenv_state_dir
 fi
-if [ -n "$AUTOENV_NOTAUTH_FILE" ]; then
+if [ -n "${AUTOENV_NOTAUTH_FILE:-}" ]; then
 	:
 elif [ -f "$HOME/.autoenv_authorized" ]; then
 	# If `.autoenv_authorized` is in home, don't suprise the user by using XDG Base Dir.
@@ -49,7 +49,7 @@ __autoenv_use_color() {
 	if [ ${NO_COLOR+x} ]; then
 		return 1
 	fi
-	case $FORCE_COLOR in
+	case ${FORCE_COLOR:-} in
 	1|2|3) return 0 ;;
 	0) return 1 ;;
 	esac
@@ -79,7 +79,7 @@ _autoenv_print() {
 # @args $1: title text to print near the beginning of the line
 # @internal
 _autoenv_draw_line() {
-	local text="${1}" char="-" width=${COLUMNS:-80} margin=3 line
+	local text="${1:-}" char="-" width=${COLUMNS:-80} margin=3 line
 
 	if [ -n "${text}" ]; then
 		text="--- ${text} "
@@ -98,7 +98,7 @@ _autoenv_draw_line() {
 # @description Main initialization function
 # @internal
 autoenv_init() {
-	if [ -n "$AUTOENV_ENABLE_LEAVE" ]; then
+	if [ -n "${AUTOENV_ENABLE_LEAVE:-}" ]; then
 		autoenv_leave "$@"
 	fi
 
@@ -129,7 +129,7 @@ ${_file}"
 	)
 
 	# ZSH: Use traditional for loop
-	if [ -n "$ZSH_VERSION" ]; then
+	if [ -n "${ZSH_VERSION:-}" ]; then
 		\setopt shwordsplit >/dev/null 2>&1
 	fi
 
@@ -141,7 +141,7 @@ ${_file}"
 	\set -f
 	# Turn around the env files order if needed
 	local _orderedfiles=''
-	if [ -z "${AUTOENV_LOWER_FIRST}" ]; then
+	if [ -z "${AUTOENV_LOWER_FIRST:-}" ]; then
 		for _file in ${_files}; do
 			_orderedfiles="${_file}
 ${_orderedfiles}"
@@ -158,7 +158,7 @@ ${_orderedfiles}"
 	\set +f
 
 	# ZSH: Unset shwordsplit
-	if [ -n "$ZSH_VERSION" ]; then
+	if [ -n "${ZSH_VERSION:-}" ]; then
 		\unsetopt shwordsplit >/dev/null 2>&1
 	fi
 }
@@ -188,13 +188,13 @@ _autoenv_check_authz_and_run() {
 	fi
 
 	# Don't ask for permission if "assume yes" is switched on
-	if [ -n "${AUTOENV_ASSUME_YES}" ]; then
+	if [ -n "${AUTOENV_ASSUME_YES:-}" ]; then
 		autoenv_authorize_env "${_envfile}"
 		autoenv_source "${_envfile}"
 		\return 0
 	fi
 
-	if [ -n "${MC_SID}" ]; then # Make sure mc is not running
+	if [ -n "${MC_SID:-}" ]; then # Make sure mc is not running
 		\return 0
 	fi
 
@@ -315,7 +315,7 @@ ${_file}"
 	)
 
 	# ZSH: Use traditional for loop
-	if [ -n "$ZSH_VERSION" ]; then
+	if [ -n "${ZSH_VERSION:-}" ]; then
 		\setopt shwordsplit >/dev/null 2>&1
 	fi
 
@@ -333,7 +333,7 @@ ${_file}"
 	\set +f
 
 	# ZSH: Unset shwordsplit
-	if [ -n "$ZSH_VERSION" ]; then
+	if [ -n "${ZSH_VERSION:-}" ]; then
 		\unsetopt shwordsplit >/dev/null 2>&1
 	fi
 }
@@ -346,7 +346,7 @@ fi
 
 # @description Run to automatically replace the cd builtin with our improved one
 enable_autoenv() {
-	if [ -z "${AUTOENV_PRESERVE_CD}" ]; then
+	if [ -z "${AUTOENV_PRESERVE_CD:-}" ]; then
 		cd() {
 			autoenv_cd "${@}"
 		}
