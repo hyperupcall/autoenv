@@ -166,8 +166,7 @@ ${_orderedfiles}"
 # @description Checks the expected hash entry of the file
 # @internal
 autoenv_hashline() {
-	local _envfile="${1}"
-	local hash
+	local _envfile="${1}" _hash
 	_hash=$(autoenv_shasum "${_envfile}" | \command cut -d' ' -f 1)
 	\printf '%s\n' "${_envfile}:${_hash}"
 }
@@ -208,7 +207,7 @@ _autoenv_check_authz_and_run() {
 		\echo "autoenv:"
 		\echo "autoenv:   --- (end contents) -----------------------------------------"
 		\echo "autoenv:"
-		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N/D) " # Keep (y/N/D) for compatibility.
+		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N/D) " # Keep (y/N/D) for old UI consistency.
 	else
 		_autoenv_print 'autoenv' 36 'New or modified env file detected\n'
 		_autoenv_draw_line "Contents of \"${_envfile##*/}\""
@@ -256,13 +255,14 @@ autoenv_authorize_env() {
 # @description Actually source a file
 # @internal
 autoenv_source() {
+	AUTOENV_CUR_DIR="$(\command dirname "${1}")"
+	export AUTOENV_CUR_FILE="${1}" AUTOENV_CUR_DIR
 	case $- in
 	*a*) ;;
 	*) \set -a; local __autoenv_set_allexport=yes ;;
 	esac
 
-	AUTOENV_CUR_FILE="${1}"
-	AUTOENV_CUR_DIR="$(\command dirname "${1}")"
+	# shellcheck disable=SC1090
 	. "${1}"
 
 	if [ "${__autoenv_set_allexport:-}" = 'yes' ]; then
@@ -273,7 +273,7 @@ autoenv_source() {
 
 # @description Function to override the 'cd' builtin
 autoenv_cd() {
-	local _pwd=${PWD}
+	local _pwd="${PWD}"
 	if __autoenv_cd "${@}"; then
 		autoenv_init "${_pwd}"
 		\return 0
@@ -339,6 +339,7 @@ ${_file}"
 }
 
 # Set Zsh option to prevent errors when "cd" is already an alias.
+# shellcheck disable=SC3010
 if [ -n "${ZSH_VERSION:-}" ] && [[ ! -o aliasfuncdef ]]; then
 	__autoenv_unset_aliasfuncdef=yes
 	\setopt ALIAS_FUNC_DEF 2>/dev/null
