@@ -1,6 +1,6 @@
 {
 	"name": "@hyperupcall/autoenv",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "Magic per-project shell environments",
 	"author": "Edwin Kofler <edwin@kofler.dev> (https://edwinkofler.com)",
 	"license": "MIT",
