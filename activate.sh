@@ -34,31 +34,34 @@ AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 AUTOENV_VIEWER="${AUTOENV_VIEWER:-cat}"
 # AUTOENV_ENABLE_LEAVE
 
-# @description Prints a user message to stdout
-# @option -b[NUM]: number of lines to print before message
-# @option -a[NUM]: number of lines to print after message (default=1)
-# @option -n: do not print trailing newline (same as -a0)
-# @arg message: space seperated text of message
-# @internal
-_autoenv_info() {
-	if [ -n "$NO_COLOR" ]; then
-		\printf "[autoenv] %s" "${*}"
-	else
-		\printf "\033[33m[autoenv]\033[0m %s" "${*}"
+__autoenv_use_color() {
+	if [ ${NO_COLOR+x} ]; then
+		return 1
 	fi
+	case $FORCE_COLOR in
+	1|2|3) return 0 ;;
+	0) return 1 ;;
+	esac
+	if [ "$TERM" = 'dumb' ]; then
+		return 1
+	fi
+	if [ -t 1 ]; then
+		return 0
+	fi
+
+	return 1
 }
 
-# @description Prints a message to stderr
-# @args *: space seperated text of message
+# @description Prints a user message to standard output
 # @internal
-_autoenv_err() {
-	if [ -n "$NO_COLOR" ]; then
-		\printf "[autoenv] Error %s" "${*}" >&2
+_autoenv_print() {
+	local title="${1}" color="${2}" text="${3}"
+	# shellcheck disable=SC2059
+	if __autoenv_use_color; then
+		\printf "\033[${color}m[${title}]\033[0m ${text}"
 	else
-		\printf "\033[33m[autoenv]\033[0m \033[31mError\033[0m %s\n" "${*}" >&2
+		\printf "[${title}] ${text}"
 	fi
-
-	\return 1
 }
 
 # @description Prints a horizontal line
@@ -74,11 +77,11 @@ _autoenv_draw_line() {
 	width=$((width - ${#text} - margin))
 	line=$(\printf '%*s\n' ${width} | \command tr " " "${char}")
 
-	if [ -n "$NO_COLOR" ]; then
-		\printf "%s%s\n" "${text}" "${line}"
-	else
+	if __autoenv_use_color; then
 		\printf "\033[1m%s%s\033[0m\n" "${text}" "${line}"
-fi
+	else
+		\printf "%s%s\n" "${text}" "${line}"
+	fi
 }
 
 # @description Main initialization function
@@ -196,15 +199,14 @@ _autoenv_check_authz_and_run() {
 		\echo "autoenv:"
 		\printf "%s" "autoenv: Are you sure you want to allow this? (y/N/D) " # Keep (y/N/D) for compatibility.
 	else
-		_autoenv_info "New or modified env file detected"
-		printf '\n'
+		_autoenv_print 'autoenv' 36 'New or modified env file detected\n'
 		_autoenv_draw_line "Contents of \"${_envfile##*/}\""
 		local ofs="${IFS}"
 		IFS=" "
 		$AUTOENV_VIEWER "${_envfile}"
 		IFS="${ofs}"
 		_autoenv_draw_line
-		_autoenv_info "Authorize this file? (y/n/d) "
+		_autoenv_print 'autoenv' 36 "Authorize this file? (y/n/d) "
 	fi
 	\read -r answer
 	if [ "${answer}" = "y" ] || [ "${answer}" = "Y" ]; then
@@ -365,5 +367,5 @@ elif \command -v shasum >/dev/null 2>&1; then
 	}
 	enable_autoenv "$@"
 else
-	_autoenv_err "can not locate a compatible shasum binary; not enabling"
+	_autoenv_print 'autoenv error' 31 "can not locate a compatible shasum binary; not enabling\n" >&2
 fi
