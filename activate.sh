@@ -37,9 +37,9 @@ AUTOENV_VIEWER="${AUTOENV_VIEWER:-cat}"
 # @internal
 __autoenv_cd() {
 	if [ "${__autoenv_has_builtin}" = 'yes' ]; then
-		CDPATH= \builtin cd "${1}"
+		\builtin cd "${1}"
 	else
-		# Shells like "dash" do not have "builtin".
+		# Some shells like "dash" do not have "builtin".
 		\chdir "${1}"
 	fi
 }
