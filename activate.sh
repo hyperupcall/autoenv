@@ -265,9 +265,17 @@ autoenv_source() {
 	AUTOENV_CUR_FILE="${1}"
 	AUTOENV_CUR_DIR="$(\command dirname "${1}")"
 	. "${1}"
+<<<<<<< Updated upstream
 	[ "${ZSH_VERSION#*5.1}" != "${ZSH_VERSION}" ] && \set +a
 	\eval "${_allexport}"
 	\unset AUTOENV_CUR_FILE AUTOENV_CUR_DIR
+=======
+
+	if [ "${__autoenv_set_allexport:-}" = 'yes' ]; then
+		\set +a
+	fi
+	\unset -v AUTOENV_CUR_FILE AUTOENV_CUR_DIR
+>>>>>>> Stashed changes
 }
 
 # @description Function to override the 'cd' builtin
@@ -368,7 +376,7 @@ if __autoenv_output=$(\type builtin); then
 		__autoenv_has_builtin=yes
 	fi
 fi
-unset -v __autoenv_output
+\unset -v __autoenv_output
 
 # If some shasum exists, specifically use it. Otherwise, do not enable autoenv.
 if \command -v gsha1sum >/dev/null 2>&1; then
