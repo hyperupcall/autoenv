@@ -367,5 +367,5 @@ elif \command -v shasum >/dev/null 2>&1; then
 	}
 	enable_autoenv "$@"
 else
-	_autoenv_print 'autoenv error' 31 "Failed to locate a compatible shasum binary; autoenv will not be enabled\n" >&2
+	_autoenv_print 'autoenv error' 31 "can not locate a compatible shasum binary; not enabling\n" >&2
 fi
