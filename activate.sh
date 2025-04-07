@@ -256,7 +256,7 @@ autoenv_authorize_env() {
 # @description Actually source a file
 # @internal
 autoenv_source() {
-	case $-) in
+	case $- in
 	*a*) ;;
 	*) \set -a; local __autoenv_set_allexport=yes ;;
 	esac
