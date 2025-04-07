@@ -1,7 +1,7 @@
 # shellcheck shell=sh
 # shellcheck disable=SC2216,SC3043
 
-if [ -n "$AUTOENV_AUTH_FILE" ]; then
+if [ -n "${AUTOENV_AUTH_FILE:-}" ]; then
 	:
 elif [ -f "$HOME/.autoenv_authorized" ]; then
 	AUTOENV_AUTH_FILE="$HOME/.autoenv_authorized"
@@ -13,7 +13,7 @@ else
 	esac
 	unset -v _autoenv_state_dir
 fi
-if [ -n "$AUTOENV_NOTAUTH_FILE" ]; then
+if [ -n "${AUTOENV_NOTAUTH_FILE:-}" ]; then
 	:
 elif [ -f "$HOME/.autoenv_authorized" ]; then
 	# If `.autoenv_authorized` is in home, don't suprise the user by using XDG Base Dir.
@@ -98,7 +98,7 @@ _autoenv_draw_line() {
 # @description Main initialization function
 # @internal
 autoenv_init() {
-	if [ -n "$AUTOENV_ENABLE_LEAVE" ]; then
+	if [ -n "${AUTOENV_ENABLE_LEAVE:-}" ]; then
 		autoenv_leave "$@"
 	fi
 
@@ -141,7 +141,7 @@ ${_file}"
 	\set -f
 	# Turn around the env files order if needed
 	local _orderedfiles=''
-	if [ -z "${AUTOENV_LOWER_FIRST}" ]; then
+	if [ -z "${AUTOENV_LOWER_FIRST:-}" ]; then
 		for _file in ${_files}; do
 			_orderedfiles="${_file}
 ${_orderedfiles}"
@@ -348,7 +348,7 @@ fi
 
 # @description Run to automatically replace the cd builtin with our improved one
 enable_autoenv() {
-	if [ -z "${AUTOENV_PRESERVE_CD}" ]; then
+	if [ -z "${AUTOENV_PRESERVE_CD:-}" ]; then
 		cd() {
 			autoenv_cd "${@}"
 		}
