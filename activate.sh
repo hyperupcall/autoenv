@@ -55,6 +55,7 @@ __autoenv_use_color() {
 # @description Prints a user message to standard output
 # @internal
 _autoenv_print() {
+	# shellcheck disable=SC2059
 	if __autoenv_use_color; then
 		\printf "\033[${3}m[$1]\033[0m $2"
 	else
