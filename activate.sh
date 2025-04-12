@@ -34,17 +34,6 @@ AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
 : ${AUTOENV_VIEWER:=}
 # AUTOENV_ENABLE_LEAVE
 
-# @internal
-__autoenv_cd() {
-	if [ "${__autoenv_has_builtin}" = 'yes' ]; then
-		\builtin cd "${1}" || return
-	else
-		# Some shells like "dash" do not have "builtin".
-		\chdir "${1}" || return
-	fi
-}
-
-# @internal
 __autoenv_use_color() {
 	if [ ${NO_COLOR+x} ]; then
 		return 1
@@ -109,7 +98,7 @@ autoenv_init() {
 	# Discover all files that we need to source.
 	local _files
 	_files=$(
-		__autoenv_cd "${_pwd}"
+		\command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || \builtin cd "${_pwd}"
 		_hadone=''
 		while :; do
 			_file="$(\pwd -P)/${AUTOENV_ENV_FILENAME}"
@@ -124,7 +113,7 @@ ${_file}"
 			fi
 			[ "$(\pwd -P)" = "${_mountpoint}" ] && \break
 			[ "$(\pwd -P)" = "/" ] && \break
-			__autoenv_cd "$(\pwd -P)/.."
+			\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd -P)/.." || \builtin cd "$(\pwd -P)/.."
 		done
 	)
 
@@ -274,7 +263,7 @@ autoenv_source() {
 # @description Function to override the 'cd' builtin
 autoenv_cd() {
 	local _pwd="${PWD}"
-	if __autoenv_cd "${@}"; then
+	if \command -v chdir >/dev/null 2>&1 && \chdir "${@}" || \builtin cd "${@}"; then
 		autoenv_init "${_pwd}"
 		\return 0
 	else
@@ -290,7 +279,7 @@ autoenv_leave() {
 	# Discover all files that we need to source.
 	local _files
 	_files=$(
-		__autoenv_cd "${from_dir}"
+		\command -v chdir >/dev/null 2>&1 && \chdir "${from_dir}" || \builtin cd "${from_dir}"
 		_hadone=''
 		while [ "$PWD" != "" ] && [ "$PWD" != "/" ]; do
 			case $to_dir/ in
@@ -308,7 +297,7 @@ autoenv_leave() {
 ${_file}"
 					fi
 				fi
-				__autoenv_cd "$PWD/.."
+				\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd)/.." || \builtin cd "$PWD/.."
 				;;
 			esac
 		done
@@ -353,7 +342,6 @@ enable_autoenv() {
 		}
 	fi
 
-	# shellcheck disable=SC2164
 	cd "${PWD}"
 }
 
@@ -361,14 +349,6 @@ if [ "${__autoenv_unset_aliasfuncdef:-}" = 'yes' ]; then
 	\unsetopt ALIAS_FUNC_DEF 2>/dev/null
 	\unset -v __autoenv_unset_aliasfuncdef
 fi
-
-__autoenv_has_builtin=no
-if __autoenv_output=$(\type builtin); then
-	if [ "${__autoenv_output}" = 'builtin is a shell builtin' ]; then
-		__autoenv_has_builtin=yes
-	fi
-fi
-\unset -v __autoenv_output
 
 # If some shasum exists, specifically use it. Otherwise, do not enable autoenv.
 if \command -v gsha1sum >/dev/null 2>&1; then
