@@ -180,7 +180,7 @@ Autoenv overrides `cd` (unless `AUTOENV_PRESERVE_CD` is set to a non-empty strin
 
 If you define a `cd` alias, `autoenv` will (properly) show an error except when using Zsh. We recommend removing any aliases to `cd`! (`unalias cd`).
 
-If you are using `dash`, `autoenv` will work. However, `dash` does not support `builtin`. As a reuslt, in `dash`, `autoenv` invokes `chdir` instead of `cd` to prevent infinite loops.
+If you are using `dash`, `autoenv` will work. However, `dash` does not support `builtin`. As a result, in `dash`, `autoenv` invokes `chdir` instead of `cd` to prevent infinite loops.
 
 Autoenv can be disabled via `unset -f cd` if you experience I/O issues with certain file systems, particularly those that are FUSE-based (such as `smbnetfs`).
 
