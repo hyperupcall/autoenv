@@ -32,15 +32,19 @@ whoa
 
 ## Installation (automated)
 
-```sh
-# with cURL
-curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/main/scripts/install.sh' | sh
+Install with [cURL](https://curl.se):
 
-# with wget
+```sh
+curl -#fLo- 'https://raw.githubusercontent.com/hyperupcall/autoenv/main/scripts/install.sh' | sh
+```
+
+Install with [wget](https://www.gnu.org/software/wget):
+
+```sh
 wget --show-progress -o /dev/null -O- 'https://raw.githubusercontent.com/hyperupcall/autoenv/main/scripts/install.sh' | sh
 ```
 
-If you encounter some variant of a `curl: command not found` or `wget: command not found` error, please install either cURL or wget (with your package manager) and try again.
+If you encounter some variant of a "curl: command not found" or "wget: command not found" error, please install either cURL or wget (with your package manager) and try again.
 
 ## Installation (manual)
 
