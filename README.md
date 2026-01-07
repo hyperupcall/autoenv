@@ -168,6 +168,30 @@ Inside the `.env` file, two _environment variables_ can be accessed:
 - `AUTOENV_CUR_FILE` - The file being sourced
 - `AUTOENV_CUR_DIR` - Equivalent to `dirname "$AUTOENV_CUR_FILE"`
 
+#### Programmatic Authorization
+
+You can programmatically authorize, deny, or remove authorization for enter and leave scripts using the following functions:
+
+- `autoenv_authorize [directory] [enter|leave|both]` - Authorize `.env` and/or `.env.leave` files in a directory to be automatically sourced. The directory defaults to the current directory, and the second argument defaults to `both`.
+- `autoenv_unauthorize [directory] [enter|leave|both]` - Deny (mark as not authorized) `.env` and/or `.env.leave` files in a directory. They will not be sourced and you won't be prompted for authorization.
+- `autoenv_deauthorize [directory] [enter|leave|both]` - Remove authorization for `.env` and/or `.env.leave` files in a directory. You will be prompted for authorization again when entering the directory.
+
+Example usage:
+
+```bash
+# Authorize both .env and .env.leave in the current directory.
+autoenv_authorize
+
+# Authorize only the .env file in a specific directory.
+autoenv_authorize /path/to/project enter
+
+# Deny the .env.leave file in a specific directory.
+autoenv_unauthorize /path/to/project leave
+
+# Remove authorization for both files in the current directory.
+autoenv_deauthorize
+```
+
 ## Shells
 
 autoenv is tested on:

@@ -84,6 +84,18 @@ _autoenv_draw_line() {
 	fi
 }
 
+# @description Convert a directory path to absolute path
+# @args $1: directory path
+# @internal
+_autoenv_get_abs_dir() {
+	local _dir="${1}"
+	if \command -v chdir >/dev/null 2>&1; then
+		( \chdir "${_dir}" && \pwd -P )
+	else
+		( \builtin cd "${_dir}" && \pwd -P )
+	fi
+}
+
 # @description Main initialization function
 # @internal
 autoenv_init() {
@@ -239,6 +251,132 @@ autoenv_authorize_env() {
 	local _envfile="${1}"
 	autoenv_deauthorize_env "${_envfile}"
 	autoenv_hashline "${_envfile}" >> "${AUTOENV_AUTH_FILE}"
+}
+
+# @description Authorize enter and/or leave scripts in a directory
+# @usage autoenv_authorize [directory] [enter|leave|both]
+# @args $1: directory path (defaults to current directory)
+# @args $2: which files to authorize - "enter", "leave", or "both" (defaults to "both")
+# @exitcode 0 on success
+# @public
+autoenv_authorize() {
+	local _dir="${1:-.}" _which="${2:-both}" _abs_dir
+
+	if [ ! -d "${_dir}" ]; then
+		\printf '%s\n' "autoenv: error: '${_dir}' is not a directory" >&2
+		\return 1
+	fi
+
+	case "${_which}" in
+		enter|leave|both)
+			;;
+		*)
+			\printf '%s\n' "autoenv: error: invalid argument '${_which}' (expected 'enter', 'leave', or 'both')" >&2
+			\return 1
+			;;
+	esac
+
+	_abs_dir=$(_autoenv_get_abs_dir "${_dir}")
+
+	if [ "${_which}" = "enter" ] || [ "${_which}" = "both" ]; then
+		if [ -f "${_abs_dir}/${AUTOENV_ENV_FILENAME}" ]; then
+			autoenv_authorize_env "${_abs_dir}/${AUTOENV_ENV_FILENAME}"
+			\printf '%s\n' "Authorized: ${_abs_dir}/${AUTOENV_ENV_FILENAME}"
+		fi
+	fi
+
+	if [ "${_which}" = "leave" ] || [ "${_which}" = "both" ]; then
+		if [ -f "${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}" ]; then
+			autoenv_authorize_env "${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+			\printf '%s\n' "Authorized: ${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+		fi
+	fi
+
+	\return 0
+}
+
+# @description Deny (unauthorize) enter and/or leave scripts in a directory
+# @usage autoenv_unauthorize [directory] [enter|leave|both]
+# @args $1: directory path (defaults to current directory)
+# @args $2: which files to deny - "enter", "leave", or "both" (defaults to "both")
+# @exitcode 0 on success
+# @public
+autoenv_unauthorize() {
+	local _dir="${1:-.}" _which="${2:-both}" _abs_dir
+
+	if [ ! -d "${_dir}" ]; then
+		\printf '%s\n' "autoenv: error: '${_dir}' is not a directory" >&2
+		\return 1
+	fi
+
+	case "${_which}" in
+		enter|leave|both)
+			;;
+		*)
+			\printf '%s\n' "autoenv: error: invalid argument '${_which}' (expected 'enter', 'leave', or 'both')" >&2
+			\return 1
+			;;
+	esac
+
+	_abs_dir=$(_autoenv_get_abs_dir "${_dir}")
+
+	if [ "${_which}" = "enter" ] || [ "${_which}" = "both" ]; then
+		if [ -f "${_abs_dir}/${AUTOENV_ENV_FILENAME}" ]; then
+			autoenv_unauthorize_env "${_abs_dir}/${AUTOENV_ENV_FILENAME}"
+			\printf '%s\n' "Denied: ${_abs_dir}/${AUTOENV_ENV_FILENAME}"
+		fi
+	fi
+
+	if [ "${_which}" = "leave" ] || [ "${_which}" = "both" ]; then
+		if [ -f "${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}" ]; then
+			autoenv_unauthorize_env "${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+			\printf '%s\n' "Denied: ${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+		fi
+	fi
+
+	\return 0
+}
+
+# @description Remove authorization for enter and/or leave scripts in a directory
+# @usage autoenv_deauthorize [directory] [enter|leave|both]
+# @args $1: directory path (defaults to current directory)
+# @args $2: which files to deauthorize - "enter", "leave", or "both" (defaults to "both")
+# @exitcode 0 on success
+# @public
+autoenv_deauthorize() {
+	local _dir="${1:-.}" _which="${2:-both}" _abs_dir
+
+	if [ ! -d "${_dir}" ]; then
+		\printf '%s\n' "autoenv: error: '${_dir}' is not a directory" >&2
+		\return 1
+	fi
+
+	case "${_which}" in
+		enter|leave|both)
+			;;
+		*)
+			\printf '%s\n' "autoenv: error: invalid argument '${_which}' (expected 'enter', 'leave', or 'both')" >&2
+			\return 1
+			;;
+	esac
+
+	_abs_dir=$(_autoenv_get_abs_dir "${_dir}")
+
+	if [ "${_which}" = "enter" ] || [ "${_which}" = "both" ]; then
+		if [ -f "${_abs_dir}/${AUTOENV_ENV_FILENAME}" ]; then
+			autoenv_deauthorize_env "${_abs_dir}/${AUTOENV_ENV_FILENAME}"
+			\printf '%s\n' "Deauthorized: ${_abs_dir}/${AUTOENV_ENV_FILENAME}"
+		fi
+	fi
+
+	if [ "${_which}" = "leave" ] || [ "${_which}" = "both" ]; then
+		if [ -f "${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}" ]; then
+			autoenv_deauthorize_env "${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+			\printf '%s\n' "Deauthorized: ${_abs_dir}/${AUTOENV_ENV_LEAVE_FILENAME}"
+		fi
+	fi
+
+	\return 0
 }
 
 # @description Actually source a file
