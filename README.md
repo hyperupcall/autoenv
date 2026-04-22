@@ -4,7 +4,7 @@ Magic per-project shell environments.
 
 ## What is it?
 
-If a directory contains an `.env` file, it will automatically be executed when you `cd` into it. And, if a directory contains an `.env.leave` file (and `AUTOENV_ENABLE_LEAVE` is a non-empty string), the file will automatically be executed when `cd`'ing away from the directory that contains that file.
+If a directory contains an `.env` or `.autoenv` file, it will automatically be executed when you `cd` into it. And, if a directory contains an `.env.leave` or `.autoenv.leave` file (and `AUTOENV_ENABLE_LEAVE` is a non-empty string), the file will automatically be executed when `cd`'ing away from the directory that contains that file.
 
 This is great for...
 
@@ -16,7 +16,7 @@ This is great for...
 You can also nest envs within each other. How awesome is that!?
 
 When executing, autoenv, will walk up the directories until the mount
-point and execute all `.env` files beginning at the top.
+point and execute all `.env` and `.autoenv` files beginning at the top.
 
 ## Usage
 
@@ -144,9 +144,9 @@ _Before_ `source`ing `activate.sh`, you can set the following variables:
 
 - `AUTOENV_AUTH_FILE`: Files authorized to be sourced; defaults to `~/.autoenv_authorized` if it exists, otherwise, `~/.local/state/autoenv/authorized_list`
 - `AUTOENV_NOTAUTH_FILE`: Files not authorized to be sourced; defaults to `~/.autoenv_not_authorized` if it exists, otherwise, `~/.local/state/autoenv/not_authorized_list`
-- `AUTOENV_ENV_FILENAME`: Name of the `.env` file; defaults to `.env`
-- `AUTOENV_LOWER_FIRST`: Set this variable to a non-empty string to flip the order of `.env` files executed
-- `AUTOENV_ENV_LEAVE_FILENAME`: Name of the `.env.leave` file; defaults to `.env.leave`
+- `AUTOENV_ENV_FILENAME`: Custom env filename to source instead of the default `.env` and `.autoenv` files
+- `AUTOENV_LOWER_FIRST`: Set this variable to a non-empty string to flip the order of env files executed
+- `AUTOENV_ENV_LEAVE_FILENAME`: Custom env leave filename to source instead of the default `.env.leave` and `.autoenv.leave` files
 - `AUTOENV_ENABLE_LEAVE`: Set this to a non-empty string in order to enable source env when leaving
 - `AUTOENV_ASSUME_YES`: Set this variable to a non-empty string to silently authorize the initialization of new environments
 - `AUTOENV_VIEWER`: Program used to display env files prior to authorization; defaults to `cat`
@@ -163,7 +163,7 @@ These options are not set by default as to conform to the expectations of backwa
 
 ### API
 
-Inside the `.env` file, two _environment variables_ can be accessed:
+Inside the `.env` or `.autoenv` file, two _environment variables_ can be accessed:
 
 - `AUTOENV_CUR_FILE` - The file being sourced
 - `AUTOENV_CUR_DIR` - Equivalent to `dirname "$AUTOENV_CUR_FILE"`

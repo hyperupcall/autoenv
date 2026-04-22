@@ -29,8 +29,20 @@ else
 	esac
 	unset -v _autoenv_state_dir
 fi
-AUTOENV_ENV_FILENAME="${AUTOENV_ENV_FILENAME:-.env}"
-AUTOENV_ENV_LEAVE_FILENAME="${AUTOENV_ENV_LEAVE_FILENAME:-.env.leave}"
+if [ -n "${AUTOENV_ENV_FILENAME:-}" ]; then
+	AUTOENV_ENV_FILENAMES="${AUTOENV_ENV_FILENAME}"
+else
+	AUTOENV_ENV_FILENAME=".env"
+	AUTOENV_ENV_FILENAMES=".autoenv
+.env"
+fi
+if [ -n "${AUTOENV_ENV_LEAVE_FILENAME:-}" ]; then
+	AUTOENV_ENV_LEAVE_FILENAMES="${AUTOENV_ENV_LEAVE_FILENAME}"
+else
+	AUTOENV_ENV_LEAVE_FILENAME=".env.leave"
+	AUTOENV_ENV_LEAVE_FILENAMES=".env.leave
+.autoenv.leave"
+fi
 : ${AUTOENV_VIEWER:=}
 # AUTOENV_ENABLE_LEAVE
 
@@ -84,6 +96,36 @@ _autoenv_draw_line() {
 	fi
 }
 
+# @description Prints env files in the current directory, one per line
+# @internal
+_autoenv_env_files_in_pwd() {
+	local _env_filename _file
+	while IFS= read -r _env_filename; do
+		[ -n "${_env_filename}" ] || \continue
+		_file="$(\pwd -P)/${_env_filename}"
+		if [ -f "${_file}" ]; then
+			\printf '%s\n' "${_file}"
+		fi
+	done <<-AUTOENV_ENV_FILENAMES_EOF
+	${AUTOENV_ENV_FILENAMES}
+	AUTOENV_ENV_FILENAMES_EOF
+}
+
+# @description Prints env leave files in the current directory, one per line
+# @internal
+_autoenv_env_leave_files_in_pwd() {
+	local _env_leave_filename _file
+	while IFS= read -r _env_leave_filename; do
+		[ -n "${_env_leave_filename}" ] || \continue
+		_file="$PWD/${_env_leave_filename}"
+		if [ -f "${_file}" ]; then
+			\printf '%s\n' "${_file}"
+		fi
+	done <<-AUTOENV_ENV_LEAVE_FILENAMES_EOF
+	${AUTOENV_ENV_LEAVE_FILENAMES}
+	AUTOENV_ENV_LEAVE_FILENAMES_EOF
+}
+
 # @description Main initialization function
 # @internal
 autoenv_init() {
@@ -99,18 +141,8 @@ autoenv_init() {
 	local _files
 	_files=$(
 		\command -v chdir >/dev/null 2>&1 && \chdir "${_pwd}" || \builtin cd "${_pwd}"
-		_hadone=''
 		while :; do
-			_file="$(\pwd -P)/${AUTOENV_ENV_FILENAME}"
-			if [ -f "${_file}" ]; then
-				if [ -z "${_hadone}" ]; then
-					\printf %s "${_file}"
-					_hadone='1'
-				else
-					\printf %s "
-${_file}"
-				fi
-			fi
+			_autoenv_env_files_in_pwd
 			[ "$(\pwd -P)" = "${_mountpoint}" ] && \break
 			[ "$(\pwd -P)" = "/" ] && \break
 			\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd -P)/.." || \builtin cd "$(\pwd -P)/.."
@@ -280,23 +312,13 @@ autoenv_leave() {
 	local _files
 	_files=$(
 		\command -v chdir >/dev/null 2>&1 && \chdir "${from_dir}" || \builtin cd "${from_dir}"
-		_hadone=''
 		while [ "$PWD" != "" ] && [ "$PWD" != "/" ]; do
 			case $to_dir/ in
 				$PWD/*)
 				\break
 				;;
 			*)
-				_file="$PWD/${AUTOENV_ENV_LEAVE_FILENAME}"
-				if [ -f "${_file}" ]; then
-					if [ -z "${_hadone}" ]; then
-						\printf %s "${_file}"
-						_hadone='1'
-					else
-						\printf %s "
-${_file}"
-					fi
-				fi
+				_autoenv_env_leave_files_in_pwd
 				\command -v chdir >/dev/null 2>&1 && \chdir "$(\pwd)/.." || \builtin cd "$PWD/.."
 				;;
 			esac
